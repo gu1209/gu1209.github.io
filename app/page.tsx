@@ -395,9 +395,16 @@ export default function Home() {
                       <p className="text-primary-600 font-medium text-lg">{lang === 'en' ? exp.roleEn : exp.role}</p>
                     </div>
                   </div>
-                  <span className="bg-primary-50 text-primary-700 px-4 py-2 rounded-full text-sm font-medium border border-primary-100 whitespace-nowrap">
-                    {lang === 'en' ? exp.periodEn : exp.period}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    {exp.logo && (
+                      <div className="w-16 h-16 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center p-2 md:hidden">
+                        <img src={exp.logo} alt={exp.company} className="w-10 h-10 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                      </div>
+                    )}
+                    <span className="bg-primary-50 text-primary-700 px-4 py-2 rounded-full text-sm font-medium border border-primary-100 whitespace-nowrap">
+                      {lang === 'en' ? exp.periodEn : exp.period}
+                    </span>
+                  </div>
                 </div>
                 <ul className="space-y-3">
                   {(lang === 'en' ? exp.highlightsEn : exp.highlights).map((highlight, i) => (
