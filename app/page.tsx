@@ -1,8 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ChevronDown, Globe, Mail, Github, Linkedin, Phone, FileText, Award, Briefcase, Code, Database, BarChart3, Languages } from 'lucide-react';
+import { useState } from 'react';
+import { Mail, Github, Phone, FileText, Award, Briefcase, Code, Database, BarChart3, Languages } from 'lucide-react';
+
+// Translations
+const translations = {
+  zh: {
+    nav: { about: '关于我', experience: '实习经历', projects: '研究项目', skills: '技能与证书', contact: '联系方式' },
+    hero: { title: '顾杰', subtitle: '金融 + 技术 | 量化分析 | LLM研究', description: '天津大学金融硕士在读，专注于金融数据分析、量化研究和LLM在金融领域的应用。', resume: '下载简历' },
+    about: { title: '关于我', education: '教育背景', intro: '我是天津大学（985）金融硕士，具有扎实的量化分析能力、Python编程技能和LLM应用经验。我的研究聚焦于使用BERT和大语言模型改进股票行业分类以优化动量策略。', strengths: '我的独特优势在于CPA证书（已过4科）、金融专业知识和Python数据分析能力的结合，使我能够胜任金融分析、数据分析和量化研究等岗位。', location: '所在地', degree: '金融硕士', university: '天津大学', period: '2024.09 - 2027.01（预计）' },
+    experience: { title: '实习经历', present: '至今', responsibilities: '工作内容', achievements: '主要成果' },
+    projects: { title: '研究项目', viewProject: '查看项目', tech: '技术栈', objective: '研究目标', methodology: '研究方法', findings: '研究发现' },
+    skills: { title: '技能与证书', programming: '编程语言', dataTools: '数据分析工具', finance: '金融与分析', certifications: '专业证书', languages: '语言能力' },
+    contact: { title: '联系方式', email: '邮箱', github: 'GitHub', linkedin: '领英', phone: '电话', message: '我正在寻找金融分析、数据分析或量化研究相关的实习机会。欢迎随时联系我！' },
+  },
+  en: {
+    nav: { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills & Certs', contact: 'Contact' },
+    hero: { title: 'Kris Gu', subtitle: 'Finance + Technology | Quantitative Analysis | LLM Research', description: "Master's student at Tianjin University, pursuing a career in financial analysis, data analytics, and quantitative research.", resume: 'Download Resume' },
+    about: { title: 'About Me', education: 'Education', intro: 'I am a Master\'s student in Finance at Tianjin University (985) with a strong background in quantitative analysis, Python programming, and LLM applications in finance. My research focuses on using BERT and large language models to improve stock industry classification for momentum strategies.', strengths: 'My unique combination of CPA certification (4 subjects passed), financial expertise, and technical skills (Python, SQL, Machine Learning) makes me well-suited for roles in financial analysis, data analytics, and quantitative research.', location: 'Location', degree: "Master's in Finance", university: 'Tianjin University', period: '2024.09 - 2027.01 (expected)' },
+    experience: { title: 'Internship Experience', present: 'Present', responsibilities: 'Key Responsibilities', achievements: 'Key Achievements' },
+    projects: { title: 'Research Projects', viewProject: 'View Project', tech: 'Technology', objective: 'Objective', methodology: 'Methodology', findings: 'Findings' },
+    skills: { title: 'Skills & Certifications', programming: 'Programming', dataTools: 'Data Tools', finance: 'Finance & Analysis', certifications: 'Certifications', languages: 'Languages' },
+    contact: { title: 'Get In Touch', email: 'Email', github: 'GitHub', linkedin: 'LinkedIn', phone: 'Phone', message: "I'm currently looking for internships in financial analysis, data analytics, or quantitative research. Feel free to reach out!" },
+  },
+};
 
 const experiences = [
   {
@@ -25,6 +46,7 @@ const experiences = [
       '熟练使用Oracle ERP处理支付、应付账款、汇款等事务',
     ],
   },
+  // ... other experiences
   {
     company: 'Sinochem Tianjin',
     role: 'Asset Transaction Intern',
@@ -126,7 +148,7 @@ const projects = [
 const skillsData = {
   programming: ['Python', 'SQL', 'VBA', 'R (basic)'],
   dataTools: ['Pandas', 'NumPy', 'Scikit-learn', 'BERT', 'MySQL', 'Wind/Choice', 'Octoparse', 'Power BI', 'Tableau'],
-  finance: ['Financial Analysis', 'DCF Valuation', 'Industry Research', ' momentum Strategies', 'Financial Modeling', 'Risk Management'],
+  finance: ['Financial Analysis', 'DCF Valuation', 'Industry Research', 'Momentum Strategies', 'Financial Modeling', 'Risk Management'],
   certifications: [
     'CPA: 4 subjects passed (Accounting, Financial Management, Strategy, Economic Law)',
     'CTA (Tax Advisor): 4 subjects passed',
@@ -138,13 +160,11 @@ const skillsData = {
 };
 
 export default function Home() {
-  const { t, i18n } = useTranslation();
-  const [lang, setLang] = useState<'en' | 'zh'>('zh');
+  const [lang, setLang] = useState<'zh' | 'en'>('zh');
+  const t = translations[lang];
 
   const toggleLanguage = () => {
-    const newLang = lang === 'en' ? 'zh' : 'en';
-    setLang(newLang);
-    i18n.changeLanguage(newLang);
+    setLang(lang === 'zh' ? 'en' : 'zh');
   };
 
   return (
@@ -155,15 +175,12 @@ export default function Home() {
           <div className="flex justify-between items-center">
             <a href="#" className="text-xl font-bold text-gray-900">KG</a>
             <div className="flex items-center gap-8">
-              <a href="#about" className="text-gray-600 hover:text-primary-600">{t('nav.about')}</a>
-              <a href="#experience" className="text-gray-600 hover:text-primary-600">{t('nav.experience')}</a>
-              <a href="#projects" className="text-gray-600 hover:text-primary-600">{t('nav.projects')}</a>
-              <a href="#skills" className="text-gray-600 hover:text-primary-600">{t('nav.skills')}</a>
-              <a href="#contact" className="text-gray-600 hover:text-primary-600">{t('nav.contact')}</a>
-              <button
-                onClick={toggleLanguage}
-                className="flex items-center gap-1 text-gray-600 hover:text-primary-600"
-              >
+              <a href="#about" className="text-gray-600 hover:text-primary-600">{t.nav.about}</a>
+              <a href="#experience" className="text-gray-600 hover:text-primary-600">{t.nav.experience}</a>
+              <a href="#projects" className="text-gray-600 hover:text-primary-600">{t.nav.projects}</a>
+              <a href="#skills" className="text-gray-600 hover:text-primary-600">{t.nav.skills}</a>
+              <a href="#contact" className="text-gray-600 hover:text-primary-600">{t.nav.contact}</a>
+              <button onClick={toggleLanguage} className="flex items-center gap-1 text-gray-600 hover:text-primary-600">
                 <Globe size={18} />
                 <span className="text-sm">{lang === 'en' ? '中文' : 'EN'}</span>
               </button>
@@ -177,55 +194,39 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row gap-12 items-center">
             <div className="flex-1">
-              <h1 className="text-5xl font-bold text-gray-900 mb-4">
-                {t('hero.title')}
-              </h1>
-              <h2 className="text-xl text-primary-600 font-medium mb-6">
-                {t('hero.subtitle')}
-              </h2>
-              <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-                {t('hero.description')}
-              </p>
+              <h1 className="text-5xl font-bold text-gray-900 mb-4">{t.hero.title}</h1>
+              <h2 className="text-xl text-primary-600 font-medium mb-6">{t.hero.subtitle}</h2>
+              <p className="text-gray-600 text-lg mb-8 leading-relaxed">{t.hero.description}</p>
               <div className="flex gap-4">
-                <a
-                  href="/resume.pdf"
-                  download
-                  className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition"
-                >
+                <a href="/resume.pdf" download className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition">
                   <FileText size={20} />
-                  {t('hero.resume')}
+                  {t.hero.resume}
                 </a>
               </div>
             </div>
             <div className="flex-1 flex justify-center">
-              <div className="w-80 h-80 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white text-6xl font-bold shadow-2xl">
-                KG
-              </div>
+              <div className="w-80 h-80 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white text-6xl font-bold shadow-2xl">KG</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* About Section */}
+      {/* About */}
       <section id="about" className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">{t('about.title')}</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">{t.about.title}</h2>
           <div className="grid md:grid-cols-3 gap-12">
             <div className="md:col-span-2">
-              <p className="text-gray-600 leading-relaxed mb-4">
-                {t('about.intro')}
-              </p>
-              <p className="text-gray-600 leading-relaxed">
-                {t('about.strengths')}
-              </p>
+              <p className="text-gray-600 leading-relaxed mb-4">{t.about.intro}</p>
+              <p className="text-gray-600 leading-relaxed">{t.about.strengths}</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('about.education')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t.about.education}</h3>
               <div className="space-y-4">
                 <div>
-                  <p className="font-medium text-gray-900">{t('about.degree')}</p>
-                  <p className="text-gray-600">{t('about.university')}</p>
-                  <p className="text-sm text-gray-500">{t('about.period')}</p>
+                  <p className="font-medium text-gray-900">{t.about.degree}</p>
+                  <p className="text-gray-600">{t.about.university}</p>
+                  <p className="text-sm text-gray-500">{t.about.period}</p>
                 </div>
               </div>
             </div>
@@ -233,12 +234,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Experience Section */}
+      {/* Experience */}
       <section id="experience" className="py-20 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-gray-900 mb-12 flex items-center gap-3">
             <Briefcase className="text-primary-600" size={28} />
-            {t('experience.title')}
+            {t.experience.title}
           </h2>
           <div className="space-y-12">
             {experiences.map((exp, idx) => (
@@ -248,9 +249,7 @@ export default function Home() {
                     <h3 className="text-xl font-bold text-gray-900">{exp.company}</h3>
                     <p className="text-primary-600 font-medium">{exp.role}</p>
                   </div>
-                  <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                    {lang === 'en' ? exp.period : exp.periodZh}
-                  </span>
+                  <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">{lang === 'en' ? exp.period : exp.periodZh}</span>
                 </div>
                 <div className="space-y-3">
                   {(lang === 'en' ? exp.highlights : exp.highlightsZh).map((highlight, i) => (
@@ -266,12 +265,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Projects Section */}
+      {/* Projects */}
       <section id="projects" className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-gray-900 mb-12 flex items-center gap-3">
             <BarChart3 className="text-primary-600" size={28} />
-            {t('projects.title')}
+            {t.projects.title}
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
             {projects.map((project, idx) => (
@@ -279,23 +278,21 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{project.title}</h3>
                 <p className="text-primary-600 text-sm mb-4">{project.subtitle}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tech.map((t, i) => (
-                    <span key={i} className="text-xs bg-primary-50 text-primary-700 px-2 py-1 rounded">
-                      {t}
-                    </span>
+                  {project.tech.map((tech, i) => (
+                    <span key={i} className="text-xs bg-primary-50 text-primary-700 px-2 py-1 rounded">{tech}</span>
                   ))}
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{t('projects.objective')}</h4>
+                    <h4 className="font-semibold text-gray-900 mb-1">{t.projects.objective}</h4>
                     <p className="text-sm text-gray-600">{lang === 'en' ? project.objective : project.objectiveZh}</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{t('projects.methodology')}</h4>
+                    <h4 className="font-semibold text-gray-900 mb-1">{t.projects.methodology}</h4>
                     <p className="text-sm text-gray-600">{lang === 'en' ? project.methodology : project.methodologyZh}</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{t('projects.findings')}</h4>
+                    <h4 className="font-semibold text-gray-900 mb-1">{t.projects.findings}</h4>
                     <p className="text-sm text-gray-600">{lang === 'en' ? project.findings : project.findingsZh}</p>
                   </div>
                   <p className="text-xs text-gray-400 mt-4">{project.status}</p>
@@ -306,76 +303,66 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Skills Section */}
+      {/* Skills */}
       <section id="skills" className="py-20 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-gray-900 mb-12 flex items-center gap-3">
             <Award className="text-primary-600" size={28} />
-            {t('skills.title')}
+            {t.skills.title}
           </h2>
           <div className="grid md:grid-cols-2 gap-12">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <Code size={20} className="text-primary-600" />
-                {t('skills.programming')}
+                {t.skills.programming}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {skillsData.programming.map((skill, i) => (
-                  <span key={i} className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 text-gray-700">
-                    {skill}
-                  </span>
+                  <span key={i} className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 text-gray-700">{skill}</span>
                 ))}
               </div>
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <Database size={20} className="text-primary-600" />
-                {t('skills.dataTools')}
+                {t.skills.dataTools}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {skillsData.dataTools.map((skill, i) => (
-                  <span key={i} className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 text-gray-700">
-                    {skill}
-                  </span>
+                  <span key={i} className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 text-gray-700">{skill}</span>
                 ))}
               </div>
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <BarChart3 size={20} className="text-primary-600" />
-                {t('skills.finance')}
+                {t.skills.finance}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {skillsData.finance.map((skill, i) => (
-                  <span key={i} className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 text-gray-700">
-                    {skill}
-                  </span>
+                  <span key={i} className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 text-gray-700">{skill}</span>
                 ))}
               </div>
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <Award size={20} className="text-primary-600" />
-                {t('skills.certifications')}
+                {t.skills.certifications}
               </h3>
               <ul className="space-y-2">
                 {skillsData.certifications.map((cert, i) => (
-                  <li key={i} className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 text-gray-700 text-sm">
-                    {cert}
-                  </li>
+                  <li key={i} className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 text-gray-700 text-sm">{cert}</li>
                 ))}
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <Languages size={20} className="text-primary-600" />
-                {t('skills.languages')}
+                {t.skills.languages}
               </h3>
               <ul className="space-y-2">
-                {skillsData.languages.map((lang, i) => (
-                  <li key={i} className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 text-gray-700 text-sm">
-                    {lang}
-                  </li>
+                {skillsData.languages.map((langItem, i) => (
+                  <li key={i} className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 text-gray-700 text-sm">{langItem}</li>
                 ))}
               </ul>
             </div>
@@ -383,34 +370,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact */}
       <section id="contact" className="py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('contact.title')}</h2>
-          <p className="text-gray-600 mb-12 max-w-2xl mx-auto">
-            {t('contact.message')}
-          </p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">{t.contact.title}</h2>
+          <p className="text-gray-600 mb-12 max-w-2xl mx-auto">{t.contact.message}</p>
           <div className="grid md:grid-cols-3 gap-8">
             <a href="mailto:gujie_kris@163.com" className="group bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
               <Mail className="mx-auto mb-4 text-primary-600" size={32} />
-              <h3 className="font-semibold text-gray-900 mb-2">{t('contact.email')}</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">{t.contact.email}</h3>
               <p className="text-gray-600 text-sm">gujie_kris@163.com</p>
             </a>
             <a href="https://github.com/gu1209" target="_blank" rel="noopener noreferrer" className="group bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
               <Github className="mx-auto mb-4 text-primary-600" size={32} />
-              <h3 className="font-semibold text-gray-900 mb-2">{t('contact.github')}</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">{t.contact.github}</h3>
               <p className="text-gray-600 text-sm">gu1209</p>
             </a>
             <a href="tel:+8619292244363" className="group bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
               <Phone className="mx-auto mb-4 text-primary-600" size={32} />
-              <h3 className="font-semibold text-gray-900 mb-2">{t('contact.phone')}</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">{t.contact.phone}</h3>
               <p className="text-gray-600 text-sm">+86 192 9224 4363</p>
             </a>
           </div>
           <div className="mt-12 pt-8 border-t border-gray-200">
-            <p className="text-gray-500 text-sm">
-              {t('hero.description')}
-            </p>
+            <p className="text-gray-500 text-sm">{t.hero.description}</p>
           </div>
         </div>
       </section>
@@ -419,9 +402,7 @@ export default function Home() {
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-gray-400 mb-4">© {new Date().getFullYear()} Kris Gu. All rights reserved.</p>
-          <p className="text-gray-500 text-sm">
-            Built with Next.js, Tailwind CSS, and i18next
-          </p>
+          <p className="text-gray-500 text-sm">Built with Next.js, Tailwind CSS</p>
         </div>
       </footer>
     </div>
