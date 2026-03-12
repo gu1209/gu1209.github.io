@@ -315,7 +315,7 @@ export default function Home() {
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-primary-200 rounded-xl flex items-center justify-center">
-                    <img src="/logos/tju_logo.png" alt="TJU" className="w-8 h-8 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling.style.display = 'block'; }} />
+                    <img src="/logos/tju_logo.png" alt="TJU" className="w-8 h-8 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; const sibling = e.currentTarget.nextElementSibling as HTMLElement | null; if (sibling) { sibling.style.display = 'block'; } }} />
                     <div className="text-primary-700 font-bold text-sm" style={{ display: 'none' }}>TJU</div>
                   </div>
                   <div>
@@ -334,7 +334,7 @@ export default function Home() {
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-primary-200 rounded-xl flex items-center justify-center">
-                    <img src="/logos/cumt_logo.png" alt="CUMT" className="w-8 h-8 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling.style.display = 'block'; }} />
+                    <img src="/logos/cumt_logo.png" alt="CUMT" className="w-8 h-8 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; const sibling = e.currentTarget.nextElementSibling as HTMLElement | null; if (sibling) { sibling.style.display = 'block'; } }} />
                     <div className="text-primary-700 font-bold text-sm" style={{ display: 'none' }}>CUMT</div>
                   </div>
                   <div>
