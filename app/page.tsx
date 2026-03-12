@@ -261,22 +261,10 @@ export default function Home() {
             </div>
             <div className="flex-1 flex justify-center">
               <div className="relative group">
-                <div className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-white shadow-2xl bg-gradient-to-br from-primary-400 to-primary-700 group-hover:scale-105 transition-transform duration-500">
-                  <img
-                    src="/images/profile.jpg"
-                    alt="Kris Gu"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
-                      if (fallback) fallback.style.display = 'flex';
-                    }}
-                  />
-                  <div className="w-full h-full flex items-center justify-center text-white text-center p-4 bg-gradient-to-br from-primary-400 to-primary-700" style={{ display: 'none' }}>
-                    <div>
-                      <div className="text-8xl font-bold mb-2">KG</div>
-                      <div className="text-sm opacity-80">Photo</div>
-                    </div>
+                <div className="w-80 h-80 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-white shadow-2xl bg-gradient-to-br from-primary-400 to-primary-700 group-hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+                  <div className="text-white text-center p-4">
+                    <div className="text-8xl font-bold mb-2">KG</div>
+                    <div className="text-sm opacity-80">{lang === 'zh' ? '顾杰' : 'Kris Gu'}</div>
                   </div>
                 </div>
                 <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-xl p-5 border border-gray-100 hover:shadow-2xl transition-shadow">
@@ -384,8 +372,8 @@ export default function Home() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                   <div className="flex items-center gap-4">
                     {exp.logo && (
-                      <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center p-2">
-                        <img src={exp.logo} alt={exp.company} className="w-8 h-8 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                      <div className="w-16 h-16 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center p-2">
+                        <img src={exp.logo} alt={exp.company} className="w-12 h-12 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                       </div>
                     )}
                     <div>
@@ -395,16 +383,9 @@ export default function Home() {
                       <p className="text-primary-600 font-medium text-lg">{lang === 'en' ? exp.roleEn : exp.role}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    {exp.logo && (
-                      <div className="w-16 h-16 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center p-2 md:hidden">
-                        <img src={exp.logo} alt={exp.company} className="w-10 h-10 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                      </div>
-                    )}
-                    <span className="bg-primary-50 text-primary-700 px-4 py-2 rounded-full text-sm font-medium border border-primary-100 whitespace-nowrap">
-                      {lang === 'en' ? exp.periodEn : exp.period}
-                    </span>
-                  </div>
+                  <span className="bg-primary-50 text-primary-700 px-4 py-2 rounded-full text-sm font-medium border border-primary-100 whitespace-nowrap">
+                    {lang === 'en' ? exp.periodEn : exp.period}
+                  </span>
                 </div>
                 <ul className="space-y-3">
                   {(lang === 'en' ? exp.highlightsEn : exp.highlights).map((highlight, i) => (
