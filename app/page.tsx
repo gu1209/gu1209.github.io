@@ -236,11 +236,22 @@ export default function Home() {
             </div>
             <div className="flex-1 flex justify-center">
               <div className="relative">
-                <div className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-white shadow-2xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
-                  {/* Profile photo placeholder - add your photo to public/images/profile.jpg */}
-                  <div className="text-white text-center p-4">
-                    <div className="text-8xl font-bold mb-2">KG</div>
-                    <div className="text-sm opacity-80">Photo (add to public/images/profile.jpg)</div>
+                <div className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-white shadow-2xl bg-gradient-to-br from-primary-400 to-primary-600">
+                  <img
+                    src="/images/profile.jpg"
+                    alt="Kris Gu"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextElementSibling.style.display = 'flex';
+                    }}
+                  />
+                  {/* Fallback if image fails to load */}
+                  <div className="w-full h-full flex items-center justify-center text-white text-center p-4" style={{ display: 'none' }}>
+                    <div>
+                      <div className="text-8xl font-bold mb-2">KG</div>
+                      <div className="text-sm opacity-80">Photo</div>
+                    </div>
                   </div>
                 </div>
                 <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg p-4 border border-gray-100">
