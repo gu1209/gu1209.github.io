@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import '../i18n';
 
 export const metadata: Metadata = {
   title: "Kris Gu | Finance & Technology Portfolio",
