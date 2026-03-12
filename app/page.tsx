@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Github, Phone, FileText, Award, Briefcase, Code, Database, BarChart3, Languages } from 'lucide-react';
+import { Mail, Github, Phone, FileText, Award, Briefcase, Code, Database, BarChart3, Languages, Globe } from 'lucide-react';
 
 // Translations
 const translations = {
