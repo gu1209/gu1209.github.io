@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown } from 'lucide-react';
+import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles } from 'lucide-react';
 import ResumeExportModal from '@/components/ResumeExportModal';
+import { STAR_DATA } from '@/lib/starData';
 
 // ============== TRANSLATION OBJECTS ==============
 const translations = {
@@ -220,6 +221,7 @@ export default function Home() {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedProject, setExpandedProject] = useState<number | null>(0);
+  const [expandedStarExp, setExpandedStarExp] = useState<number | null>(null);
   const t = translations[lang];
 
   useEffect(() => { setMounted(true); }, []);
@@ -550,6 +552,52 @@ export default function Home() {
                         </li>
                       ))}
                     </ul>
+
+                    {/* STAR detail toggle */}
+                    {STAR_DATA[exp.company] && (
+                      <div className="mt-4">
+                        <button
+                          onClick={() => setExpandedStarExp(expandedStarExp === idx ? null : idx)}
+                          className="flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 border border-primary-200 hover:border-primary-400 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-full transition-all"
+                        >
+                          <Sparkles size={12} />
+                          {expandedStarExp === idx
+                            ? (lang === 'zh' ? '收起 STAR 详情' : 'Hide STAR Details')
+                            : (lang === 'zh' ? '查看 STAR 详情' : 'View STAR Details')}
+                          <ChevronDown size={12} className={`transition-transform duration-200 ${expandedStarExp === idx ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {expandedStarExp === idx && (
+                          <div className="mt-3 space-y-4 border-t border-primary-100 pt-4 accordion-body">
+                            {STAR_DATA[exp.company].map((entry, ei) => (
+                              <div key={ei} className="bg-primary-50/50 rounded-xl p-4 border border-primary-100">
+                                <p className="text-sm font-semibold text-primary-800 mb-3">
+                                  {lang === 'zh' ? entry.title : entry.titleEn}
+                                </p>
+                                <div className="space-y-2">
+                                  {[
+                                    { label: 'S', labelFull: lang === 'zh' ? '情境' : 'Situation', content: lang === 'zh' ? entry.s : entry.sEn, color: 'bg-blue-100 text-blue-700' },
+                                    { label: 'T', labelFull: lang === 'zh' ? '任务' : 'Task', content: lang === 'zh' ? entry.t : entry.tEn, color: 'bg-purple-100 text-purple-700' },
+                                    { label: 'A', labelFull: lang === 'zh' ? '行动' : 'Action', content: lang === 'zh' ? entry.a : entry.aEn, color: 'bg-amber-100 text-amber-700' },
+                                    { label: 'R', labelFull: lang === 'zh' ? '结果' : 'Result', content: lang === 'zh' ? entry.r : entry.rEn, color: 'bg-green-100 text-green-700' },
+                                  ].map(({ label, labelFull, content, color }) => (
+                                    <div key={label} className="flex items-start gap-2.5">
+                                      <span className={`flex-shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold ${color}`}>
+                                        {label}
+                                      </span>
+                                      <div className="flex-1 min-w-0">
+                                        <span className="text-xs font-semibold text-gray-500 mr-1.5">{labelFull}</span>
+                                        <span className="text-sm text-gray-700 leading-relaxed">{content}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
