@@ -1,10 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Download, Check, X, Briefcase, BookOpen } from 'lucide-react';
-import { ResumeConverter } from '@/lib/ResumeConverter';
+import { X, Printer, Minus, Plus } from 'lucide-react';
 
-interface ResumeExportModalProps {
+interface Props {
   isOpen: boolean;
   onClose: () => void;
   experiences: any[];
@@ -12,189 +11,397 @@ interface ResumeExportModalProps {
   lang: 'zh' | 'en';
 }
 
-export default function ResumeExportModal({ isOpen, onClose, experiences, projects, lang }: ResumeExportModalProps) {
+// Skills data (mirrored from page.tsx for standalone use)
+const SKILLS = {
+  programming: ['Python', 'SQL', 'VBA'],
+  dataTools: ['Pandas', 'NumPy', 'Scikit-learn', 'BERT', 'MySQL', 'Wind/Choice', 'Power BI', 'Jira'],
+  finance: { zh: ['财务分析', 'DCF估值', '行业研究', '财务建模', '风险评估', '资产估值'], en: ['Financial Analysis', 'DCF Valuation', 'Industry Research', 'Financial Modeling', 'Risk Assessment'] },
+  certs: {
+    zh: ['CPA：通过4科（会计、财管、经济法、战略风管）', 'CTA：通过4科（财会、税法一、税法二、涉税实务）', '初级会计专业技术资格证书', '基金从业资格证书'],
+    en: ['CPA: 4 subjects passed (Accounting, Financial Mgmt, Economic Law, Strategy)', 'CTA: 4 subjects passed (Financial Acct, Tax Law I & II, Tax Practice)', 'Junior Accounting Qualification Certificate', 'Fund Practitioner Certificate'],
+  },
+};
+
+// ── Resume Preview Component (renders inside modal + used for print HTML) ──
+function ResumePreview({
+  experiences, projects, selectedExps, selectedProjects,
+  includeSkills, includeCerts, includeSelfEval, fontSize, lang,
+}: {
+  experiences: any[]; projects: any[]; selectedExps: Set<number>; selectedProjects: Set<number>;
+  includeSkills: boolean; includeCerts: boolean; includeSelfEval: boolean; fontSize: number; lang: 'zh' | 'en';
+}) {
+  const isZh = lang === 'zh';
+  const expList = experiences.filter((_, i) => selectedExps.has(i));
+  const projList = projects.filter((_, i) => selectedProjects.has(i));
+
+  const fs = (delta = 0) => `${fontSize + delta}pt`;
+  const blue = '#1d4ed8';
+  const gray = '#555';
+  const dark = '#111827';
+
+  const sectionTitle: React.CSSProperties = {
+    fontSize: fs(1), fontWeight: 700, color: blue,
+    borderBottom: `0.75pt solid #bfdbfe`, paddingBottom: '3pt', marginBottom: '5pt', marginTop: '0',
+  };
+  const bullet: React.CSSProperties = {
+    fontSize: fs(-0.5), color: '#374151', paddingLeft: '10pt',
+    marginBottom: '1.5pt', lineHeight: 1.3,
+  };
+
+  const selfEval = isZh
+    ? '具备金融专业背景与CPA证书体系知识，熟练掌握Python数据分析与机器学习，能将LLM应用于金融场景。实习经历覆盖资金分析、资产交易、项目管理、行业研究等领域，具备快速学习能力和问题解决能力。'
+    : 'Strong foundation in finance with CPA knowledge, proficient in Python data analytics and machine learning, experienced in applying LLMs to financial scenarios. Fast learner with strong problem-solving skills and diverse internship experience.';
+
+  return (
+    <div style={{
+      width: '794px', minHeight: '1123px', background: '#fff',
+      fontFamily: "'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', Arial, sans-serif",
+      fontSize: fs(), lineHeight: 1.45, color: dark,
+      padding: '32pt 40pt', boxSizing: 'border-box',
+    }}>
+      {/* Header */}
+      <div style={{ textAlign: 'center', borderBottom: `1.5pt solid ${blue}`, paddingBottom: '8pt', marginBottom: '10pt' }}>
+        <div style={{ fontSize: fs(7), fontWeight: 800, letterSpacing: '1px' }}>{isZh ? '顾杰' : 'Kris Gu'}</div>
+        <div style={{ fontSize: fs(1), color: blue, margin: '3pt 0' }}>
+          {isZh ? '金融 × 技术  |  数据分析  |  LLM应用' : 'Finance × Technology  |  Data Analytics  |  LLM Applications'}
+        </div>
+        <div style={{ fontSize: fs(-1), color: gray }}>
+          gujie_kris@163.com &nbsp;|&nbsp; +86 192 9224 4363 &nbsp;|&nbsp; github.com/gu1209 &nbsp;|&nbsp; {isZh ? '天津' : 'Tianjin, China'}
+        </div>
+      </div>
+
+      {/* Education */}
+      <div style={{ marginBottom: '10pt' }}>
+        <div style={sectionTitle}>{isZh ? '教育背景' : 'Education'}</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3pt', fontSize: fs() }}>
+          <span>
+            <strong>{isZh ? '天津大学（985）' : 'Tianjin University (985)'}</strong>
+            <span style={{ color: gray, marginLeft: '6pt' }}>{isZh ? '金融硕士在读 · 管理与经济学部' : "Master's in Finance (in progress) · Faculty of Management and Economics"}</span>
+          </span>
+          <span style={{ color: gray, flexShrink: 0 }}>2024.09 – 2027.01</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: fs() }}>
+          <span>
+            <strong>{isZh ? '中国矿业大学（211）' : 'China University of Mining & Technology (211)'}</strong>
+            <span style={{ color: gray, marginLeft: '6pt' }}>{isZh ? '金融学士 · GPA 4.15/5.0，专业前15%' : "Bachelor's in Finance · GPA 4.15/5.0, Top 15% in major"}</span>
+          </span>
+          <span style={{ color: gray, flexShrink: 0 }}>2020.09 – 2024.06</span>
+        </div>
+      </div>
+
+      {/* Experience */}
+      {expList.length > 0 && (
+        <div style={{ marginBottom: '10pt' }}>
+          <div style={sectionTitle}>{isZh ? '实习经历' : 'Internship Experience'}</div>
+          {expList.map((exp, i) => {
+            const company = isZh ? exp.company : exp.companyEn;
+            const role = isZh ? exp.role : exp.roleEn;
+            const period = isZh ? exp.period : exp.periodEn;
+            const allHighlights = isZh ? exp.highlights : exp.highlightsEn;
+            // Use highlightsBold as key bullets (max 3)
+            const boldIdx: number[] = exp.highlightsBold || [0, 1];
+            const keyBullets = boldIdx.slice(0, 3).map((idx: number) => allHighlights[idx]).filter(Boolean);
+
+            return (
+              <div key={i} style={{ marginBottom: i < expList.length - 1 ? '7pt' : 0 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '2pt' }}>
+                  <div style={{ fontSize: fs(), fontWeight: 700 }}>
+                    {company}
+                    <span style={{ color: blue, fontWeight: 500, margin: '0 5pt' }}>·</span>
+                    <span style={{ color: blue, fontWeight: 500 }}>{role}</span>
+                  </div>
+                  <span style={{ fontSize: fs(-1), color: gray, flexShrink: 0 }}>{period}</span>
+                </div>
+                {keyBullets.map((b: string, j: number) => (
+                  <div key={j} style={bullet}>• {b}</div>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Projects */}
+      {projList.length > 0 && (
+        <div style={{ marginBottom: '10pt' }}>
+          <div style={sectionTitle}>{isZh ? '研究项目' : 'Research Projects'}</div>
+          {projList.map((proj, i) => {
+            const title = isZh ? proj.title : proj.titleEn;
+            const subtitle = isZh ? proj.subtitle : proj.subtitleEn;
+            const status = isZh ? proj.status : proj.statusEn;
+            const objective = isZh ? proj.objective : proj.objectiveEn;
+            const techStr = proj.tech.slice(0, 6).join(' · ');
+
+            return (
+              <div key={i} style={{ marginBottom: i < projList.length - 1 ? '6pt' : 0 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '2pt' }}>
+                  <div style={{ fontSize: fs(), fontWeight: 700 }}>
+                    {title}
+                    <span style={{ color: gray, fontWeight: 400, fontSize: fs(-1), marginLeft: '6pt' }}>{subtitle}</span>
+                  </div>
+                  <span style={{ fontSize: fs(-1), color: gray, flexShrink: 0 }}>{status}</span>
+                </div>
+                <div style={{ ...bullet, marginBottom: '1.5pt' }}>
+                  • {isZh ? '技术栈：' : 'Tech: '}<span style={{ color: blue }}>{techStr}</span>
+                </div>
+                <div style={bullet}>• {objective.length > 90 ? objective.slice(0, 90) + '…' : objective}</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Skills */}
+      {includeSkills && (
+        <div style={{ marginBottom: '10pt' }}>
+          <div style={sectionTitle}>{isZh ? '技术技能' : 'Technical Skills'}</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2pt' }}>
+            {[
+              { label: isZh ? '编程语言' : 'Programming', value: SKILLS.programming.join('  ·  ') },
+              { label: isZh ? '数据分析' : 'Data Tools', value: SKILLS.dataTools.join('  ·  ') },
+              { label: isZh ? '金融技能' : 'Finance', value: (isZh ? SKILLS.finance.zh : SKILLS.finance.en).join('  ·  ') },
+            ].map(({ label, value }) => (
+              <div key={label} style={{ fontSize: fs(-0.5) }}>
+                <strong style={{ color: blue }}>{label}：</strong>{value}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Certifications */}
+      {includeCerts && (
+        <div style={{ marginBottom: '10pt' }}>
+          <div style={sectionTitle}>{isZh ? '专业认证' : 'Certifications'}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2pt' }}>
+            {(isZh ? SKILLS.certs.zh : SKILLS.certs.en).map((c, i) => (
+              <div key={i} style={{ ...bullet, paddingLeft: 0 }}>• {c}</div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Self-evaluation */}
+      {includeSelfEval && (
+        <div>
+          <div style={sectionTitle}>{isZh ? '自我评价' : 'Self-Evaluation'}</div>
+          <div style={{ fontSize: fs(-0.5), color: '#374151', lineHeight: 1.4 }}>{selfEval}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Main Modal ──
+export default function ResumeExportModal({ isOpen, onClose, experiences, projects, lang }: Props) {
   const [selectedExps, setSelectedExps] = useState<Set<number>>(new Set(experiences.map((_, i) => i)));
   const [selectedProjects, setSelectedProjects] = useState<Set<number>>(new Set(projects.map((_, i) => i)));
-  const [isExporting, setIsExporting] = useState(false);
+  const [includeSkills, setIncludeSkills] = useState(true);
+  const [includeCerts, setIncludeCerts] = useState(true);
+  const [includeSelfEval, setIncludeSelfEval] = useState(true);
+  const [fontSize, setFontSize] = useState(9);
 
   if (!isOpen) return null;
 
-  const toggleExp = (idx: number) => {
-    const newSet = new Set(selectedExps);
-    if (newSet.has(idx)) newSet.delete(idx);
-    else newSet.add(idx);
-    setSelectedExps(newSet);
+  const isZh = lang === 'zh';
+
+  const toggleExp = (i: number) => {
+    const s = new Set(selectedExps);
+    s.has(i) ? s.delete(i) : s.add(i);
+    setSelectedExps(s);
+  };
+  const toggleProj = (i: number) => {
+    const s = new Set(selectedProjects);
+    s.has(i) ? s.delete(i) : s.add(i);
+    setSelectedProjects(s);
   };
 
-  const toggleProj = (idx: number) => {
-    const newSet = new Set(selectedProjects);
-    if (newSet.has(idx)) newSet.delete(idx);
-    else newSet.add(idx);
-    setSelectedProjects(newSet);
-  };
+  // Print: open new window with rendered HTML
+  const handlePrint = () => {
+    // Collect inline styles by rendering to string via a hidden iframe trick.
+    // Simplest approach: serialize the preview's outerHTML via a temporary DOM node.
+    const previewEl = document.getElementById('resume-preview-content');
+    if (!previewEl) return;
 
-  const handleExport = async () => {
-    setIsExporting(true);
-    try {
-      const selectedExpData = experiences.filter((_, i) => selectedExps.has(i));
-      const selectedProjData = projects.filter((_, i) => selectedProjects.has(i));
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${isZh ? '顾杰_简历' : 'Kris_Gu_Resume'}</title>
+<style>
+  @page { size: A4 portrait; margin: 0; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; box-sizing: border-box; }
+  body { margin: 0; padding: 0; background: #fff; }
+</style>
+</head>
+<body>
+${previewEl.outerHTML}
+</body>
+</html>`;
 
-      if (selectedExpData.length === 0 && selectedProjData.length === 0) {
-        alert(lang === 'zh' ? '请选择至少一段经历或项目' : 'Please select at least one experience or project');
-        setIsExporting(false);
-        return;
-      }
-
-      const blob = await ResumeConverter.generateResume(selectedExpData, selectedProjData, lang);
-      const filename = `顾杰_简历_${new Date().toISOString().split('T')[0]}.docx`;
-
-      // 使用 saveAs 下载
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      onClose();
-    } catch (error) {
-      console.error('Export failed:', error);
-      alert(lang === 'zh' ? '导出失败，请重试' : 'Export failed, please try again');
-    } finally {
-      setIsExporting(false);
+    const win = window.open('', '_blank', 'width=900,height=750');
+    if (win) {
+      win.document.write(html);
+      win.document.close();
+      // Small delay to ensure styles are applied
+      setTimeout(() => {
+        win.focus();
+        win.print();
+      }, 300);
     }
   };
 
+  // Scale for preview display (A4 = 794px wide, show at ~65%)
+  const SCALE = 0.63;
+  const scaledW = Math.round(794 * SCALE);
+  const scaledH = Math.round(1123 * SCALE);
+
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] p-3">
+      <div className="bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden" style={{ width: '96vw', maxWidth: '1100px', height: '92vh' }}>
+
         {/* Header */}
-        <div className="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
-          <h2 className="text-xl font-bold text-gray-900">{lang === 'zh' ? '导出简历' : 'Export Resume'}</h2>
-          <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition">
-            <X size={24} />
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">{isZh ? '简历预览与导出' : 'Resume Preview & Export'}</h2>
+            <p className="text-xs text-gray-500 mt-0.5">{isZh ? '在左侧选择包含的内容，右侧实时预览 A4 效果' : 'Select sections on the left, preview A4 output on the right'}</p>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition">
+            <X size={20} />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          <p className="text-gray-600 mb-6">
-            {lang === 'zh'
-              ? '选择要包含在简历中的经历（已按STAR法则优化），生成的Word文档适配一页纸排版。'
-              : 'Select experiences to include (optimized using STAR method). The generated Word document is formatted for one-page resume.'}
-          </p>
+        {/* Body */}
+        <div className="flex flex-1 overflow-hidden">
 
-          {/* Internship Experiences */}
-          <div className="mb-6">
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-              <Briefcase size={18} />
-              {lang === 'zh' ? '实习经历' : 'Internship Experiences'}
-            </h3>
-            <div className="space-y-2">
-              {experiences.map((exp, idx) => (
-                <label
-                  key={idx}
-                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition ${
-                    selectedExps.has(idx)
-                      ? 'bg-primary-50 border-primary-500'
-                      : 'bg-white border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedExps.has(idx)}
-                    onChange={() => toggleExp(idx)}
-                    className="w-5 h-5 text-primary-600 rounded focus:ring-primary-500"
-                  />
-                  <div>
-                    <div className="font-medium text-gray-900">{exp.company}</div>
-                    <div className="text-sm text-gray-500">
-                      {exp.role} · {exp.period}
+          {/* ── Left Panel: Controls ── */}
+          <div className="w-60 flex-shrink-0 border-r border-gray-100 overflow-y-auto px-4 py-5 space-y-5">
+
+            {/* Font size */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{isZh ? '字体大小' : 'Font Size'}</p>
+              <div className="flex items-center gap-2">
+                <button onClick={() => setFontSize(s => Math.max(7, s - 1))} className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition">
+                  <Minus size={13} />
+                </button>
+                <span className="text-sm font-semibold text-gray-800 w-8 text-center">{fontSize}pt</span>
+                <button onClick={() => setFontSize(s => Math.min(12, s + 1))} className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition">
+                  <Plus size={13} />
+                </button>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">{isZh ? '推荐 8–10pt，内容多时调小' : 'Recommended 8–10pt'}</p>
+            </div>
+
+            {/* Experience */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{isZh ? '实习经历' : 'Experience'}</p>
+              <div className="space-y-1.5">
+                {experiences.map((exp, i) => (
+                  <label key={i} className="flex items-start gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox" checked={selectedExps.has(i)} onChange={() => toggleExp(i)}
+                      className="mt-0.5 w-4 h-4 rounded text-primary-600 accent-blue-600 flex-shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-sm text-gray-800 font-medium leading-tight group-hover:text-primary-600 transition-colors">
+                        {isZh ? exp.company : exp.companyEn}
+                      </p>
+                      <p className="text-xs text-gray-400 truncate">{isZh ? exp.role : exp.roleEn}</p>
                     </div>
-                  </div>
-                  {selectedExps.has(idx) && (
-                    <Check className="ml-auto text-primary-600" size={20} />
-                  )}
-                </label>
-              ))}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Projects */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{isZh ? '研究项目' : 'Projects'}</p>
+              <div className="space-y-1.5">
+                {projects.map((proj, i) => (
+                  <label key={i} className="flex items-start gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox" checked={selectedProjects.has(i)} onChange={() => toggleProj(i)}
+                      className="mt-0.5 w-4 h-4 rounded text-primary-600 accent-blue-600 flex-shrink-0"
+                    />
+                    <p className="text-sm text-gray-800 font-medium leading-snug group-hover:text-primary-600 transition-colors">
+                      {isZh ? proj.title : proj.titleEn}
+                    </p>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Fixed sections */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{isZh ? '其他板块' : 'Sections'}</p>
+              <div className="space-y-1.5">
+                {[
+                  { label: isZh ? '技术技能' : 'Technical Skills', value: includeSkills, set: setIncludeSkills },
+                  { label: isZh ? '专业认证' : 'Certifications', value: includeCerts, set: setIncludeCerts },
+                  { label: isZh ? '自我评价' : 'Self-Evaluation', value: includeSelfEval, set: setIncludeSelfEval },
+                ].map(({ label, value, set }) => (
+                  <label key={label} className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={value} onChange={e => set(e.target.checked)}
+                      className="w-4 h-4 rounded accent-blue-600" />
+                    <span className="text-sm text-gray-700">{label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Tip */}
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 leading-relaxed">
+              {isZh
+                ? '💡 点击「打印/PDF」后，在浏览器打印对话框中选择「另存为 PDF」，目标纸张选 A4，去掉页眉页脚。'
+                : '💡 Click "Print/PDF", then in the browser print dialog choose "Save as PDF", paper size A4, uncheck headers/footers.'}
             </div>
           </div>
 
-          {/* Research Projects */}
-          <div className="mb-6">
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-              <BookOpen size={18} />
-              {lang === 'zh' ? '研究项目' : 'Research Projects'}
-            </h3>
-            <div className="space-y-2">
-              {projects.map((proj, idx) => (
-                <label
-                  key={idx}
-                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition ${
-                    selectedProjects.has(idx)
-                      ? 'bg-primary-50 border-primary-500'
-                      : 'bg-white border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedProjects.has(idx)}
-                    onChange={() => toggleProj(idx)}
-                    className="w-5 h-5 text-primary-600 rounded focus:ring-primary-500"
-                  />
-                  <div>
-                    <div className="font-medium text-gray-900">{proj.title}</div>
-                    <div className="text-sm text-gray-500">
-                      {lang === 'zh' ? '研究项目' : 'Research Project'} · {proj.status || proj.statusEn}
-                    </div>
-                  </div>
-                  {selectedProjects.has(idx) && (
-                    <Check className="ml-auto text-primary-600" size={20} />
-                  )}
-                </label>
-              ))}
-            </div>
-          </div>
+          {/* ── Right Panel: A4 Preview ── */}
+          <div className="flex-1 bg-gray-100 overflow-auto flex flex-col items-center py-6 px-4">
+            <p className="text-xs text-gray-400 mb-3 flex-shrink-0">{isZh ? '预览（A4 · 缩放 63%）' : 'Preview (A4 · 63% scale)'}</p>
 
-          {/* Info */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-            <p className="font-semibold mb-1">
-              {lang === 'zh' ? '📌 简历结构' : '📌 Resume Structure'}
+            {/* Scaled A4 wrapper */}
+            <div
+              className="flex-shrink-0 shadow-2xl rounded-sm overflow-hidden ring-1 ring-gray-200"
+              style={{ width: `${scaledW}px`, height: `${scaledH}px`, position: 'relative' }}
+            >
+              <div style={{
+                width: '794px', height: '1123px',
+                transform: `scale(${SCALE})`,
+                transformOrigin: 'top left',
+                position: 'absolute', top: 0, left: 0,
+                overflow: 'hidden',
+              }}>
+                <div id="resume-preview-content">
+                  <ResumePreview
+                    experiences={experiences} projects={projects}
+                    selectedExps={selectedExps} selectedProjects={selectedProjects}
+                    includeSkills={includeSkills} includeCerts={includeCerts}
+                    includeSelfEval={includeSelfEval} fontSize={fontSize} lang={lang}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Overflow warning */}
+            <p className="text-xs text-gray-400 mt-3 flex-shrink-0">
+              {isZh ? '如内容超出一页，请减少选项或调小字体' : 'If content overflows, deselect items or reduce font size'}
             </p>
-            <ul className="list-disc list-inside space-y-1 text-blue-700">
-              <li>{lang === 'zh' ? '求职意向' : 'Career Objective'}</li>
-              <li>{lang === 'zh' ? '基础信息（姓名、联系方式、教育背景）' : 'Basic Info (Name, Contact, Education)'}</li>
-              <li>{lang === 'zh' ? '实习经历（STAR法则）' : 'Internship Experience (STAR method)'}</li>
-              <li>{lang === 'zh' ? '研究项目（STAR法则）' : 'Research Projects (STAR method)'}</li>
-              <li>{lang === 'zh' ? '技能与证书' : 'Skills & Certifications'}</li>
-              <li>{lang === 'zh' ? '自我评价' : 'Self-Evaluation'}</li>
-            </ul>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t bg-gray-50 flex justify-end gap-3">
-          <button
-            onClick={() => { setSelectedExps(new Set(experiences.map((_, i) => i))); setSelectedProjects(new Set(projects.map((_, i) => i))); }}
-            className="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition"
-          >
-            {lang === 'zh' ? '全选' : 'Select All'}
+        <div className="border-t border-gray-100 px-6 py-4 flex justify-end items-center gap-3 flex-shrink-0 bg-gray-50/50">
+          <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm">
+            {isZh ? '取消' : 'Cancel'}
           </button>
           <button
-            onClick={() => { setSelectedExps(new Set()); setSelectedProjects(new Set()); }}
-            className="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition"
+            onClick={handlePrint}
+            className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl hover:bg-primary-700 transition font-medium text-sm shadow-sm hover:shadow-md"
           >
-            {lang === 'zh' ? '清空' : 'Clear'}
-          </button>
-          <button
-            onClick={handleExport}
-            disabled={isExporting}
-            className="flex items-center gap-2 px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition font-medium"
-          >
-            <Download size={18} />
-            {isExporting ? (lang === 'zh' ? '生成中...' : 'Generating...') : (lang === 'zh' ? '导出 Word' : 'Export Word')}
+            <Printer size={16} />
+            {isZh ? '打印 / 导出 PDF' : 'Print / Save as PDF'}
           </button>
         </div>
       </div>
