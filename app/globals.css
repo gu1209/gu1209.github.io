@@ -24,7 +24,25 @@ body {
   transform: translateY(0);
 }
 
-/* Accordion expand animation */
+/* ── Admin mode editable fields ───────────────────────────────────────── */
+.admin-mode [data-admin-field] {
+  outline: 1.5px dashed #f59e0b;
+  border-radius: 3px;
+  background: rgba(253, 224, 71, 0.12);
+  cursor: text;
+  min-width: 4px;
+  display: inline;
+}
+.admin-mode [data-admin-field]:hover {
+  background: rgba(253, 224, 71, 0.25);
+  outline-color: #d97706;
+}
+.admin-mode [data-admin-field]:focus {
+  background: rgba(253, 224, 71, 0.35);
+  outline: 2px solid #d97706;
+}
+
+/* ── Accordion expand animation */
 .accordion-body {
   animation: accordionOpen 0.25s ease forwards;
 }

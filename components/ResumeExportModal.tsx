@@ -52,11 +52,19 @@ function Bold({ text }: { text: string }) {
   return <>{parts.map((p, i) => i % 2 === 1 ? <strong key={i}>{p}</strong> : <span key={i}>{p}</span>)}</>;
 }
 
+// Section title with lines on BOTH sides: ─── 教育背景 ───
 function SectionTitle({ label, size }: { label: string; size: string }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '6pt', marginBottom: '4pt' }}>
-      <strong style={{ fontSize: size, flexShrink: 0, letterSpacing: '0.3px' }}>{label}</strong>
-      <div style={{ flex: 1, height: '0.8pt', background: '#222' }} />
+    <div style={{ display: 'flex', alignItems: 'center', gap: '7pt', marginBottom: '5pt', marginTop: '2pt' }}>
+      <div style={{ flex: 1, height: '0.75pt', background: '#222' }} />
+      <strong style={{
+        fontSize: size, flexShrink: 0, letterSpacing: '2px',
+        fontFamily: "'KaiTi','STKaiti','FangSong','STFangsong',serif",
+        fontWeight: 700,
+      }}>
+        {label}
+      </strong>
+      <div style={{ flex: 1, height: '0.75pt', background: '#222' }} />
     </div>
   );
 }
@@ -92,7 +100,8 @@ function ResumePreview({
   return (
     <div id="resume-preview-content" style={{
       width: '794px', minHeight: '1123px', background: '#fff',
-      fontFamily: "'Microsoft YaHei','PingFang SC','Hiragino Sans GB','SimHei',Arial,sans-serif",
+      /* Base body font: YaHei (sans) for all regular text */
+      fontFamily: "'Microsoft YaHei','PingFang SC','Hiragino Sans GB',Arial,sans-serif",
       fontSize: f(), lineHeight: 1.5, color: '#111',
       padding: '26pt 36pt 20pt', boxSizing: 'border-box',
     }}>
@@ -101,7 +110,11 @@ function ResumePreview({
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10pt', borderBottom: '1.5pt solid #111', paddingBottom: '7pt', marginBottom: '8pt' }}>
         <img src={`${origin}/logos/tju_logo.svg`} alt="TJU" style={{ width: '40pt', height: '40pt', objectFit: 'contain', marginTop: '2pt', flexShrink: 0 }} />
         <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{ fontSize: f(11), fontWeight: 900, letterSpacing: '5px', lineHeight: 1, marginBottom: '4pt' }}>
+          <div style={{
+            fontSize: f(12), fontWeight: 900, letterSpacing: '6px', lineHeight: 1, marginBottom: '4pt',
+            /* Heavy display font: SimHei (黑体) for Chinese, contrasts with YaHei body */
+            fontFamily: "'SimHei','STHeiti','Microsoft YaHei',sans-serif",
+          }}>
             {isZh ? '顾杰' : 'Kris Gu'}
           </div>
           {objective.trim() && (

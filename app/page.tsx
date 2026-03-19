@@ -1,9 +1,42 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles } from 'lucide-react';
+import { useState, useEffect, createContext, useContext } from 'react';
+import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles, Lock, RotateCcw, LogOut } from 'lucide-react';
 import ResumeExportModal from '@/components/ResumeExportModal';
 import { STAR_DATA } from '@/lib/starData';
+import { useAdminContent } from '@/lib/adminStore';
+
+// ── Admin context ──────────────────────────────────────────────────────────
+type AdminCtx = { isAdmin: boolean; get: (id: string, def: string) => string; save: (id: string, val: string) => void; };
+const AdminContext = createContext<AdminCtx>({ isAdmin: false, get: (_, d) => d, save: () => {} });
+
+/**
+ * Editable text component — renders contenteditable in admin mode,
+ * plain text otherwise. Wraps in the given HTML element (`as` prop).
+ * Use `cls` for className.
+ */
+function E({ id, def, as = 'span', cls, style }: {
+  id: string; def: string;
+  as?: keyof JSX.IntrinsicElements; cls?: string; style?: React.CSSProperties;
+}) {
+  const { isAdmin, get, save } = useContext(AdminContext);
+  const value = get(id, def);
+  const Tag = as as any;
+  if (!isAdmin) return <Tag className={cls} style={style}>{value}</Tag>;
+  return (
+    <Tag
+      className={cls} style={style}
+      contentEditable suppressContentEditableWarning
+      data-admin-field="true"
+      onBlur={(e: React.FocusEvent<HTMLElement>) => {
+        const v = e.currentTarget.textContent ?? def;
+        if (v !== get(id, def)) save(id, v);
+      }}
+    >
+      {value}
+    </Tag>
+  );
+}
 
 // ============== TRANSLATION OBJECTS ==============
 const translations = {
@@ -224,6 +257,13 @@ export default function Home() {
   const [expandedStarExp, setExpandedStarExp] = useState<number | null>(null);
   const t = translations[lang];
 
+  // Admin mode
+  const { isAdmin, get, save, reset, login, logout } = useAdminContent();
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [adminPwInput, setAdminPwInput] = useState('');
+  const [adminPwError, setAdminPwError] = useState(false);
+  const adminCtx: AdminCtx = { isAdmin, get, save };
+
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
@@ -239,7 +279,8 @@ export default function Home() {
   const toggleLanguage = () => setLang(lang === 'zh' ? 'en' : 'zh');
 
   return (
-    <div className="min-h-screen bg-white selection:bg-primary-200 selection:text-primary-900" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+    <AdminContext.Provider value={adminCtx}>
+    <div className={`min-h-screen bg-white selection:bg-primary-200 selection:text-primary-900${isAdmin ? ' admin-mode' : ''}`} style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
 
       {/* ── Navigation ── */}
       <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md z-50 border-b border-gray-100 shadow-sm">
@@ -271,6 +312,13 @@ export default function Home() {
               >
                 <Globe size={13} />
                 <span>{lang === 'en' ? '中文' : 'EN'}</span>
+              </button>
+              <button
+                onClick={() => isAdmin ? logout() : setShowAdminLogin(true)}
+                title={isAdmin ? '退出管理模式' : '管理员登录'}
+                className={`p-1.5 rounded-full transition ${isAdmin ? 'text-amber-600 bg-amber-100 hover:bg-amber-200' : 'text-gray-300 hover:text-gray-500'}`}
+              >
+                <Lock size={13} />
               </button>
             </div>
 
@@ -344,13 +392,13 @@ export default function Home() {
                 {lang === 'zh' ? '欢迎访问我的个人主页' : 'Welcome to my portfolio'}
               </div>
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
-                {t.hero.title}
+                <E id={`hero.${lang}.title`} def={t.hero.title} />
               </h1>
               <h2 className="text-xl md:text-2xl text-primary-600 font-medium leading-relaxed">
-                {t.hero.subtitle}
+                <E id={`hero.${lang}.subtitle`} def={t.hero.subtitle} />
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed max-w-lg">
-                {t.hero.description}
+                <E id={`hero.${lang}.description`} def={t.hero.description} />
               </p>
 
               {/* Quick-stat chips */}
@@ -417,10 +465,10 @@ export default function Home() {
           <div className="space-y-6">
             {/* Intro card */}
             <div className="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm animate-on-scroll">
-              <p className="text-gray-700 leading-relaxed mb-4">{t.about.intro}</p>
+              <E id={`about.${lang}.intro`} def={t.about.intro} as="p" cls="text-gray-700 leading-relaxed mb-4" />
               <div className="flex items-start gap-3 bg-primary-50 border border-primary-100 rounded-xl px-4 py-3">
                 <span className="mt-1 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-primary-500" />
-                <p className="text-primary-800 text-sm font-medium leading-relaxed">{t.about.strengths}</p>
+                <E id={`about.${lang}.strengths`} def={t.about.strengths} as="p" cls="text-primary-800 text-sm font-medium leading-relaxed" />
               </div>
             </div>
 
@@ -527,15 +575,15 @@ export default function Home() {
                         </div>
                         <div>
                           <h3 className="font-bold text-gray-900 text-lg leading-tight">
-                            {lang === 'en' ? exp.companyEn : exp.company}
+                            <E id={`exp.${idx}.${lang === 'en' ? 'companyEn' : 'company'}`} def={lang === 'en' ? exp.companyEn : exp.company} />
                           </h3>
                           <p className="text-primary-600 font-medium text-sm mt-0.5">
-                            {lang === 'en' ? exp.roleEn : exp.role}
+                            <E id={`exp.${idx}.${lang === 'en' ? 'roleEn' : 'role'}`} def={lang === 'en' ? exp.roleEn : exp.role} />
                           </p>
                         </div>
                       </div>
                       <span className="bg-gray-50 text-gray-500 px-3 py-1.5 rounded-full text-xs font-medium border border-gray-200 whitespace-nowrap self-start">
-                        {lang === 'en' ? exp.periodEn : exp.period}
+                        <E id={`exp.${idx}.${lang === 'en' ? 'periodEn' : 'period'}`} def={lang === 'en' ? exp.periodEn : exp.period} />
                       </span>
                     </div>
 
@@ -548,7 +596,7 @@ export default function Home() {
                           }`}
                         >
                           <span className="mt-2 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-primary-400" />
-                          {highlight}
+                          <E id={`exp.${idx}.h.${lang}.${i}`} def={highlight} />
                         </li>
                       ))}
                     </ul>
@@ -642,8 +690,12 @@ export default function Home() {
                         </span>
                         <span className="text-xs text-gray-300 font-mono tracking-wider">0{idx + 1}</span>
                       </div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-1 leading-snug">{title}</h3>
-                      <p className="text-primary-600/80 text-sm mb-3">{subtitle}</p>
+                      <h3 className="text-lg font-bold text-gray-900 mb-1 leading-snug">
+                        <E id={`proj.${idx}.${lang === 'en' ? 'titleEn' : 'title'}`} def={title} />
+                      </h3>
+                      <p className="text-primary-600/80 text-sm mb-3">
+                        <E id={`proj.${idx}.${lang === 'en' ? 'subtitleEn' : 'subtitle'}`} def={subtitle} />
+                      </p>
                       <div className="flex flex-wrap gap-1.5">
                         {project.tech.map((tech: string, i: number) => (
                           <span
@@ -666,16 +718,16 @@ export default function Home() {
                     <div className="border-t border-gray-100 px-6 pb-6 pt-5 accordion-body">
                       <div className="grid md:grid-cols-3 gap-5">
                         {[
-                          { label: t.projects.objective, content: lang === 'en' ? project.objectiveEn : project.objective },
-                          { label: t.projects.methodology, content: lang === 'en' ? project.methodologyEn : project.methodology },
-                          { label: t.projects.design, content: lang === 'en' ? project.designEn : project.design },
-                        ].map(({ label, content }) => (
+                          { label: t.projects.objective, key: lang === 'en' ? 'objectiveEn' : 'objective', content: lang === 'en' ? project.objectiveEn : project.objective },
+                          { label: t.projects.methodology, key: lang === 'en' ? 'methodologyEn' : 'methodology', content: lang === 'en' ? project.methodologyEn : project.methodology },
+                          { label: t.projects.design, key: lang === 'en' ? 'designEn' : 'design', content: lang === 'en' ? project.designEn : project.design },
+                        ].map(({ label, content, key: contentKey }) => (
                           <div key={label}>
                             <h4 className="font-semibold text-gray-800 text-sm mb-2.5 flex items-center gap-1.5">
                               <span className="w-1 h-3.5 bg-primary-500 rounded-full flex-shrink-0" />
                               {label}
                             </h4>
-                            <p className="text-gray-600 text-sm leading-relaxed">{content}</p>
+                            <E id={`proj.${idx}.${contentKey}`} def={content} as="p" cls="text-gray-600 text-sm leading-relaxed" />
                           </div>
                         ))}
                       </div>
@@ -711,7 +763,7 @@ export default function Home() {
                       key={j}
                       className="bg-gray-50 px-3 py-1.5 rounded-lg text-gray-700 text-xs font-medium border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition cursor-default"
                     >
-                      {skill}
+                      <E id={`skill.${cat.key}.${j}`} def={skill} />
                     </span>
                   ))}
                 </div>
@@ -729,7 +781,7 @@ export default function Home() {
               {(lang === 'zh' ? skillsData.certifications : skillsData.certificationsEn).map((cert, i) => (
                 <div key={i} className="flex items-start gap-2.5 bg-gray-50 px-4 py-3 rounded-xl border border-gray-100">
                   <span className="mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-primary-400" />
-                  <span className="text-gray-700 text-sm leading-relaxed">{cert}</span>
+                  <E id={`cert.${lang}.${i}`} def={cert} cls="text-gray-700 text-sm leading-relaxed" />
                 </div>
               ))}
             </div>
@@ -744,7 +796,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-2.5">
               {skillsData.languages.map((langItem, i) => (
                 <span key={i} className="bg-gray-50 px-4 py-2.5 rounded-xl text-gray-700 text-sm border border-gray-200 font-medium">
-                  {langItem}
+                  <E id={`lang.item.${i}`} def={langItem} />
                 </span>
               ))}
             </div>
@@ -757,7 +809,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">{t.contact.title}</h2>
           <p className="text-primary-100 mb-12 max-w-xl mx-auto leading-relaxed">
-            {t.contact.message}
+            <E id={`contact.${lang}.message`} def={t.contact.message} />
           </p>
           <div className="grid md:grid-cols-3 gap-4">
             <a
@@ -808,6 +860,51 @@ export default function Home() {
         projects={projects}
         lang={lang}
       />
+
+      {/* Admin login dialog */}
+      {showAdminLogin && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[200]">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 w-80">
+            <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><Lock size={16} /> 管理员登录</h3>
+            <input
+              type="password" value={adminPwInput}
+              onChange={e => { setAdminPwInput(e.target.value); setAdminPwError(false); }}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  if (login(adminPwInput)) { setShowAdminLogin(false); setAdminPwInput(''); }
+                  else { setAdminPwError(true); setAdminPwInput(''); }
+                }
+              }}
+              autoFocus placeholder="密码"
+              className={`w-full border rounded-xl px-3 py-2 text-sm mb-3 focus:outline-none ${adminPwError ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-primary-400'}`}
+            />
+            {adminPwError && <p className="text-xs text-red-500 mb-2">密码错误</p>}
+            <div className="flex gap-2">
+              <button
+                onClick={() => { if (login(adminPwInput)) { setShowAdminLogin(false); setAdminPwInput(''); } else { setAdminPwError(true); setAdminPwInput(''); } }}
+                className="flex-1 bg-primary-600 text-white py-2 rounded-xl text-sm font-medium hover:bg-primary-700 transition"
+              >进入</button>
+              <button onClick={() => { setShowAdminLogin(false); setAdminPwInput(''); setAdminPwError(false); }} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl text-sm transition">取消</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Admin mode banner */}
+      {isAdmin && (
+        <div className="fixed bottom-0 left-0 right-0 z-[150] bg-amber-400 text-amber-900 px-6 py-2.5 flex items-center justify-between shadow-xl">
+          <span className="text-sm font-semibold">⚙ 管理员编辑模式 — 点击任意高亮文字即可编辑，失焦自动保存到 localStorage</span>
+          <div className="flex items-center gap-3">
+            <button onClick={reset} className="flex items-center gap-1 text-xs font-medium underline hover:no-underline">
+              <RotateCcw size={12} /> 重置所有修改
+            </button>
+            <button onClick={logout} className="flex items-center gap-1.5 bg-amber-900 text-amber-100 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-amber-800 transition">
+              <LogOut size={12} /> 退出
+            </button>
+          </div>
+        </div>
+      )}
     </div>
+    </AdminContext.Provider>
   );
 }
