@@ -52,19 +52,19 @@ function Bold({ text }: { text: string }) {
   return <>{parts.map((p, i) => i % 2 === 1 ? <strong key={i}>{p}</strong> : <span key={i}>{p}</span>)}</>;
 }
 
-// Section title with lines on BOTH sides: ─── 教育背景 ───
+// Section title: bold text on top, full-width rule below, both left-aligned
 function SectionTitle({ label, size }: { label: string; size: string }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '7pt', marginBottom: '5pt', marginTop: '2pt' }}>
-      <div style={{ flex: 1, height: '0.75pt', background: '#222' }} />
+    <div style={{ marginBottom: '5pt', marginTop: '2pt' }}>
       <strong style={{
-        fontSize: size, flexShrink: 0, letterSpacing: '2px',
+        display: 'block',
+        fontSize: size, letterSpacing: '1.5px',
         fontFamily: "'KaiTi','STKaiti','FangSong','STFangsong',serif",
-        fontWeight: 700,
+        fontWeight: 700, marginBottom: '2pt',
       }}>
         {label}
       </strong>
-      <div style={{ flex: 1, height: '0.75pt', background: '#222' }} />
+      <div style={{ width: '100%', height: '0.75pt', background: '#222' }} />
     </div>
   );
 }
