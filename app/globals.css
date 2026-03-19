@@ -12,7 +12,27 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Scroll-triggered fade-in animations */
+/* ── Scroll progress bar ─────────────────────────────────────────────── */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #6366f1, #3b82f6);
+  background-size: 200% 100%;
+  animation: progressShimmer 2s linear infinite;
+  z-index: 300;
+  transition: width 0.1s linear;
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+}
+
+@keyframes progressShimmer {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+/* ── Scroll-triggered fade-in animations ────────────────────────────── */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(18px);
@@ -22,6 +42,82 @@ body {
 .animate-on-scroll.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ── Animated gradient text ─────────────────────────────────────────── */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradient-text-animated {
+  background: linear-gradient(270deg, #3b82f6, #6366f1, #1d4ed8, #3b82f6);
+  background-size: 300% 300%;
+  animation: gradientShift 5s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+/* ── Typing cursor ───────────────────────────────────────────────────── */
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  -webkit-text-fill-color: #3b82f6;
+  color: #3b82f6;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ── Float animation for profile photo ──────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.float-animate {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* ── Card glow on hover ─────────────────────────────────────────────── */
+.card-glow {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.25s ease !important;
+}
+.card-glow:hover {
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.12), 0 12px 35px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-3px) !important;
+  border-color: rgb(191 219 254) !important;
+}
+
+/* ── Skill tag hover lift ────────────────────────────────────────────── */
+.skill-tag-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease !important;
+}
+.skill-tag-hover:hover {
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.18);
+}
+
+/* ── Nav link active underline ───────────────────────────────────────── */
+.nav-link-active {
+  color: #2563eb !important;
+}
+
+/* ── Hero stat chip hover ────────────────────────────────────────────── */
+.stat-chip {
+  transition: all 0.2s ease;
+}
+.stat-chip:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.1);
 }
 
 /* ── Print resume (mobile-friendly: no window.open needed) ────────────── */

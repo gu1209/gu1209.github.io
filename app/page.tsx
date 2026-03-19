@@ -255,6 +255,10 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedProject, setExpandedProject] = useState<number | null>(0);
   const [expandedStarExp, setExpandedStarExp] = useState<number | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState('');
+  const [typedSubtitle, setTypedSubtitle] = useState('');
+  const [isTypingDone, setIsTypingDone] = useState(false);
   const t = translations[lang];
 
   // Admin mode
@@ -276,11 +280,49 @@ export default function Home() {
     return () => observer.disconnect();
   }, [mounted]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const sectionObs = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id); }),
+      { threshold: 0.25, rootMargin: '-64px 0px -40% 0px' }
+    );
+    document.querySelectorAll('section[id]').forEach(el => sectionObs.observe(el));
+    return () => sectionObs.disconnect();
+  }, [mounted]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const subtitle = t.hero.subtitle;
+    setTypedSubtitle('');
+    setIsTypingDone(false);
+    let i = 0;
+    const id = setInterval(() => {
+      i++;
+      setTypedSubtitle(subtitle.slice(0, i));
+      if (i >= subtitle.length) { clearInterval(id); setIsTypingDone(true); }
+    }, 55);
+    return () => clearInterval(id);
+  }, [mounted, lang]);
+
   const toggleLanguage = () => setLang(lang === 'zh' ? 'en' : 'zh');
 
   return (
     <AdminContext.Provider value={adminCtx}>
     <div className={`min-h-screen bg-white selection:bg-primary-200 selection:text-primary-900${isAdmin ? ' admin-mode' : ''}`} style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+
+      {/* ── Scroll progress bar ── */}
+      <div id="scroll-progress" style={{ width: `${scrollProgress}%` }} />
 
       {/* ── Navigation ── */}
       <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md z-50 border-b border-gray-100 shadow-sm">
@@ -294,9 +336,9 @@ export default function Home() {
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-7">
               {(['about', 'experience', 'projects', 'skills', 'contact'] as const).map(item => (
-                <a key={item} href={`#${item}`} className="text-gray-600 hover:text-primary-600 text-sm font-medium transition-colors relative group">
+                <a key={item} href={`#${item}`} className={`text-sm font-medium transition-colors relative group ${activeSection === item ? 'text-primary-600' : 'text-gray-600 hover:text-primary-600'}`}>
                   {t.nav[item]}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all group-hover:w-full" />
+                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary-500 transition-all duration-300 ${activeSection === item ? 'w-full' : 'w-0 group-hover:w-full'}`} />
                 </a>
               ))}
               <button
@@ -382,6 +424,8 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent" />
         {/* Soft radial glow top-left */}
         <div className="absolute top-0 left-0 w-[600px] h-[400px] bg-gradient-to-br from-primary-50/70 to-transparent rounded-full blur-3xl" />
+        {/* Soft radial glow bottom-right */}
+        <div className="absolute bottom-0 right-0 w-[500px] h-[350px] bg-gradient-to-tl from-violet-50/60 to-transparent rounded-full blur-3xl" />
 
         <div className="max-w-6xl mx-auto relative">
           <div className="flex flex-col md:flex-row gap-14 items-center">
@@ -394,8 +438,14 @@ export default function Home() {
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
                 <E id={`hero.${lang}.title`} def={t.hero.title} />
               </h1>
-              <h2 className="text-xl md:text-2xl text-primary-600 font-medium leading-relaxed">
-                <E id={`hero.${lang}.subtitle`} def={t.hero.subtitle} />
+              <h2 className="text-xl md:text-2xl font-medium leading-relaxed">
+                {isAdmin ? (
+                  <E id={`hero.${lang}.subtitle`} def={t.hero.subtitle} cls="text-primary-600" />
+                ) : (
+                  <span className={`gradient-text-animated${!isTypingDone ? ' typing-cursor' : ''}`}>
+                    {typedSubtitle}
+                  </span>
+                )}
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed max-w-lg">
                 <E id={`hero.${lang}.description`} def={t.hero.description} />
@@ -408,7 +458,7 @@ export default function Home() {
                   lang === 'zh' ? 'CPA 4科通过' : 'CPA 4 Subjects',
                   lang === 'zh' ? '3个研究项目' : '3 Research Projects',
                 ].map((chip, i) => (
-                  <span key={i} className="text-sm text-gray-600 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg font-medium">
+                  <span key={i} className="stat-chip text-sm text-gray-600 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg font-medium cursor-default">
                     {chip}
                   </span>
                 ))}
@@ -436,8 +486,8 @@ export default function Home() {
 
             {/* Right: profile photo */}
             <div className="flex-shrink-0">
-              <div className="relative">
-                <div className="w-72 h-72 md:w-80 md:h-80 rounded-2xl overflow-hidden border border-gray-200 shadow-2xl">
+              <div className="relative float-animate">
+                <div className="w-72 h-72 md:w-80 md:h-80 rounded-2xl overflow-hidden border-2 border-primary-100 shadow-2xl" style={{ boxShadow: '0 0 40px rgba(59,130,246,0.15), 0 25px 50px rgba(0,0,0,0.12)' }}>
                   <img src="/images/profile.jpg" alt="Kris Gu" className="w-full h-full object-cover" />
                 </div>
                 {/* Status badge */}
@@ -464,7 +514,7 @@ export default function Home() {
           <SectionHeading label={t.about.title} />
           <div className="space-y-6">
             {/* Intro card */}
-            <div className="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm animate-on-scroll">
+            <div className="card-glow bg-white rounded-2xl p-7 border border-gray-100 shadow-sm animate-on-scroll">
               <E id={`about.${lang}.intro`} def={t.about.intro} as="p" cls="text-gray-700 leading-relaxed mb-4" />
               <div className="flex items-start gap-3 bg-primary-50 border border-primary-100 rounded-xl px-4 py-3">
                 <span className="mt-1 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-primary-500" />
@@ -477,7 +527,7 @@ export default function Home() {
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4 px-1">{t.about.education}</p>
               <div className="grid md:grid-cols-2 gap-5">
                 {/* Master's */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition animate-on-scroll" style={{ transitionDelay: '60ms' }}>
+                <div className="card-glow bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-on-scroll" style={{ transitionDelay: '60ms' }}>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl flex items-center justify-center border border-primary-100 p-1.5">
                       <img
@@ -501,7 +551,7 @@ export default function Home() {
                 </div>
 
                 {/* Bachelor's */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition animate-on-scroll" style={{ transitionDelay: '120ms' }}>
+                <div className="card-glow bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-on-scroll" style={{ transitionDelay: '120ms' }}>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl flex items-center justify-center border border-primary-100 p-1.5">
                       <img
@@ -559,7 +609,7 @@ export default function Home() {
                   </div>
 
                   {/* Card */}
-                  <div className="flex-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary-100 transition-all duration-300">
+                  <div className="card-glow flex-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-5">
                       <div className="flex items-center gap-3">
                         {/* Mobile logo */}
@@ -700,7 +750,7 @@ export default function Home() {
                         {project.tech.map((tech: string, i: number) => (
                           <span
                             key={i}
-                            className="text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full font-medium border border-primary-100"
+                            className="skill-tag-hover text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full font-medium border border-primary-100 cursor-default"
                           >
                             {tech}
                           </span>
@@ -750,7 +800,7 @@ export default function Home() {
             {skillCategories.map((cat, i) => (
               <div
                 key={cat.key}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition animate-on-scroll"
+                className="card-glow bg-white rounded-2xl p-6 shadow-sm border border-gray-100 animate-on-scroll"
                 style={{ transitionDelay: `${i * 60}ms` }}
               >
                 <div className="flex items-center gap-2.5 mb-4">
@@ -761,7 +811,7 @@ export default function Home() {
                   {(skillsData[cat.key as keyof typeof skillsData] as string[]).map((skill, j) => (
                     <span
                       key={j}
-                      className="bg-gray-50 px-3 py-1.5 rounded-lg text-gray-700 text-xs font-medium border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition cursor-default"
+                      className="skill-tag-hover bg-gray-50 px-3 py-1.5 rounded-lg text-gray-700 text-xs font-medium border border-gray-200 hover:border-primary-300 hover:bg-primary-50 cursor-default"
                     >
                       <E id={`skill.${cat.key}.${j}`} def={skill} />
                     </span>
@@ -772,7 +822,7 @@ export default function Home() {
           </div>
 
           {/* Certifications */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition mb-5 animate-on-scroll">
+          <div className="card-glow bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-5 animate-on-scroll">
             <div className="flex items-center gap-2.5 mb-4">
               <Award className="text-primary-600" size={20} />
               <h3 className="font-semibold text-gray-900 text-sm">{t.skills.certifications}</h3>
@@ -788,7 +838,7 @@ export default function Home() {
           </div>
 
           {/* Languages */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition animate-on-scroll">
+          <div className="card-glow bg-white rounded-2xl p-6 shadow-sm border border-gray-100 animate-on-scroll">
             <div className="flex items-center gap-2.5 mb-4">
               <Languages className="text-primary-600" size={20} />
               <h3 className="font-semibold text-gray-900 text-sm">{t.skills.languages}</h3>
