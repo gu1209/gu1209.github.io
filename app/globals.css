@@ -24,6 +24,28 @@ body {
   transform: translateY(0);
 }
 
+/* ── Print resume (mobile-friendly: no window.open needed) ────────────── */
+#resume-print-root {
+  display: none;
+}
+@media print {
+  /* Hide everything on the page */
+  body > * {
+    display: none !important;
+  }
+  /* Show only the resume content */
+  #resume-print-root {
+    display: block !important;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: auto;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+}
+
 /* ── Admin mode editable fields ───────────────────────────────────────── */
 .admin-mode [data-admin-field] {
   outline: 1.5px dashed #f59e0b;

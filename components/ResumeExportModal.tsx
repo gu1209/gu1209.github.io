@@ -292,15 +292,22 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
   const doPrint = () => {
     const el = document.getElementById('resume-preview-content');
     if (!el) return;
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
-<title>${isZh ? '顾杰_简历' : 'Kris_Gu_Resume'}</title>
-<style>
-  @page { size: A4 portrait; margin: 0; }
-  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; box-sizing: border-box; }
-  body { margin: 0; padding: 0; background: #fff; }
-</style></head><body>${el.outerHTML}</body></html>`;
-    const win = window.open('', '_blank', 'width=900,height=750');
-    if (win) { win.document.write(html); win.document.close(); setTimeout(() => { win.focus(); win.print(); }, 350); }
+
+    // Use a DOM-based print approach — works on mobile (no window.open needed)
+    let root = document.getElementById('resume-print-root');
+    if (!root) {
+      root = document.createElement('div');
+      root.id = 'resume-print-root';
+      document.body.appendChild(root);
+    }
+    // Inject resume HTML into the print root
+    root.innerHTML = el.outerHTML;
+
+    // Trigger the browser's native print dialog
+    window.print();
+
+    // Clean up after print dialog closes
+    setTimeout(() => { if (root) root.innerHTML = ''; }, 3000);
   };
 
   const handlePrintClick = () => { setPwInput(''); setPwError(false); setPwVisible(true); };
