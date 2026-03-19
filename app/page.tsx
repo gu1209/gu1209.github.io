@@ -411,21 +411,24 @@ export default function Home() {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="pt-28 pb-20 px-6 relative overflow-hidden bg-white">
-        {/* Dot-grid background decoration */}
-        <div
-          className="absolute inset-0 opacity-[0.4]"
-          style={{
-            backgroundImage: 'radial-gradient(circle, #cbd5e1 1px, transparent 1px)',
-            backgroundSize: '28px 28px',
-          }}
-        />
-        {/* Fade to white at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent" />
-        {/* Soft radial glow top-left */}
-        <div className="absolute top-0 left-0 w-[600px] h-[400px] bg-gradient-to-br from-primary-50/70 to-transparent rounded-full blur-3xl" />
-        {/* Soft radial glow bottom-right */}
-        <div className="absolute bottom-0 right-0 w-[500px] h-[350px] bg-gradient-to-tl from-violet-50/60 to-transparent rounded-full blur-3xl" />
+      <section className="pt-28 pb-20 px-6 relative bg-white">
+        {/* Background decorations — overflow-hidden scoped here so content isn't clipped */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Dot-grid background decoration */}
+          <div
+            className="absolute inset-0 opacity-[0.4]"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #cbd5e1 1px, transparent 1px)',
+              backgroundSize: '28px 28px',
+            }}
+          />
+          {/* Fade to white at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent" />
+          {/* Soft radial glow top-left */}
+          <div className="absolute top-0 left-0 w-[600px] h-[400px] bg-gradient-to-br from-primary-50/70 to-transparent rounded-full blur-3xl" />
+          {/* Soft radial glow bottom-right */}
+          <div className="absolute bottom-0 right-0 w-[500px] h-[350px] bg-gradient-to-tl from-violet-50/60 to-transparent rounded-full blur-3xl" />
+        </div>
 
         <div className="max-w-6xl mx-auto relative">
           <div className="flex flex-col md:flex-row gap-14 items-center">
