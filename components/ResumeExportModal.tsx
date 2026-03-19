@@ -262,6 +262,9 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
   const [includePhoto, setIncludePhoto] = useState(true);
   const [fontSize, setFontSize] = useState(9);
   const [objective, setObjective] = useState(isZh ? '财务BP实习生' : 'Finance / Data Analytics Intern');
+  const [pwVisible, setPwVisible] = useState(false);
+  const [pwInput, setPwInput] = useState('');
+  const [pwError, setPwError] = useState(false);
 
   if (!isOpen) return null;
 
@@ -269,7 +272,7 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
     const s = new Set(set); s.has(idx) ? s.delete(idx) : s.add(idx); return s;
   };
 
-  const handlePrint = () => {
+  const doPrint = () => {
     const el = document.getElementById('resume-preview-content');
     if (!el) return;
     const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
@@ -282,6 +285,24 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
 <body>${el.outerHTML}</body></html>`;
     const win = window.open('', '_blank', 'width=900,height=750');
     if (win) { win.document.write(html); win.document.close(); setTimeout(() => { win.focus(); win.print(); }, 350); }
+  };
+
+  const handlePrintClick = () => {
+    setPwInput('');
+    setPwError(false);
+    setPwVisible(true);
+  };
+
+  const handlePwSubmit = () => {
+    if (pwInput === '1209') {
+      setPwVisible(false);
+      setPwInput('');
+      setPwError(false);
+      doPrint();
+    } else {
+      setPwError(true);
+      setPwInput('');
+    }
   };
 
   const SCALE = 0.62;
@@ -402,12 +423,37 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
         </div>
 
         {/* Footer */}
-        <div className="border-t border-gray-100 px-6 py-3.5 flex justify-end gap-3 flex-shrink-0 bg-gray-50/50">
-          <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm">{isZh ? '取消' : 'Cancel'}</button>
-          <button onClick={handlePrint} className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl hover:bg-primary-700 transition font-medium text-sm shadow-sm">
-            <Printer size={16} />
-            {isZh ? '打印 / 导出 PDF' : 'Print / Save as PDF'}
-          </button>
+        <div className="border-t border-gray-100 px-6 py-3.5 flex-shrink-0 bg-gray-50/50">
+          {/* Password prompt */}
+          {pwVisible && (
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-sm text-gray-600 flex-shrink-0">{isZh ? '请输入密码：' : 'Enter password:'}</span>
+              <input
+                type="password"
+                value={pwInput}
+                onChange={e => { setPwInput(e.target.value); setPwError(false); }}
+                onKeyDown={e => e.key === 'Enter' && handlePwSubmit()}
+                autoFocus
+                className={`w-32 text-sm border rounded-lg px-2.5 py-1.5 focus:outline-none ${pwError ? 'border-red-400 bg-red-50 focus:border-red-500' : 'border-gray-200 focus:border-primary-400'}`}
+                placeholder="••••"
+              />
+              <button onClick={handlePwSubmit} className="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700 transition font-medium">
+                {isZh ? '确认' : 'OK'}
+              </button>
+              <button onClick={() => { setPwVisible(false); setPwError(false); }} className="px-3 py-1.5 text-gray-500 hover:bg-gray-100 rounded-lg text-sm transition">
+                {isZh ? '取消' : 'Cancel'}
+              </button>
+              {pwError && <span className="text-xs text-red-500 font-medium">{isZh ? '密码错误' : 'Wrong password'}</span>}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-3">
+            <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm">{isZh ? '关闭' : 'Close'}</button>
+            <button onClick={handlePrintClick} className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl hover:bg-primary-700 transition font-medium text-sm shadow-sm">
+              <Printer size={16} />
+              {isZh ? '打印 / 导出 PDF' : 'Print / Save as PDF'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
