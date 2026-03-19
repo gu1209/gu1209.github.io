@@ -273,7 +273,7 @@ export default function Home() {
   useEffect(() => {
     if (!mounted) return;
     const observer = new IntersectionObserver(
-      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      (entries) => entries.forEach(e => { if (e.isIntersecting) (e.target as HTMLElement).dataset.visible = '1'; }),
       { threshold: 0.07 }
     );
     document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));

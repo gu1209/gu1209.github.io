@@ -39,7 +39,7 @@ body {
   transition: opacity 0.55s ease, transform 0.55s ease;
 }
 
-.animate-on-scroll.visible {
+.animate-on-scroll[data-visible] {
   opacity: 1;
   transform: translateY(0);
 }
