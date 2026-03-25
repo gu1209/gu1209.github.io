@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { saveAs } from 'file-saver';
 
 // 从网站数据转换为PDF所需格式

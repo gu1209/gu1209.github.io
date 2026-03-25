@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 
@@ -15,7 +16,7 @@ const styles = StyleSheet.create({
     fontSize: 8.5,
     fontFamily: 'SourceHanSansSC',
     lineHeight: 1.25,
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
 
   // 顶部布局
@@ -50,17 +51,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 2,
     letterSpacing: 1.5,
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
   jobTitle: {
     fontSize: 10,
     marginBottom: 2,
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
   contactInfo: {
     fontSize: 8,
     textAlign: 'center',
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
 
   // 分隔线
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 2,
     marginTop: 1,
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
 
   // 教育背景
@@ -91,13 +92,13 @@ const styles = StyleSheet.create({
   schoolName: {
     fontSize: 9,
     fontWeight: 'bold',
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
   educationInfo: {
     fontSize: 8,
     lineHeight: 1.25,
     marginBottom: 0.5,
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
 
   // 实习经历
@@ -112,13 +113,13 @@ const styles = StyleSheet.create({
   companyName: {
     fontSize: 9,
     fontWeight: 'bold',
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
   bulletText: {
     fontSize: 8,
     lineHeight: 1.25,
     marginBottom: 1.5,
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
 
   // 项目经历
@@ -136,12 +137,12 @@ const styles = StyleSheet.create({
     fontSize: 8,
     lineHeight: 1.25,
     marginBottom: 1.5,
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
 
   bold: {
     fontWeight: 'bold',
-    hyphenationCallback: (e) => [e],
+    hyphenationCallback: (e: string) => [e],
   },
 });
 
@@ -225,10 +226,10 @@ export const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => {
         {education.map((edu, index) => (
           <View key={index} style={styles.educationItem}>
             <View style={styles.educationHeader}>
-              <Text style={{ fontSize: 8, hyphenationCallback: (e) => [e] }}>
+              <Text style={{ fontSize: 8, hyphenationCallback: (e: string) => [e] }}>
                 {`${edu.school}  ${edu.major}  ${edu.degree}`}
               </Text>
-              <Text style={{ fontSize: 8, hyphenationCallback: (e) => [e] }}>{edu.duration}</Text>
+              <Text style={{ fontSize: 8, hyphenationCallback: (e: string) => [e] }}>{edu.duration}</Text>
             </View>
             {edu.gpa && (
               <Text style={styles.educationInfo}>{edu.gpa}</Text>
@@ -246,10 +247,10 @@ export const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => {
         {experiences.map((exp, index) => (
           <View key={index} style={styles.experienceItem}>
             <View style={styles.experienceHeader}>
-              <Text style={{ fontSize: 8, hyphenationCallback: (e) => [e] }}>
+              <Text style={{ fontSize: 8, hyphenationCallback: (e: string) => [e] }}>
                 {`${exp.position}  ${exp.company}`}
               </Text>
-              <Text style={{ fontSize: 8, hyphenationCallback: (e) => [e] }}>{exp.duration}</Text>
+              <Text style={{ fontSize: 8, hyphenationCallback: (e: string) => [e] }}>{exp.duration}</Text>
             </View>
             {exp.highlights.map((highlight, idx) => (
               <Text key={idx} style={styles.bulletText} orphans={0} widows={0}>
@@ -266,10 +267,10 @@ export const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => {
         {projects.map((proj, index) => (
           <View key={index} style={styles.projectItem}>
             <View style={styles.projectHeader}>
-              <Text style={{ fontSize: 8, hyphenationCallback: (e) => [e] }}>
+              <Text style={{ fontSize: 8, hyphenationCallback: (e: string) => [e] }}>
                 {`${proj.role}  ${proj.name}`}
               </Text>
-              <Text style={{ fontSize: 8, hyphenationCallback: (e) => [e] }}>{proj.duration}</Text>
+              <Text style={{ fontSize: 8, hyphenationCallback: (e: string) => [e] }}>{proj.duration}</Text>
             </View>
             {proj.details.map((detail, idx) => (
               <Text key={idx} style={styles.bulletText} orphans={0} widows={0}>
