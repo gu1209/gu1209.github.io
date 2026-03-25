@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { X, Printer, Minus, Plus, ChevronDown, Pencil } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { X, Printer, Minus, Plus, ChevronDown, Pencil, FileDown, Upload } from 'lucide-react';
 import { EXP_CONTENT, PROJ_CONTENT } from '@/lib/resumeContent';
+import { exportResumeToPDF } from '@/lib/exportResumePDF';
 
 interface Props {
   isOpen: boolean; onClose: () => void;
@@ -10,8 +11,10 @@ interface Props {
 }
 
 // ── Font stacks ──────────────────────────────────────────────────────────
-const SONG = "'SimSun','STSong','NSimSun','Times New Roman',serif";          // 宋体 — body text
-const HEI  = "'SimHei','STHeiti','Microsoft YaHei Black',sans-serif";        // 黑体 — headings & bold topics
+const SONG = "'SimSun','STSong','NSimSun','Times New Roman',serif";
+const HEI  = "'SimHei','STHeiti','Microsoft YaHei Black',sans-serif";
+const TJU_BLUE = '#00518e'; // from tju_logo.svg: rgb(0%, 31.76%, 55.69%)
+const SEP_W = '1.5pt';     // shared thickness: section underlines + contact separators
 
 // ── Education data ────────────────────────────────────────────────────────
 const EDU = {
@@ -62,45 +65,76 @@ function Bold({ text, bodySize }: { text: string; bodySize: string }) {
   );
 }
 
-// ── Section title: 黑体 text, full-width rule below ────────────────────
+// ── Section title: blue 黑体, blue thick rule below ─────────────────────
 function Sec({ label, fs }: { label: string; fs: string }) {
   return (
     <div style={{ marginBottom: '4pt', marginTop: '0' }}>
-      <div style={{ fontFamily: HEI, fontWeight: 700, fontSize: fs, letterSpacing: '0.5px', lineHeight: 1.25, marginBottom: '2pt' }}>
+      <div style={{ fontFamily: HEI, fontWeight: 700, fontSize: fs, letterSpacing: '0.5px', lineHeight: 1.25, marginBottom: '2pt', color: TJU_BLUE }}>
         {label}
       </div>
-      <div style={{ width: '100%', height: '1pt', background: '#000' }} />
+      <div style={{ width: '100%', height: 0, borderTop: SEP_W + ' solid ' + TJU_BLUE }} />
     </div>
   );
 }
+
+// ── Vertical contact separator (same thickness as section underline) ──────
+function VSep() {
+  return (
+    <span style={{
+      display: 'inline-block', width: 0, height: '1em',
+      borderLeft: SEP_W + ' solid ' + TJU_BLUE,
+      verticalAlign: 'middle', margin: '0 5pt',
+    }} />
+  );
+}
+
+// ── Per-section font size stepper ─────────────────────────────────────────
+function Stepper({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', padding: '2px 0' }}>
+      <span style={{ color: '#6b7280', flex: 1 }}>{label}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '2px', flexShrink: 0 }}>
+        <button onClick={() => onChange(Math.max(-3, value - 1))} className="w-5 h-5 rounded border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-gray-500"><Minus size={8} /></button>
+        <span style={{ width: '28px', textAlign: 'center', fontFamily: 'monospace', color: '#374151' }}>{value > 0 ? '+' : ''}{value}</span>
+        <button onClick={() => onChange(Math.min(3, value + 1))} className="w-5 h-5 rounded border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-gray-500"><Plus size={8} /></button>
+      </div>
+    </div>
+  );
+}
+
+type SectionFs = { name: number; contact: number; edu: number; exp: number; proj: number; skills: number };
 
 // ── Resume Preview ────────────────────────────────────────────────────────
 function ResumePreview({
   experiences, projects, selectedExps, selectedProjects,
   includeSkills, includeSelfEval, fontSize, lang,
   objective, includePhoto, expBullets, projBullets, age, location,
+  phone, email, logoUrl, sectionFs,
 }: {
   experiences: any[]; projects: any[]; selectedExps: Set<number>; selectedProjects: Set<number>;
   includeSkills: boolean; includeSelfEval: boolean; fontSize: number;
   lang: 'zh' | 'en'; objective: string; includePhoto: boolean;
   expBullets: Record<string, [string, string]>; projBullets: Record<string, [string, string]>;
   age: string; location: string;
+  phone: string; email: string; logoUrl: string;
+  sectionFs: SectionFs;
 }) {
   const isZh = lang === 'zh';
   const expList = experiences.filter((_, i) => selectedExps.has(i));
   const projList = projects.filter((_, i) => selectedProjects.has(i));
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
-  const f = (d = 0) => `${fontSize + d}pt`;
+  const sf = (section: keyof SectionFs, delta = 0) => `${fontSize + sectionFs[section] + delta}pt`;
+  const effectiveLogoUrl = logoUrl || `${origin}/logos/tju_logo.svg`;
 
   const selfEval = isZh
     ? '具备金融专业背景与CPA/CTA证书体系知识，熟练掌握Python数据分析与机器学习，能将LLM应用于金融实际场景。实习经历覆盖资金分析、资产交易、项目管理、行业研究等多个领域，学习迅速、注重量化成果、善于跨部门协作。'
     : 'Strong finance foundation with CPA/CTA credentials, proficient in Python analytics and ML, experienced in applying LLMs to financial scenarios. Fast learner, results-driven, skilled in cross-functional collaboration.';
 
-  const bulletRow = (b: string, bi: number) => (
+  const bulletRow = (b: string, bi: number, bodyFs: string) => (
     <div key={bi} style={{ display: 'flex', alignItems: 'flex-start', gap: '4pt', marginBottom: '2pt', paddingLeft: '2pt' }}>
-      <span style={{ flexShrink: 0, fontFamily: SONG, fontSize: f(0.5), lineHeight: 1.3, marginTop: '0.5pt' }}>●</span>
-      <span style={{ fontFamily: SONG, fontSize: f(), lineHeight: 1.35 }}>
-        <Bold text={b} bodySize={f()} />
+      <span style={{ flexShrink: 0, fontFamily: SONG, fontSize: bodyFs, lineHeight: 1.4, marginTop: '1pt' }}>•</span>
+      <span style={{ fontFamily: SONG, fontSize: bodyFs, lineHeight: 1.35 }}>
+        <Bold text={b} bodySize={bodyFs} />
       </span>
     </div>
   );
@@ -108,64 +142,62 @@ function ResumePreview({
   return (
     <div id="resume-preview-content" style={{
       width: '794px', minHeight: '1123px', background: '#fff',
-      fontFamily: SONG, fontSize: f(), lineHeight: 1.4, color: '#000',
+      fontFamily: SONG, fontSize: `${fontSize}pt`, lineHeight: 1.4, color: '#000',
       padding: '20pt 28pt 16pt', boxSizing: 'border-box',
     }}>
 
       {/* ── Header ── */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8pt', marginBottom: '4pt' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8pt', marginBottom: '6pt' }}>
 
-        {/* TJU logo */}
-        <img src={`${origin}/logos/tju_logo.svg`} alt="TJU"
+        {/* Logo (supports custom upload) */}
+        <img src={effectiveLogoUrl} alt="logo"
           style={{ width: '44pt', height: '44pt', objectFit: 'contain', flexShrink: 0, marginTop: '2pt' }} />
 
         {/* Center: name + objective + contact */}
         <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{ fontFamily: HEI, fontWeight: 900, fontSize: f(19), letterSpacing: '8px', lineHeight: 1.1, marginBottom: '3pt' }}>
+          <div style={{ fontFamily: HEI, fontWeight: 900, fontSize: sf('name', 19), letterSpacing: '8px', lineHeight: 1.1, marginBottom: '3pt' }}>
             {isZh ? '顾杰' : 'Kris Gu'}
           </div>
           {objective.trim() && (
-            <div style={{ fontFamily: SONG, fontWeight: 700, fontSize: f(1.5), marginBottom: '4pt' }}>
+            <div style={{ fontFamily: SONG, fontWeight: 700, fontSize: sf('contact', 1.5), marginBottom: '4pt' }}>
               {isZh ? '求职意向：' : 'Objective: '}{objective.trim()}
             </div>
           )}
-          <div style={{ fontFamily: SONG, fontSize: f(-0.5), lineHeight: 1.5 }}>
-            <strong style={{ fontFamily: HEI }}>(+86)19292244363</strong>
-            {'  │  '}gujie_kris@163.com
-            {'  │  '}<strong style={{ fontFamily: HEI }}>{isZh ? `年龄：${age}` : `Age: ${age}`}</strong>
-            {'  │  '}<strong style={{ fontFamily: HEI }}>{isZh ? `现居地：${location}` : `Location: ${location}`}</strong>
+          {/* Contact row: flex separators with same style as section underlines */}
+          <div style={{ fontFamily: SONG, fontSize: sf('contact', -0.5), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <strong style={{ fontFamily: HEI }}>{phone}</strong>
+            <VSep />
+            <a href={`mailto:${email}`} style={{ color: '#000', textDecoration: 'none' }}>{email}</a>
+            <VSep />
+            <strong style={{ fontFamily: HEI }}>{isZh ? `年龄：${age}` : `Age: ${age}`}</strong>
+            <VSep />
+            <strong style={{ fontFamily: HEI }}>{isZh ? `现居地：${location}` : `Location: ${location}`}</strong>
           </div>
         </div>
 
-        {/* Photo */}
+        {/* Photo — no border */}
         {includePhoto && (
           <img src={`${origin}/images/profile.jpg`} alt="photo"
-            style={{ width: '52pt', height: '66pt', objectFit: 'cover', border: '0.5pt solid #aaa', flexShrink: 0, marginTop: '2pt' }} />
+            style={{ width: '52pt', height: '66pt', objectFit: 'cover', flexShrink: 0, marginTop: '2pt' }} />
         )}
       </div>
 
-      {/* Full-width rule under header */}
-      <div style={{ width: '100%', height: '1.5pt', background: '#000', marginBottom: '6pt' }} />
-
       {/* ── Education ── */}
       <div style={{ marginBottom: '6pt' }}>
-        <Sec label={isZh ? '教育背景' : 'Education'} fs={f(1.5)} />
+        <Sec label={isZh ? '教育背景' : 'Education'} fs={sf('edu', 1.5)} />
         {[EDU.master, EDU.bachelor].map((edu, i) => (
           <div key={i} style={{ marginBottom: i === 0 ? '4pt' : 0 }}>
-            {/* 4-column row */}
             <div style={{ display: 'flex', alignItems: 'baseline', lineHeight: 1.35 }}>
-              <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: f(0.5), flex: '0 0 36%' }}>{edu.school[isZh ? 'zh' : 'en']}</span>
-              <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: f(0.5), flex: '0 0 14%', textAlign: 'center' }}>{edu.major[isZh ? 'zh' : 'en']}</span>
-              <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: f(0.5), flex: '0 0 14%', textAlign: 'center' }}>{edu.degree[isZh ? 'zh' : 'en']}</span>
-              <span style={{ fontFamily: SONG, fontSize: f(-0.5), flex: 1, textAlign: 'right', color: '#222' }}>{edu.period}</span>
+              <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: sf('edu', 0.5), flex: '0 0 36%' }}>{edu.school[isZh ? 'zh' : 'en']}</span>
+              <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: sf('edu', 0.5), flex: '0 0 14%', textAlign: 'center' }}>{edu.major[isZh ? 'zh' : 'en']}</span>
+              <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: sf('edu', 0.5), flex: '0 0 14%', textAlign: 'center' }}>{edu.degree[isZh ? 'zh' : 'en']}</span>
+              <span style={{ fontFamily: SONG, fontSize: sf('edu', -0.5), flex: 1, textAlign: 'right', color: '#222' }}>{edu.period}</span>
             </div>
-            {/* GPA */}
-            <div style={{ fontFamily: SONG, fontSize: f(-0.5), lineHeight: 1.35, paddingLeft: '1pt' }}>
-              <Bold text={edu.gpa[isZh ? 'zh' : 'en']} bodySize={f(-0.5)} />
+            <div style={{ fontFamily: SONG, fontSize: sf('edu', -0.5), lineHeight: 1.35, paddingLeft: '1pt' }}>
+              <Bold text={edu.gpa[isZh ? 'zh' : 'en']} bodySize={sf('edu', -0.5)} />
             </div>
-            {/* Courses */}
-            <div style={{ fontFamily: SONG, fontSize: f(-0.5), lineHeight: 1.35, paddingLeft: '1pt' }}>
-              <Bold text={edu.courses[isZh ? 'zh' : 'en']} bodySize={f(-0.5)} />
+            <div style={{ fontFamily: SONG, fontSize: sf('edu', -0.5), lineHeight: 1.35, paddingLeft: '1pt' }}>
+              <Bold text={edu.courses[isZh ? 'zh' : 'en']} bodySize={sf('edu', -0.5)} />
             </div>
           </div>
         ))}
@@ -174,7 +206,7 @@ function ResumePreview({
       {/* ── Experience ── */}
       {expList.length > 0 && (
         <div style={{ marginBottom: '6pt' }}>
-          <Sec label={isZh ? '实习经历' : 'Internship Experience'} fs={f(1.5)} />
+          <Sec label={isZh ? '实习经历' : 'Internship Experience'} fs={sf('exp', 1.5)} />
           {expList.map((exp, i) => {
             const role    = isZh ? exp.role    : exp.roleEn;
             const company = isZh ? exp.company : exp.companyEn;
@@ -182,13 +214,12 @@ function ResumePreview({
             const bullets = expBullets[exp.company] || ['', ''];
             return (
               <div key={i} style={{ marginBottom: i < expList.length - 1 ? '5pt' : 0 }}>
-                {/* 3-column header */}
                 <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '2pt' }}>
-                  <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: f(0.5), flex: '0 0 28%' }}>{role}</span>
-                  <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: f(0.5), flex: '0 0 44%', textAlign: 'center' }}>{company}</span>
-                  <span style={{ fontFamily: SONG, fontSize: f(-0.5), flex: 1, textAlign: 'right', color: '#222' }}>{period}</span>
+                  <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: sf('exp', 0.5), flex: '0 0 28%' }}>{role}</span>
+                  <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: sf('exp', 0.5), flex: '0 0 44%', textAlign: 'center' }}>{company}</span>
+                  <span style={{ fontFamily: SONG, fontSize: sf('exp', -0.5), flex: 1, textAlign: 'right', color: '#222' }}>{period}</span>
                 </div>
-                {bullets.filter(Boolean).map(bulletRow)}
+                {bullets.filter(Boolean).map((b, bi) => bulletRow(b, bi, sf('exp')))}
               </div>
             );
           })}
@@ -198,23 +229,22 @@ function ResumePreview({
       {/* ── Projects ── */}
       {projList.length > 0 && (
         <div style={{ marginBottom: '6pt' }}>
-          <Sec label={isZh ? '项目经历' : 'Research Projects'} fs={f(1.5)} />
+          <Sec label={isZh ? '项目经历' : 'Research Projects'} fs={sf('proj', 1.5)} />
           {projList.map((proj, i) => {
             const role   = isZh ? '核心参与者' : 'Core Participant';
             const title  = isZh ? proj.title   : proj.titleEn;
             const status = isZh ? proj.status  : proj.statusEn;
             const bullets = projBullets[proj.title] || ['', ''];
-            // Clean up status to date range format
             const dateMatch = status.match(/\d{4}[\.\-]\d{2}.*\d{4}[\.\-]\d{2}|进行中|Ongoing/);
             const periodStr = dateMatch ? dateMatch[0] : status;
             return (
               <div key={i} style={{ marginBottom: i < projList.length - 1 ? '5pt' : 0 }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', marginBottom: '2pt' }}>
-                  <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: f(0.5), flex: '0 0 20%' }}>{role}</span>
-                  <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: f(0.5), flex: '0 0 52%', textAlign: 'center' }}>{title}</span>
-                  <span style={{ fontFamily: SONG, fontSize: f(-0.5), flex: 1, textAlign: 'right', color: '#222' }}>{periodStr}</span>
+                  <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: sf('proj', 0.5), flex: '0 0 20%' }}>{role}</span>
+                  <span style={{ fontFamily: HEI, fontWeight: 700, fontSize: sf('proj', 0.5), flex: '0 0 52%', textAlign: 'center' }}>{title}</span>
+                  <span style={{ fontFamily: SONG, fontSize: sf('proj', -0.5), flex: 1, textAlign: 'right', color: '#222' }}>{periodStr}</span>
                 </div>
-                {bullets.filter(Boolean).map(bulletRow)}
+                {bullets.filter(Boolean).map((b, bi) => bulletRow(b, bi, sf('proj')))}
               </div>
             );
           })}
@@ -224,11 +254,11 @@ function ResumePreview({
       {/* ── Skills ── */}
       {includeSkills && (
         <div style={{ marginBottom: '6pt' }}>
-          <Sec label={isZh ? '技能＆证书' : 'Skills & Certifications'} fs={f(1.5)} />
+          <Sec label={isZh ? '技能＆证书' : 'Skills & Certifications'} fs={sf('skills', 1.5)} />
           {(isZh ? SKILLS_ZH : SKILLS_EN).map(({ topic, body }, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '4pt', marginBottom: '2pt', paddingLeft: '2pt' }}>
-              <span style={{ flexShrink: 0, fontFamily: SONG, fontSize: f(0.5), lineHeight: 1.3, marginTop: '0.5pt' }}>●</span>
-              <span style={{ fontFamily: SONG, fontSize: f(), lineHeight: 1.35 }}>
+              <span style={{ flexShrink: 0, fontFamily: SONG, fontSize: sf('skills'), lineHeight: 1.4, marginTop: '1pt' }}>•</span>
+              <span style={{ fontFamily: SONG, fontSize: sf('skills'), lineHeight: 1.35 }}>
                 <strong style={{ fontFamily: HEI, fontWeight: 700 }}>{topic}：</strong>{body}
               </span>
             </div>
@@ -239,8 +269,8 @@ function ResumePreview({
       {/* ── Self-eval ── */}
       {includeSelfEval && (
         <div>
-          <Sec label={isZh ? '自我评价' : 'Self-Evaluation'} fs={f(1.5)} />
-          <div style={{ fontFamily: SONG, fontSize: f(), lineHeight: 1.35, paddingLeft: '3pt' }}>{selfEval}</div>
+          <Sec label={isZh ? '自我评价' : 'Self-Evaluation'} fs={`${fontSize + 1.5}pt`} />
+          <div style={{ fontFamily: SONG, fontSize: `${fontSize}pt`, lineHeight: 1.35, paddingLeft: '3pt' }}>{selfEval}</div>
         </div>
       )}
     </div>
@@ -259,7 +289,19 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
   const [fontSize,         setFontSize]         = useState(9);
   const [objective,        setObjective]        = useState(isZh ? '财务BP实习生' : 'Finance / Data Analytics Intern');
   const [age,              setAge]              = useState('22');
-  const [location,         setLocation]        = useState(isZh ? '天津' : 'Tianjin');
+  const [location,         setLocation]         = useState(isZh ? '天津' : 'Tianjin');
+  const [phone,            setPhone]            = useState('(+86)19292244363');
+  const [email,            setEmail]            = useState('gujie_kris@163.com');
+  const [logoUrl,          setLogoUrl]          = useState('');
+  const [sectionFs,        setSectionFs]        = useState<SectionFs>({ name: 0, contact: 0, edu: 0, exp: 0, proj: 0, skills: 0 });
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => setLogoUrl(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
 
   // Editable bullets
   const [expBullets, setExpBullets] = useState<Record<string, [string, string]>>(() => {
@@ -286,8 +328,9 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
 
   if (!isOpen) return null;
 
-  const toggleSel = (set: Set<number>, idx: number) => { const s = new Set(set); s.has(idx) ? s.delete(idx) : s.add(idx); return s; };
+  const toggleSel  = (set: Set<number>, idx: number) => { const s = new Set(set); s.has(idx) ? s.delete(idx) : s.add(idx); return s; };
   const toggleEdit = (key: string) => { const s = new Set(editOpen); s.has(key) ? s.delete(key) : s.add(key); setEditOpen(s); };
+  const setSf = (k: keyof SectionFs, v: number) => setSectionFs(prev => ({ ...prev, [k]: v }));
 
   const doPrint = () => {
     const el = document.getElementById('resume-preview-content');
@@ -375,6 +418,12 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
             {/* Personal info */}
             <div className="space-y-2">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{isZh ? '个人信息' : 'Personal Info'}</p>
+              <input value={phone} onChange={e => setPhone(e.target.value)}
+                className="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-primary-400"
+                placeholder={isZh ? '电话' : 'Phone'} />
+              <input value={email} onChange={e => setEmail(e.target.value)}
+                className="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-primary-400"
+                placeholder={isZh ? '邮箱' : 'Email'} />
               <input value={objective} onChange={e => setObjective(e.target.value)}
                 className="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-primary-400"
                 placeholder={isZh ? '求职意向' : 'Objective'} />
@@ -388,16 +437,46 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
               </div>
             </div>
 
-            {/* Photo + font */}
-            <div className="flex items-center justify-between">
+            {/* Logo upload + photo toggle */}
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{isZh ? '校徽与照片' : 'Logo & Photo'}</p>
+              <div className="flex items-center gap-2">
+                <button onClick={() => logoInputRef.current?.click()}
+                  className="flex items-center gap-1.5 text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 hover:bg-gray-50 text-gray-600 transition">
+                  <Upload size={12} />
+                  {logoUrl ? (isZh ? '已上传校徽' : 'Logo uploaded') : (isZh ? '上传校徽' : 'Upload logo')}
+                </button>
+                {logoUrl && (
+                  <button onClick={() => setLogoUrl('')} className="text-xs text-red-400 hover:text-red-600 transition">
+                    {isZh ? '恢复默认' : 'Reset'}
+                  </button>
+                )}
+                <input ref={logoInputRef} type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+              </div>
               <label className="flex items-center gap-1.5 cursor-pointer text-sm text-gray-700">
                 <input type="checkbox" checked={includePhoto} onChange={e => setIncludePhoto(e.target.checked)} className="w-4 h-4 accent-blue-600" />
-                {isZh ? '证件照' : 'Photo'}
+                {isZh ? '显示证件照' : 'Show photo'}
               </label>
-              <div className="flex items-center gap-1">
-                <button onClick={() => setFontSize(s => Math.max(7, s - 1))} className="w-6 h-6 rounded border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-gray-500"><Minus size={11} /></button>
-                <span className="text-xs font-semibold w-7 text-center">{fontSize}pt</span>
-                <button onClick={() => setFontSize(s => Math.min(11, s + 1))} className="w-6 h-6 rounded border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-gray-500"><Plus size={11} /></button>
+            </div>
+
+            {/* Font sizes: global base + per-section */}
+            <div className="space-y-1">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{isZh ? '字体大小' : 'Font Sizes'}</p>
+              <div className="flex items-center justify-between text-xs py-0.5">
+                <span className="text-gray-700 font-medium">{isZh ? '全局基准' : 'Base'}</span>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => setFontSize(s => Math.max(7, s - 1))} className="w-5 h-5 rounded border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-gray-500"><Minus size={8} /></button>
+                  <span className="w-8 text-center font-mono text-gray-700">{fontSize}pt</span>
+                  <button onClick={() => setFontSize(s => Math.min(11, s + 1))} className="w-5 h-5 rounded border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-gray-500"><Plus size={8} /></button>
+                </div>
+              </div>
+              <div className="border-t border-gray-100 pt-1 space-y-0.5">
+                <Stepper label={isZh ? '姓名' : 'Name'}        value={sectionFs.name}    onChange={v => setSf('name', v)} />
+                <Stepper label={isZh ? '联系信息' : 'Contact'}  value={sectionFs.contact} onChange={v => setSf('contact', v)} />
+                <Stepper label={isZh ? '教育背景' : 'Education'} value={sectionFs.edu}    onChange={v => setSf('edu', v)} />
+                <Stepper label={isZh ? '实习经历' : 'Experience'} value={sectionFs.exp}   onChange={v => setSf('exp', v)} />
+                <Stepper label={isZh ? '项目经历' : 'Projects'}  value={sectionFs.proj}   onChange={v => setSf('proj', v)} />
+                <Stepper label={isZh ? '技能证书' : 'Skills'}    value={sectionFs.skills} onChange={v => setSf('skills', v)} />
               </div>
             </div>
 
@@ -484,6 +563,7 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
                   fontSize={fontSize} lang={lang} objective={objective}
                   includePhoto={includePhoto} expBullets={expBullets} projBullets={projBullets}
                   age={age} location={location}
+                  phone={phone} email={email} logoUrl={logoUrl} sectionFs={sectionFs}
                 />
               </div>
             </div>
@@ -507,9 +587,24 @@ export default function ResumeExportModal({ isOpen, onClose, experiences, projec
           )}
           <div className="flex justify-end gap-3">
             <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm">{isZh ? '关闭' : 'Close'}</button>
+            <button
+              onClick={async () => {
+                try {
+                  const selectedExpList = experiences.filter((_, i) => selectedExps.has(i));
+                  const selectedProjList = projects.filter((_, i) => selectedProjects.has(i));
+                  await exportResumeToPDF(selectedExpList, selectedProjList);
+                } catch (error) {
+                  alert(isZh ? 'PDF导出失败，请重试' : 'PDF export failed, please try again');
+                }
+              }}
+              className="flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl hover:bg-green-700 transition font-medium text-sm shadow-sm"
+            >
+              <FileDown size={16} />
+              {isZh ? '导出标准PDF' : 'Export Standard PDF'}
+            </button>
             <button onClick={handlePrintClick} className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl hover:bg-primary-700 transition font-medium text-sm shadow-sm">
               <Printer size={16} />
-              {isZh ? '打印 / 导出 PDF' : 'Print / Save as PDF'}
+              {isZh ? '浏览器打印' : 'Browser Print'}
             </button>
           </div>
         </div>
