@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect, createContext, useContext } from 'react';
-import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles, Lock, RotateCcw, LogOut } from 'lucide-react';
+import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles, Lock, RotateCcw, LogOut, BookOpen, ExternalLink, Plus, Trash2, Pencil } from 'lucide-react';
 import ResumeExportModal from '@/components/ResumeExportModal';
 import { STAR_DATA } from '@/lib/starData';
-import { useAdminContent } from '@/lib/adminStore';
+import { useAdminContent, useNotesStore, NoteItem } from '@/lib/adminStore';
 
 // ── Admin context ──────────────────────────────────────────────────────────
 type AdminCtx = { isAdmin: boolean; get: (id: string, def: string) => string; save: (id: string, val: string) => void; };
@@ -41,22 +41,24 @@ function E({ id, def, as = 'span', cls, style }: {
 // ============== TRANSLATION OBJECTS ==============
 const translations = {
   zh: {
-    nav: { about: '关于我', experience: '实习经历', projects: '研究项目', skills: '技能与证书', contact: '联系方式' },
+    nav: { about: '关于我', experience: '实习经历', projects: '研究项目', skills: '技能与证书', notes: '学习笔记', contact: '联系方式' },
     hero: { title: '顾杰', subtitle: '金融 × 技术 | 数据分析 | LLM应用', description: '天津大学金融硕士在读，专注于金融数据分析、机器学习与LLM在金融领域的应用。', contact: '联系我', github: 'GitHub' },
     about: { title: '关于我', education: '教育背景', intro: '天津大学（985）金融硕士在读，研究方向为机器学习在金融市场的应用。本科毕业于中国矿业大学（211）金融专业。具备扎实的Python数据分析能力、机器学习基础和金融专业知识。', strengths: '核心优势：CPA专业阶段4科通过 + 金融专业 + Python技术 + LLM应用经验，复合背景突出。', degree: '金融硕士', university: '天津大学', faculty: '管理与经济学部', facultyEn: 'Faculty of Management and Economics', major: '主修课程：大数据与金融风险、金融随机分析、金融计量经济学、金融数据分析、衍生金融工具、行为金融学、投资学、公司金融', period: '2024.09 - 2027.01（预计）', bachelor: '金融学士', bachelorUniv: '中国矿业大学（211）', bachelorFaculty: '经济管理学院', bachelorMajor: '主修课程：货币金融学、宏观经济学、微观经济学、管理学、商业银行经营管理、金融数据分析、大数据分析技术、金融经济学、证券投资学、基础会计学、Python数据分析', bachelorPeriod: '2020.09 - 2024.06', bachelorGpa: 'GPA: 4.15/5.0，专业前15%，二等学业奖学金' },
     experience: { title: '实习经历' },
     projects: { title: '研究项目', tech: '技术栈', objective: '研究目标', methodology: '研究方法', design: '研究设计', status: '状态' },
     skills: { title: '技能与证书', programming: '编程语言', dataTools: '数据分析工具', finance: '金融能力', certifications: '专业认证', languages: '语言能力' },
-    contact: { title: '联系方式', email: '邮箱', github: 'GitHub', phone: '电话', message: '寻求金融分析、数据科学或量化相关实习机会。欢迎联系！' },
+    notes: { title: '学习笔记', subtitle: '整理的备考笔记与错题复盘，持续更新中' },
+    contact: { title: '联系方式', email: '邮箱', github: 'GitHub', phone: '电话', xiaohongshu: '小红书', bilibili: 'B站', message: '寻求金融分析、数据科学或量化相关实习机会。欢迎联系！' },
   },
   en: {
-    nav: { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills & Certs', contact: 'Contact' },
+    nav: { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills & Certs', notes: 'Notes', contact: 'Contact' },
     hero: { title: 'Kris Gu', subtitle: 'Finance × Technology | Data Analytics | LLM Applications', description: "Master's student at Tianjin University focusing on financial data analytics, machine learning, and LLM applications in finance.", contact: 'Contact Me', github: 'GitHub' },
     about: { title: 'About Me', education: 'Education', intro: "Master's in Finance at Tianjin University (985), research focus on machine learning in financial markets. Bachelor's in Finance from China University of Mining and Technology (211). Strong skills in Python data analytics, machine learning, and financial knowledge.", strengths: 'Core strengths: CPA 4 subjects passed + Finance expertise + Python programming + LLM application experience.', degree: "Master's in Finance", university: 'Tianjin University', faculty: 'Faculty of Management and Economics', major: 'Core Courses: Big Data & Financial Risk, Financial Stochastic Analysis, Financial Econometrics, Financial Data Analysis, Derivatives, Behavioral Finance, Investment, Corporate Finance', period: '2024.09 - 2027.01 (expected)', bachelor: 'Bachelor in Finance', bachelorUniv: 'China University of Mining and Technology (211)', bachelorFaculty: 'School of Economics & Management', bachelorMajor: 'Core Courses: Money & Banking, Macroeconomics, Microeconomics, Management, Commercial Bank Management, Financial Data Analysis, Big Data Analytics, Financial Economics, Securities Investment, Basic Accounting, Python Data Analysis', bachelorPeriod: 'Sep 2020 - Jun 2024', bachelorGpa: 'GPA: 4.15/5.0, Top 15% in major, Second-class Academic Scholarship' },
     experience: { title: 'Internship Experience' },
     projects: { title: 'Research Projects', tech: 'Tech Stack', objective: 'Objective', methodology: 'Methodology', design: 'Research Design', status: 'Status' },
     skills: { title: 'Skills & Certifications', programming: 'Programming', dataTools: 'Data Tools', finance: 'Finance Skills', certifications: 'Certifications', languages: 'Languages' },
-    contact: { title: 'Get In Touch', email: 'Email', github: 'GitHub', phone: 'Phone', message: 'Seeking internships in financial analysis, data science, or quantitative roles. Feel free to reach out!' },
+    notes: { title: 'Study Notes', subtitle: 'Exam prep notes & mistake reviews — updated regularly' },
+    contact: { title: 'Get In Touch', email: 'Email', github: 'GitHub', phone: 'Phone', xiaohongshu: 'Xiaohongshu', bilibili: 'Bilibili', message: 'Seeking internships in financial analysis, data science, or quantitative roles. Feel free to reach out!' },
   },
 };
 
@@ -237,6 +239,40 @@ const skillCategories = [
   { key: 'finance', icon: BarChart3, label: '金融能力' },
 ];
 
+// ── Study notes default data ──────────────────────────────────────────────
+const defaultNotes: NoteItem[] = [
+  {
+    id: 'default-1',
+    title: '税二·错题复盘·综合提高（做题不顺畅）',
+    tag: 'CTA 税法二',
+    href: 'https://share.mubu.com/doc/3TZehcyQt6R',
+  },
+];
+
+// ── Xiaohongshu icon (inline SVG) ────────────────────────────────────────
+function XhsIcon({ size = 28 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="24" height="24" rx="5" fill="#FF2442" />
+      <path d="M11 5h2v6h3l-4 4-4-4h3V5z" fill="white" />
+      <rect x="5" y="17" width="14" height="2" rx="1" fill="white" />
+    </svg>
+  );
+}
+
+// ── Bilibili icon (inline SVG) ───────────────────────────────────────────
+function BiliIcon({ size = 28 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="24" height="24" rx="5" fill="#00AEEC" />
+      <path d="M7.5 7.5h9a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1z" fill="white" />
+      <circle cx="9.5" cy="11" r="1" fill="#00AEEC" />
+      <circle cx="14.5" cy="11" r="1" fill="#00AEEC" />
+      <path d="M9 7.5 7.5 6M15 7.5 16.5 6" stroke="white" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 // ============== HELPER COMPONENTS ==============
 function SectionHeading({ label }: { label: string }) {
   return (
@@ -267,6 +303,19 @@ export default function Home() {
   const [adminPwInput, setAdminPwInput] = useState('');
   const [adminPwError, setAdminPwError] = useState(false);
   const adminCtx: AdminCtx = { isAdmin, get, save };
+
+  // Notes store (localStorage-backed)
+  const { notes, addNote, removeNote, updateNote } = useNotesStore(defaultNotes);
+  type NoteForm = { mode: 'add' | 'edit'; id?: string; title: string; tag: string; href: string };
+  const [noteForm, setNoteForm] = useState<NoteForm | null>(null);
+  const openAddNote  = () => setNoteForm({ mode: 'add',  title: '', tag: '', href: '' });
+  const openEditNote = (n: NoteItem) => setNoteForm({ mode: 'edit', id: n.id, title: n.title, tag: n.tag, href: n.href });
+  const submitNoteForm = () => {
+    if (!noteForm || !noteForm.title.trim() || !noteForm.href.trim()) return;
+    if (noteForm.mode === 'add') addNote({ title: noteForm.title.trim(), tag: noteForm.tag.trim(), href: noteForm.href.trim() });
+    else if (noteForm.id) updateNote(noteForm.id, { title: noteForm.title.trim(), tag: noteForm.tag.trim(), href: noteForm.href.trim() });
+    setNoteForm(null);
+  };
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -335,7 +384,7 @@ export default function Home() {
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-7">
-              {(['about', 'experience', 'projects', 'skills', 'contact'] as const).map(item => (
+              {(['about', 'experience', 'projects', 'skills', 'notes', 'contact'] as const).map(item => (
                 <a key={item} href={`#${item}`} className={`text-sm font-medium transition-colors relative group ${activeSection === item ? 'text-primary-600' : 'text-gray-600 hover:text-primary-600'}`}>
                   {t.nav[item]}
                   <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary-500 transition-all duration-300 ${activeSection === item ? 'w-full' : 'w-0 group-hover:w-full'}`} />
@@ -388,7 +437,7 @@ export default function Home() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-100 bg-white px-6 pt-4 pb-5">
             <div className="space-y-1 mb-4">
-              {(['about', 'experience', 'projects', 'skills', 'contact'] as const).map(item => (
+              {(['about', 'experience', 'projects', 'skills', 'notes', 'contact'] as const).map(item => (
                 <a
                   key={item}
                   href={`#${item}`}
@@ -857,39 +906,163 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Notes ── */}
+      <section id="notes" className="py-20 px-6 bg-gray-50 scroll-mt-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-start justify-between mb-2">
+            <SectionHeading label={t.notes.title} />
+            {isAdmin && (
+              <button
+                onClick={openAddNote}
+                className="flex items-center gap-1.5 text-sm bg-primary-600 text-white px-3 py-2 rounded-xl hover:bg-primary-700 transition font-medium mt-1"
+              >
+                <Plus size={15} /> 添加笔记
+              </button>
+            )}
+          </div>
+          <p className="text-gray-500 text-sm mb-8 -mt-6">{t.notes.subtitle}</p>
+
+          {/* Add / Edit form */}
+          {noteForm && (
+            <div className="bg-white border border-primary-200 rounded-2xl p-5 mb-6 shadow-sm">
+              <p className="text-sm font-semibold text-gray-700 mb-3">
+                {noteForm.mode === 'add' ? '添加笔记' : '编辑笔记'}
+              </p>
+              <div className="flex flex-col gap-2.5">
+                <input
+                  value={noteForm.title}
+                  onChange={e => setNoteForm(f => f && { ...f, title: e.target.value })}
+                  placeholder="笔记标题 *"
+                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-primary-400"
+                />
+                <input
+                  value={noteForm.tag}
+                  onChange={e => setNoteForm(f => f && { ...f, tag: e.target.value })}
+                  placeholder="分类标签（如：CTA 税法二）"
+                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-primary-400"
+                />
+                <input
+                  value={noteForm.href}
+                  onChange={e => setNoteForm(f => f && { ...f, href: e.target.value })}
+                  placeholder="文档链接 * （https://...）"
+                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-primary-400"
+                />
+              </div>
+              <div className="flex gap-2 mt-3">
+                <button
+                  onClick={submitNoteForm}
+                  disabled={!noteForm.title.trim() || !noteForm.href.trim()}
+                  className="px-4 py-1.5 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  保存
+                </button>
+                <button
+                  onClick={() => setNoteForm(null)}
+                  className="px-4 py-1.5 text-gray-500 hover:bg-gray-100 rounded-lg text-sm transition"
+                >
+                  取消
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {notes.map(note => (
+              <div key={note.id} className="relative group">
+                <a
+                  href={note.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col gap-3 h-full"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary-50 border border-primary-100 flex items-center justify-center flex-shrink-0">
+                      <BookOpen size={18} className="text-primary-600" />
+                    </div>
+                    <ExternalLink size={14} className="text-gray-300 group-hover:text-primary-400 transition-colors flex-shrink-0 mt-1" />
+                  </div>
+                  <p className="flex-1 text-gray-800 font-medium text-sm leading-snug">{note.title}</p>
+                  {note.tag && (
+                    <span className="self-start text-xs font-medium bg-primary-50 text-primary-600 border border-primary-100 px-2.5 py-1 rounded-lg">
+                      {note.tag}
+                    </span>
+                  )}
+                </a>
+                {/* Admin controls */}
+                {isAdmin && (
+                  <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={e => { e.preventDefault(); openEditNote(note); }}
+                      className="w-6 h-6 bg-white border border-gray-200 rounded-md flex items-center justify-center hover:bg-primary-50 hover:border-primary-300 shadow-sm transition"
+                      title="编辑"
+                    >
+                      <Pencil size={11} className="text-gray-500" />
+                    </button>
+                    <button
+                      onClick={e => { e.preventDefault(); if (confirm('删除这条笔记？')) removeNote(note.id); }}
+                      className="w-6 h-6 bg-white border border-gray-200 rounded-md flex items-center justify-center hover:bg-red-50 hover:border-red-300 shadow-sm transition"
+                      title="删除"
+                    >
+                      <Trash2 size={11} className="text-red-400" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Contact ── */}
       <section id="contact" className="py-20 px-6 bg-gradient-to-br from-primary-600 to-primary-800 text-white scroll-mt-24">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">{t.contact.title}</h2>
           <p className="text-primary-100 mb-12 max-w-xl mx-auto leading-relaxed">
             <E id={`contact.${lang}.message`} def={t.contact.message} />
           </p>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             <a
               href="mailto:gujie_kris@163.com"
-              className="bg-white/10 backdrop-blur-sm p-7 rounded-2xl border border-white/20 hover:bg-white/20 hover:scale-[1.03] transition-all duration-200"
+              className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20 hover:bg-white/20 hover:scale-[1.03] transition-all duration-200"
             >
-              <Mail className="mx-auto mb-3" size={28} />
-              <h3 className="font-semibold mb-1">{t.contact.email}</h3>
-              <p className="text-primary-100 text-sm">gujie_kris@163.com</p>
+              <Mail className="mx-auto mb-3" size={26} />
+              <h3 className="font-semibold mb-1 text-sm">{t.contact.email}</h3>
+              <p className="text-primary-100 text-xs">gujie_kris@163.com</p>
             </a>
             <a
               href="https://github.com/gu1209"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur-sm p-7 rounded-2xl border border-white/20 hover:bg-white/20 hover:scale-[1.03] transition-all duration-200"
+              target="_blank" rel="noopener noreferrer"
+              className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20 hover:bg-white/20 hover:scale-[1.03] transition-all duration-200"
             >
-              <Github className="mx-auto mb-3" size={28} />
-              <h3 className="font-semibold mb-1">{t.contact.github}</h3>
-              <p className="text-primary-100 text-sm">gu1209</p>
+              <Github className="mx-auto mb-3" size={26} />
+              <h3 className="font-semibold mb-1 text-sm">{t.contact.github}</h3>
+              <p className="text-primary-100 text-xs">gu1209</p>
+            </a>
+            <a
+              href="https://xhslink.com/m/5Q4gGqHQfrc"
+              target="_blank" rel="noopener noreferrer"
+              className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20 hover:bg-white/20 hover:scale-[1.03] transition-all duration-200"
+            >
+              <div className="flex justify-center mb-3"><XhsIcon size={26} /></div>
+              <h3 className="font-semibold mb-1 text-sm">{t.contact.xiaohongshu}</h3>
+              <p className="text-primary-100 text-xs">UID: 293946035</p>
+            </a>
+            <a
+              href="https://b23.tv/qt7QGN9"
+              target="_blank" rel="noopener noreferrer"
+              className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20 hover:bg-white/20 hover:scale-[1.03] transition-all duration-200"
+            >
+              <div className="flex justify-center mb-3"><BiliIcon size={26} /></div>
+              <h3 className="font-semibold mb-1 text-sm">{t.contact.bilibili}</h3>
+              <p className="text-primary-100 text-xs">清祀朔九</p>
             </a>
             <a
               href="tel:+8619292244363"
-              className="bg-white/10 backdrop-blur-sm p-7 rounded-2xl border border-white/20 hover:bg-white/20 hover:scale-[1.03] transition-all duration-200"
+              className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20 hover:bg-white/20 hover:scale-[1.03] transition-all duration-200"
             >
-              <Phone className="mx-auto mb-3" size={28} />
-              <h3 className="font-semibold mb-1">{t.contact.phone}</h3>
-              <p className="text-primary-100 text-sm">+86 192 9224 4363</p>
+              <Phone className="mx-auto mb-3" size={26} />
+              <h3 className="font-semibold mb-1 text-sm">{t.contact.phone}</h3>
+              <p className="text-primary-100 text-xs">+86 192 9224 4363</p>
             </a>
           </div>
         </div>

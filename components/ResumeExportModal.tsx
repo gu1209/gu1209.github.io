@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { X, Printer, Minus, Plus, ChevronDown, Pencil, FileDown, Upload } from 'lucide-react';
 import { EXP_CONTENT, PROJ_CONTENT } from '@/lib/resumeContent';
 import { exportResumeToPDF } from '@/lib/exportResumePDF';
@@ -126,6 +126,70 @@ function ResumePreview({
   const sf = (section: keyof SectionFs, delta = 0) => `${fontSize + sectionFs[section] + delta}pt`;
   const effectiveLogoUrl = logoUrl || `${origin}/logos/tju_logo.svg`;
 
+  // ── Preload images as base64 data URLs ────────────────────────────────
+  // Fixes: (1) browser print skips network images on some PCs
+  //        (2) html2canvas cannot render SVG <img> reliably
+  const [photoDataUrl, setPhotoDataUrl] = useState<string>('');
+  const [logoDataUrl,  setLogoDataUrl]  = useState<string>('');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    /** Fetch any URL and return a base64 data URL. Skips already-base64 URLs. */
+    async function toDataUrl(url: string): Promise<string> {
+      if (!url || url.startsWith('data:')) return url;
+      const res  = await fetch(url, { cache: 'force-cache' });
+      const blob = await res.blob();
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    /** Convert an SVG data URL → PNG data URL via an offscreen canvas.
+     *  html2canvas cannot render SVG <img> on many browsers. */
+    function svgToPng(svgDataUrl: string, px: number): Promise<string> {
+      return new Promise<string>((resolve, reject) => {
+        const img = new window.Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = canvas.height = px * 2; // 2× for crisp rendering
+          const ctx = canvas.getContext('2d');
+          if (!ctx) { reject(new Error('no ctx')); return; }
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = reject;
+        img.src = svgDataUrl;
+      });
+    }
+
+    // Load profile photo
+    if (includePhoto && origin) {
+      toDataUrl(`${origin}/images/profile.jpg`)
+        .then(url => { if (!cancelled) setPhotoDataUrl(url); })
+        .catch(() => {/* fallback to URL */});
+    } else {
+      setPhotoDataUrl('');
+    }
+
+    // Load logo — convert SVG to PNG for html2canvas compatibility
+    const logoSrc = logoUrl || (origin ? `${origin}/logos/tju_logo.svg` : '');
+    if (logoSrc) {
+      toDataUrl(logoSrc)
+        .then(dataUrl => {
+          const isSvg = dataUrl.startsWith('data:image/svg') || logoSrc.endsWith('.svg');
+          return isSvg ? svgToPng(dataUrl, 88) : dataUrl;
+        })
+        .then(url => { if (!cancelled) setLogoDataUrl(url); })
+        .catch(() => {/* fallback to URL */});
+    }
+
+    return () => { cancelled = true; };
+  }, [includePhoto, logoUrl, origin]);
+
   const selfEval = isZh
     ? '具备金融专业背景与CPA/CTA证书体系知识，熟练掌握Python数据分析与机器学习，能将LLM应用于金融实际场景。实习经历覆盖资金分析、资产交易、项目管理、行业研究等多个领域，学习迅速、注重量化成果、善于跨部门协作。'
     : 'Strong finance foundation with CPA/CTA credentials, proficient in Python analytics and ML, experienced in applying LLMs to financial scenarios. Fast learner, results-driven, skilled in cross-functional collaboration.';
@@ -150,7 +214,7 @@ function ResumePreview({
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8pt', marginBottom: '6pt' }}>
 
         {/* Logo (supports custom upload) */}
-        <img src={effectiveLogoUrl} alt="logo"
+        <img src={logoDataUrl || effectiveLogoUrl} alt="logo"
           style={{ width: '44pt', height: '44pt', objectFit: 'contain', flexShrink: 0, marginTop: '2pt' }} />
 
         {/* Center: name + objective + contact */}
@@ -177,7 +241,7 @@ function ResumePreview({
 
         {/* Photo — no border */}
         {includePhoto && (
-          <img src={`${origin}/images/profile.jpg`} alt="photo"
+          <img src={photoDataUrl || `${origin}/images/profile.jpg`} alt="photo"
             style={{ width: '52pt', height: '66pt', objectFit: 'cover', flexShrink: 0, marginTop: '2pt' }} />
         )}
       </div>

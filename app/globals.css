@@ -136,6 +136,11 @@ body {
     top: 0; left: 0;
     width: 100%; height: auto;
   }
+  /* Force browsers to print images in full color (off by default in many browsers) */
+  #resume-print-root img {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
   @page {
     size: A4 portrait;
     margin: 0;
