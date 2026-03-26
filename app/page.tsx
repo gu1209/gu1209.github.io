@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, createContext, useContext } from 'react';
-import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles, Lock, RotateCcw, LogOut, BookOpen, ExternalLink, Plus, Trash2, Pencil } from 'lucide-react';
+import { useState, useEffect, useRef, createContext, useContext } from 'react';
+import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles, Lock, RotateCcw, LogOut, BookOpen, ExternalLink, Plus, Trash2, Pencil, Sun, Moon, Eye, EyeOff } from 'lucide-react';
 import ResumeExportModal from '@/components/ResumeExportModal';
 import { STAR_DATA } from '@/lib/starData';
-import { useAdminContent, useNotesStore, NoteItem } from '@/lib/adminStore';
+import { useAdminContent, useNotesStore, NoteItem, useNowStore, NowItem, useHiddenSections } from '@/lib/adminStore';
 
 // ── Admin context ──────────────────────────────────────────────────────────
 type AdminCtx = { isAdmin: boolean; get: (id: string, def: string) => string; save: (id: string, val: string) => void; };
@@ -41,24 +41,32 @@ function E({ id, def, as = 'span', cls, style }: {
 // ============== TRANSLATION OBJECTS ==============
 const translations = {
   zh: {
-    nav: { about: '关于我', experience: '实习经历', projects: '研究项目', skills: '技能与证书', notes: '学习笔记', contact: '联系方式' },
+    nav: { about: '关于我', experience: '实习经历', projects: '研究项目', skills: '技能与证书', now: '现在', notes: '学习笔记', contact: '联系方式' },
     hero: { title: '顾杰', subtitle: '金融 × 技术 | 数据分析 | LLM应用', description: '天津大学金融硕士在读，专注于金融数据分析、机器学习与LLM在金融领域的应用。', contact: '联系我', github: 'GitHub' },
     about: { title: '关于我', education: '教育背景', intro: '天津大学（985）金融硕士在读，研究方向为机器学习在金融市场的应用。本科毕业于中国矿业大学（211）金融专业。具备扎实的Python数据分析能力、机器学习基础和金融专业知识。', strengths: '核心优势：CPA专业阶段4科通过 + 金融专业 + Python技术 + LLM应用经验，复合背景突出。', degree: '金融硕士', university: '天津大学', faculty: '管理与经济学部', facultyEn: 'Faculty of Management and Economics', major: '主修课程：大数据与金融风险、金融随机分析、金融计量经济学、金融数据分析、衍生金融工具、行为金融学、投资学、公司金融', period: '2024.09 - 2027.01（预计）', bachelor: '金融学士', bachelorUniv: '中国矿业大学（211）', bachelorFaculty: '经济管理学院', bachelorMajor: '主修课程：货币金融学、宏观经济学、微观经济学、管理学、商业银行经营管理、金融数据分析、大数据分析技术、金融经济学、证券投资学、基础会计学、Python数据分析', bachelorPeriod: '2020.09 - 2024.06', bachelorGpa: 'GPA: 4.15/5.0，专业前15%，二等学业奖学金' },
     experience: { title: '实习经历' },
     projects: { title: '研究项目', tech: '技术栈', objective: '研究目标', methodology: '研究方法', design: '研究设计', status: '状态' },
     skills: { title: '技能与证书', programming: '编程语言', dataTools: '数据分析工具', finance: '金融能力', certifications: '专业认证', languages: '语言能力' },
+    now: { title: '最近在…', subtitle: '动态更新，记录当下在做的事' },
     notes: { title: '学习笔记', subtitle: '整理的备考笔记与错题复盘，持续更新中' },
-    contact: { title: '联系方式', email: '邮箱', github: 'GitHub', phone: '电话', xiaohongshu: '小红书', bilibili: 'B站', message: '寻求金融分析、数据科学或量化相关实习机会。欢迎联系！' },
+    contact: {
+      title: '联系方式', email: '邮箱', github: 'GitHub', phone: '电话', xiaohongshu: '小红书', bilibili: 'B站',
+      message: '寻求金融分析、数据科学或量化相关实习机会。欢迎联系！',
+    },
   },
   en: {
-    nav: { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills & Certs', notes: 'Notes', contact: 'Contact' },
+    nav: { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills & Certs', now: 'Now', notes: 'Notes', contact: 'Contact' },
     hero: { title: 'Kris Gu', subtitle: 'Finance × Technology | Data Analytics | LLM Applications', description: "Master's student at Tianjin University focusing on financial data analytics, machine learning, and LLM applications in finance.", contact: 'Contact Me', github: 'GitHub' },
     about: { title: 'About Me', education: 'Education', intro: "Master's in Finance at Tianjin University (985), research focus on machine learning in financial markets. Bachelor's in Finance from China University of Mining and Technology (211). Strong skills in Python data analytics, machine learning, and financial knowledge.", strengths: 'Core strengths: CPA 4 subjects passed + Finance expertise + Python programming + LLM application experience.', degree: "Master's in Finance", university: 'Tianjin University', faculty: 'Faculty of Management and Economics', major: 'Core Courses: Big Data & Financial Risk, Financial Stochastic Analysis, Financial Econometrics, Financial Data Analysis, Derivatives, Behavioral Finance, Investment, Corporate Finance', period: '2024.09 - 2027.01 (expected)', bachelor: 'Bachelor in Finance', bachelorUniv: 'China University of Mining and Technology (211)', bachelorFaculty: 'School of Economics & Management', bachelorMajor: 'Core Courses: Money & Banking, Macroeconomics, Microeconomics, Management, Commercial Bank Management, Financial Data Analysis, Big Data Analytics, Financial Economics, Securities Investment, Basic Accounting, Python Data Analysis', bachelorPeriod: 'Sep 2020 - Jun 2024', bachelorGpa: 'GPA: 4.15/5.0, Top 15% in major, Second-class Academic Scholarship' },
     experience: { title: 'Internship Experience' },
     projects: { title: 'Research Projects', tech: 'Tech Stack', objective: 'Objective', methodology: 'Methodology', design: 'Research Design', status: 'Status' },
     skills: { title: 'Skills & Certifications', programming: 'Programming', dataTools: 'Data Tools', finance: 'Finance Skills', certifications: 'Certifications', languages: 'Languages' },
+    now: { title: 'Now', subtitle: 'What I\'m currently into — updated live' },
     notes: { title: 'Study Notes', subtitle: 'Exam prep notes & mistake reviews — updated regularly' },
-    contact: { title: 'Get In Touch', email: 'Email', github: 'GitHub', phone: 'Phone', xiaohongshu: 'Xiaohongshu', bilibili: 'Bilibili', message: 'Seeking internships in financial analysis, data science, or quantitative roles. Feel free to reach out!' },
+    contact: {
+      title: 'Get In Touch', email: 'Email', github: 'GitHub', phone: 'Phone', xiaohongshu: 'Xiaohongshu', bilibili: 'Bilibili',
+      message: 'Seeking internships in financial analysis, data science, or quantitative roles. Feel free to reach out!',
+    },
   },
 };
 
@@ -283,6 +291,96 @@ function SectionHeading({ label }: { label: string }) {
   );
 }
 
+/** Counts from 0 → target when scrolled into view. */
+function AnimatedStat({ target, decimals = 0, suffix = '', prefix = '', label }: {
+  target: number; decimals?: number; suffix?: string; prefix?: string; label: string;
+}) {
+  const [display, setDisplay] = useState(decimals > 0 ? (0).toFixed(decimals) : '0');
+  const [started, setStarted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setStarted(true); },
+      { threshold: 0.5 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!started) return;
+    const duration = 1200;
+    const startTime = performance.now();
+    const tick = (now: number) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const val = eased * target;
+      setDisplay(decimals > 0 ? val.toFixed(decimals) : Math.round(val).toString());
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [started, target, decimals]);
+
+  return (
+    <div ref={ref} className="flex flex-col items-center gap-1">
+      <span className="text-3xl md:text-4xl font-bold text-primary-600 tabular-nums leading-none">
+        {prefix}{display}{suffix}
+      </span>
+      <span className="text-xs md:text-sm text-gray-500 font-medium text-center leading-tight">{label}</span>
+    </div>
+  );
+}
+
+const METRICS_ZH = [
+  { target: 4,     decimals: 0, suffix: '',   prefix: '',     label: '段实习经历' },
+  { target: 60,    decimals: 0, suffix: '%',  prefix: '',     label: '效率提升' },
+  { target: 80,    decimals: 0, suffix: '%',  prefix: '',     label: '人工时间节省' },
+  { target: 4,     decimals: 0, suffix: '',   prefix: 'CPA ', label: '科目通过' },
+  { target: 92.21, decimals: 2, suffix: '',   prefix: '',     label: 'GPA 专业前10%' },
+];
+const METRICS_EN = [
+  { target: 4,     decimals: 0, suffix: '',   prefix: '',     label: 'Internships' },
+  { target: 60,    decimals: 0, suffix: '%',  prefix: '',     label: 'Efficiency Gain' },
+  { target: 80,    decimals: 0, suffix: '%',  prefix: '',     label: 'Time Saved' },
+  { target: 4,     decimals: 0, suffix: '',   prefix: 'CPA ', label: 'Subjects Passed' },
+  { target: 92.21, decimals: 2, suffix: '',   prefix: '',     label: 'GPA Top 10%' },
+];
+
+// ── "Now" default items ───────────────────────────────────────────────────
+const defaultNow: NowItem[] = [
+  { emoji: '📚', category: '在读', categoryEn: 'Reading',  content: '点击编辑，填写你在读的书' },
+  { emoji: '🎬', category: '在看', categoryEn: 'Watching', content: '点击编辑，填写在看的剧或番' },
+  { emoji: '💬', category: '在聊', categoryEn: 'Thinking', content: '点击编辑，填写最近在思考的话题' },
+];
+
+/** Mouse cursor sparkle effect */
+function CursorSparkle() {
+  useEffect(() => {
+    let frame = 0;
+    const handle = (e: MouseEvent) => {
+      // Throttle: only create a star every 3rd event
+      frame++;
+      if (frame % 3 !== 0) return;
+      const star = document.createElement('div');
+      star.className = 'cursor-star';
+      star.style.left = `${e.clientX}px`;
+      star.style.top  = `${e.clientY}px`;
+      // Random size 3–7px and random hue for variety
+      const size = 3 + Math.random() * 4;
+      const hues = ['#60a5fa','#a78bfa','#34d399','#f472b6','#fbbf24'];
+      star.style.width  = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.background = hues[Math.floor(Math.random() * hues.length)];
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 700);
+    };
+    window.addEventListener('mousemove', handle);
+    return () => window.removeEventListener('mousemove', handle);
+  }, []);
+  return null;
+}
+
 // ============== MAIN COMPONENT ==============
 export default function Home() {
   const [lang, setLang] = useState<'zh' | 'en'>('zh');
@@ -304,8 +402,46 @@ export default function Home() {
   const [adminPwError, setAdminPwError] = useState(false);
   const adminCtx: AdminCtx = { isAdmin, get, save };
 
+  // Dark mode
+  const [isDark, setIsDark] = useState(false);
+  useEffect(() => {
+    const saved = localStorage.getItem('portfolio_dark') === '1';
+    setIsDark(saved);
+  }, []);
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('portfolio_dark', isDark ? '1' : '0');
+  }, [isDark]);
+
   // Notes store (localStorage-backed)
   const { notes, addNote, removeNote, updateNote } = useNotesStore(defaultNotes);
+
+  // "Now" store
+  const { items: nowItems, updateItem: updateNowItem } = useNowStore(defaultNow);
+
+  // Section visibility (admin can hide sections from visitors)
+  const { isHidden: secHidden, toggle: toggleSec } = useHiddenSections();
+  // Returns null for non-admin when section is hidden; dims content for admin
+  const Veil = ({ id }: { id: string }) => !isAdmin ? null : (
+    <button
+      onClick={() => toggleSec(id)}
+      title={secHidden(id) ? '点击恢复显示' : '点击隐藏此区块'}
+      className={`absolute top-5 right-6 z-20 flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border shadow-sm transition
+        ${secHidden(id) ? 'bg-amber-50 border-amber-200 text-amber-600 hover:bg-amber-100' : 'bg-white/80 border-gray-200 text-gray-400 hover:bg-gray-50'}`}
+    >
+      {secHidden(id) ? <><EyeOff size={10} /><span>已隐藏</span></> : <><Eye size={10} /><span>隐藏</span></>}
+    </button>
+  );
+  const dim = (id: string) => isAdmin && secHidden(id) ? 'opacity-40 pointer-events-none select-none' : '';
+
+  // 每日一言 (Hitokoto)
+  const [hitokoto, setHitokoto] = useState<{ hitokoto: string; from: string; from_who: string } | null>(null);
+  useEffect(() => {
+    fetch('https://v1.hitokoto.cn/')
+      .then(r => r.json())
+      .then(setHitokoto)
+      .catch(() => {});
+  }, []);
   type NoteForm = { mode: 'add' | 'edit'; id?: string; title: string; tag: string; href: string };
   const [noteForm, setNoteForm] = useState<NoteForm | null>(null);
   const openAddNote  = () => setNoteForm({ mode: 'add',  title: '', tag: '', href: '' });
@@ -384,7 +520,7 @@ export default function Home() {
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-7">
-              {(['about', 'experience', 'projects', 'skills', 'notes', 'contact'] as const).map(item => (
+              {(['about', 'experience', 'projects', 'skills', 'now', 'notes', 'contact'] as const).map(item => (
                 <a key={item} href={`#${item}`} className={`text-sm font-medium transition-colors relative group ${activeSection === item ? 'text-primary-600' : 'text-gray-600 hover:text-primary-600'}`}>
                   {t.nav[item]}
                   <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary-500 transition-all duration-300 ${activeSection === item ? 'w-full' : 'w-0 group-hover:w-full'}`} />
@@ -405,6 +541,13 @@ export default function Home() {
                 <span>{lang === 'en' ? '中文' : 'EN'}</span>
               </button>
               <button
+                onClick={() => setIsDark(d => !d)}
+                title={isDark ? '切换浅色' : '切换深色'}
+                className="p-1.5 rounded-full text-gray-400 hover:text-primary-600 hover:bg-primary-50 transition"
+              >
+                {isDark ? <Sun size={14} /> : <Moon size={14} />}
+              </button>
+              <button
                 onClick={() => isAdmin ? logout() : setShowAdminLogin(true)}
                 title={isAdmin ? '退出管理模式' : '管理员登录'}
                 className={`p-1.5 rounded-full transition ${isAdmin ? 'text-amber-600 bg-amber-100 hover:bg-amber-200' : 'text-gray-300 hover:text-gray-500'}`}
@@ -423,6 +566,12 @@ export default function Home() {
                 {lang === 'en' ? '中文' : 'EN'}
               </button>
               <button
+                onClick={() => setIsDark(d => !d)}
+                className="p-1.5 text-gray-400 hover:text-primary-600 transition"
+              >
+                {isDark ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
+              <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="p-2 text-gray-600 hover:text-primary-600 transition"
                 aria-label="Toggle menu"
@@ -437,7 +586,7 @@ export default function Home() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-100 bg-white px-6 pt-4 pb-5">
             <div className="space-y-1 mb-4">
-              {(['about', 'experience', 'projects', 'skills', 'notes', 'contact'] as const).map(item => (
+              {(['about', 'experience', 'projects', 'skills', 'now', 'notes', 'contact'] as const).map(item => (
                 <a
                   key={item}
                   href={`#${item}`}
@@ -560,9 +709,23 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Metrics strip ── */}
+      {(!secHidden('metrics') || isAdmin) && (
+        <div className="bg-white border-y border-gray-100 py-10 px-6 relative">
+          <Veil id="metrics" />
+          <div className={`max-w-4xl mx-auto grid grid-cols-3 md:grid-cols-5 gap-8 ${dim('metrics')}`}>
+            {(lang === 'zh' ? METRICS_ZH : METRICS_EN).map((m, i) => (
+              <AnimatedStat key={i} {...m} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ── About & Education ── */}
-      <section id="about" className="py-20 px-6 scroll-mt-24 bg-gray-50/50">
-        <div className="max-w-4xl mx-auto">
+      {(!secHidden('about') || isAdmin) && (
+      <section id="about" className="py-20 px-6 scroll-mt-24 bg-gray-50/50 relative">
+        <Veil id="about" />
+        <div className={dim('about')}><div className="max-w-4xl mx-auto">
           <SectionHeading label={t.about.title} />
           <div className="space-y-6">
             {/* Intro card */}
@@ -629,12 +792,15 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </div></div>
       </section>
+      )}
 
       {/* ── Experience — Timeline ── */}
-      <section id="experience" className="py-20 px-6 scroll-mt-24">
-        <div className="max-w-4xl mx-auto">
+      {(!secHidden('experience') || isAdmin) && (
+      <section id="experience" className="py-20 px-6 scroll-mt-24 relative">
+        <Veil id="experience" />
+        <div className={dim('experience')}><div className="max-w-4xl mx-auto">
           <SectionHeading label={t.experience.title} />
 
           <div className="relative">
@@ -753,12 +919,15 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </div>
+        </div></div>
       </section>
+      )}
 
       {/* ── Projects — Accordion ── */}
-      <section id="projects" className="py-20 px-6 scroll-mt-24 bg-gray-50/50">
-        <div className="max-w-4xl mx-auto">
+      {(!secHidden('projects') || isAdmin) && (
+      <section id="projects" className="py-20 px-6 scroll-mt-24 bg-gray-50/50 relative">
+        <Veil id="projects" />
+        <div className={dim('projects')}><div className="max-w-4xl mx-auto">
           <SectionHeading label={t.projects.title} />
           <div className="space-y-3">
             {projects.map((project, idx) => {
@@ -839,12 +1008,15 @@ export default function Home() {
               );
             })}
           </div>
-        </div>
+        </div></div>
       </section>
+      )}
 
       {/* ── Skills ── */}
-      <section id="skills" className="py-20 px-6 scroll-mt-24">
-        <div className="max-w-6xl mx-auto">
+      {(!secHidden('skills') || isAdmin) && (
+      <section id="skills" className="py-20 px-6 scroll-mt-24 relative">
+        <Veil id="skills" />
+        <div className={dim('skills')}><div className="max-w-6xl mx-auto">
           <SectionHeading label={t.skills.title} />
 
           {/* 3-column skill categories */}
@@ -903,12 +1075,48 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </div>
+        </div></div>
       </section>
+      )}
+
+      {/* ── Now ── */}
+      {(!secHidden('now') || isAdmin) && (
+      <section id="now" className="py-20 px-6 scroll-mt-24 relative">
+        <Veil id="now" />
+        <div className={dim('now')}><div className="max-w-6xl mx-auto">
+          <SectionHeading label={t.now.title} />
+          <p className="text-gray-500 text-sm mb-8 -mt-6">{t.now.subtitle}</p>
+          <div className="grid sm:grid-cols-3 gap-5">
+            {nowItems.map((item, i) => (
+              <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{item.emoji}</span>
+                  <span className="text-xs font-semibold text-primary-600 bg-primary-50 border border-primary-100 px-2.5 py-1 rounded-lg">
+                    {lang === 'zh' ? item.category : item.categoryEn}
+                  </span>
+                </div>
+                {isAdmin ? (
+                  <textarea
+                    value={item.content}
+                    onChange={e => updateNowItem(i, e.target.value)}
+                    rows={3}
+                    className="text-sm text-gray-700 border border-dashed border-primary-300 rounded-xl px-3 py-2 resize-none focus:outline-none focus:border-primary-500 bg-primary-50/30 leading-relaxed"
+                  />
+                ) : (
+                  <p className="text-sm text-gray-700 leading-relaxed">{item.content}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div></div>
+      </section>
+      )}
 
       {/* ── Notes ── */}
-      <section id="notes" className="py-20 px-6 bg-gray-50 scroll-mt-24">
-        <div className="max-w-6xl mx-auto">
+      {(!secHidden('notes') || isAdmin) && (
+      <section id="notes" className="py-20 px-6 bg-gray-50 scroll-mt-24 relative">
+        <Veil id="notes" />
+        <div className={dim('notes')}><div className="max-w-6xl mx-auto">
           <div className="flex items-start justify-between mb-2">
             <SectionHeading label={t.notes.title} />
             {isAdmin && (
@@ -1010,8 +1218,9 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
+        </div></div>
       </section>
+      )}
 
       {/* ── Contact ── */}
       <section id="contact" className="py-20 px-6 bg-gradient-to-br from-primary-600 to-primary-800 text-white scroll-mt-24">
@@ -1065,19 +1274,33 @@ export default function Home() {
               <p className="text-primary-100 text-xs">+86 192 9224 4363</p>
             </a>
           </div>
+
         </div>
       </section>
 
       {/* ── Footer ── */}
       <footer className="bg-gray-950 text-white py-10 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center text-white text-sm font-bold">KG</div>
-            <span className="font-medium">Kris Gu</span>
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-5">
+          {/* 每日一言 */}
+          {hitokoto && (
+            <div className="text-center max-w-lg">
+              <p className="text-gray-300 text-sm italic leading-relaxed">&ldquo;{hitokoto.hitokoto}&rdquo;</p>
+              <p className="text-gray-600 text-xs mt-1.5">
+                — {hitokoto.from_who ? `${hitokoto.from_who}，` : ''}{hitokoto.from}
+              </p>
+            </div>
+          )}
+          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-3 border-t border-gray-800 pt-5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center text-white text-sm font-bold">KG</div>
+              <span className="font-medium">Kris Gu</span>
+            </div>
+            <p className="text-gray-500 text-sm">© {new Date().getFullYear()} · Built with Next.js & Tailwind CSS</p>
           </div>
-          <p className="text-gray-500 text-sm">© {new Date().getFullYear()} · Built with Next.js & Tailwind CSS</p>
         </div>
       </footer>
+
+      <CursorSparkle />
 
       <ResumeExportModal
         isOpen={isExportModalOpen}
