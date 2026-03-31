@@ -243,10 +243,10 @@ const skillsData = {
 
 const vibeTools = [
   {
-    name: 'OAA · 现场面试助手',
-    nameEn: 'OAA · Onsite Apply Assistant',
-    desc: '一款专为现场求职面试场景设计的 AI 辅助小工具，帮助快速整理面试材料、生成自我介绍与问题回答，提升现场发挥效率。使用 Claude API + Python 构建，Vibe Coding 出品。',
-    descEn: 'An AI-powered assistant designed for onsite job interviews — helps organize materials, generate self-introductions and answers on the fly. Built with Claude API + Python via Vibe Coding.',
+    name: 'OAA · 网申助手',
+    nameEn: 'OAA · Online Application Assistant',
+    desc: '一款 AI 驱动的网申填写助手，自动读取招聘平台的网申问题，结合个人经历智能生成填写内容，告别重复手填，大幅提升投递效率。使用 Claude API + Python 构建，Vibe Coding 出品。',
+    descEn: 'An AI-powered online job application assistant that reads application form questions and auto-generates tailored answers based on your background. No more manual form-filling. Built with Claude API + Python via Vibe Coding.',
     tech: ['Python', 'Claude API', 'Vibe Coding'],
     github: 'https://github.com/gu1209/onsite_apply_ass',
   },
