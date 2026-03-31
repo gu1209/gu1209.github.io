@@ -41,7 +41,7 @@ function E({ id, def, as = 'span', cls, style }: {
 // ============== TRANSLATION OBJECTS ==============
 const translations = {
   zh: {
-    nav: { about: '关于我', experience: '实习经历', projects: '研究项目', skills: '技能与证书', now: '现在', notes: '学习笔记', contact: '联系方式' },
+    nav: { about: '关于我', experience: '实习经历', projects: '研究项目', skills: '技能与证书', tools: 'Vibe小工具', now: '现在', notes: '学习笔记', contact: '联系方式' },
     hero: { title: '顾杰', subtitle: '金融 × 技术 | 数据分析 | LLM应用', description: '天津大学金融硕士在读，专注于金融数据分析、机器学习与LLM在金融领域的应用。', contact: '联系我', github: 'GitHub' },
     about: { title: '关于我', education: '教育背景', intro: '天津大学（985）金融硕士在读，研究方向为机器学习在金融市场的应用。本科毕业于中国矿业大学（211）金融专业。具备扎实的Python数据分析能力、机器学习基础和金融专业知识。', strengths: '核心优势：CPA专业阶段4科通过 + 金融专业 + Python技术 + LLM应用经验，复合背景突出。', degree: '金融硕士', university: '天津大学', faculty: '管理与经济学部', facultyEn: 'Faculty of Management and Economics', major: '主修课程：大数据与金融风险、金融随机分析、金融计量经济学、金融数据分析、衍生金融工具、行为金融学、投资学、公司金融', period: '2024.09 - 2027.01（预计）', bachelor: '金融学士', bachelorUniv: '中国矿业大学（211）', bachelorFaculty: '经济管理学院', bachelorMajor: '主修课程：货币金融学、宏观经济学、微观经济学、管理学、商业银行经营管理、金融数据分析、大数据分析技术、金融经济学、证券投资学、基础会计学、Python数据分析', bachelorPeriod: '2020.09 - 2024.06', bachelorGpa: 'GPA: 4.15/5.0，专业前15%，二等学业奖学金' },
     experience: { title: '实习经历' },
@@ -55,7 +55,7 @@ const translations = {
     },
   },
   en: {
-    nav: { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills & Certs', now: 'Now', notes: 'Notes', contact: 'Contact' },
+    nav: { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills & Certs', tools: 'Vibe Tools', now: 'Now', notes: 'Notes', contact: 'Contact' },
     hero: { title: 'Kris Gu', subtitle: 'Finance × Technology | Data Analytics | LLM Applications', description: "Master's student at Tianjin University focusing on financial data analytics, machine learning, and LLM applications in finance.", contact: 'Contact Me', github: 'GitHub' },
     about: { title: 'About Me', education: 'Education', intro: "Master's in Finance at Tianjin University (985), research focus on machine learning in financial markets. Bachelor's in Finance from China University of Mining and Technology (211). Strong skills in Python data analytics, machine learning, and financial knowledge.", strengths: 'Core strengths: CPA 4 subjects passed + Finance expertise + Python programming + LLM application experience.', degree: "Master's in Finance", university: 'Tianjin University', faculty: 'Faculty of Management and Economics', major: 'Core Courses: Big Data & Financial Risk, Financial Stochastic Analysis, Financial Econometrics, Financial Data Analysis, Derivatives, Behavioral Finance, Investment, Corporate Finance', period: '2024.09 - 2027.01 (expected)', bachelor: 'Bachelor in Finance', bachelorUniv: 'China University of Mining and Technology (211)', bachelorFaculty: 'School of Economics & Management', bachelorMajor: 'Core Courses: Money & Banking, Macroeconomics, Microeconomics, Management, Commercial Bank Management, Financial Data Analysis, Big Data Analytics, Financial Economics, Securities Investment, Basic Accounting, Python Data Analysis', bachelorPeriod: 'Sep 2020 - Jun 2024', bachelorGpa: 'GPA: 4.15/5.0, Top 15% in major, Second-class Academic Scholarship' },
     experience: { title: 'Internship Experience' },
@@ -240,6 +240,17 @@ const skillsData = {
   ],
   languages: ['中文（母语）', 'English（CET-6，专业工作语言）'],
 };
+
+const vibeTools = [
+  {
+    name: 'OAA · 现场面试助手',
+    nameEn: 'OAA · Onsite Apply Assistant',
+    desc: '一款专为现场求职面试场景设计的 AI 辅助小工具，帮助快速整理面试材料、生成自我介绍与问题回答，提升现场发挥效率。使用 Claude API + Python 构建，Vibe Coding 出品。',
+    descEn: 'An AI-powered assistant designed for onsite job interviews — helps organize materials, generate self-introductions and answers on the fly. Built with Claude API + Python via Vibe Coding.',
+    tech: ['Python', 'Claude API', 'Vibe Coding'],
+    github: 'https://github.com/gu1209/onsite_apply_ass',
+  },
+];
 
 const skillCategories = [
   { key: 'programming', icon: Code, label: '编程语言' },
@@ -520,7 +531,7 @@ export default function Home() {
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-7">
-              {(['about', 'experience', 'projects', 'skills', 'now', 'notes', 'contact'] as const).map(item => (
+              {(['about', 'experience', 'projects', 'skills', 'tools', 'now', 'notes', 'contact'] as const).map(item => (
                 <a key={item} href={`#${item}`} className={`text-sm font-medium transition-colors relative group ${activeSection === item ? 'text-primary-600' : 'text-gray-600 hover:text-primary-600'}`}>
                   {t.nav[item]}
                   <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary-500 transition-all duration-300 ${activeSection === item ? 'w-full' : 'w-0 group-hover:w-full'}`} />
@@ -586,7 +597,7 @@ export default function Home() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-100 bg-white px-6 pt-4 pb-5">
             <div className="space-y-1 mb-4">
-              {(['about', 'experience', 'projects', 'skills', 'now', 'notes', 'contact'] as const).map(item => (
+              {(['about', 'experience', 'projects', 'skills', 'tools', 'now', 'notes', 'contact'] as const).map(item => (
                 <a
                   key={item}
                   href={`#${item}`}
@@ -1074,6 +1085,53 @@ export default function Home() {
                 </span>
               ))}
             </div>
+          </div>
+        </div></div>
+      </section>
+      )}
+
+      {/* ── Vibe Tools ── */}
+      {(!secHidden('tools') || isAdmin) && (
+      <section id="tools" className="py-20 px-6 scroll-mt-24 bg-gray-50/50 relative">
+        <Veil id="tools" />
+        <div className={dim('tools')}><div className="max-w-6xl mx-auto">
+          <SectionHeading label={lang === 'zh' ? 'Kris的Vibe Coding小工具' : "Kris's Vibe Coding Tools"} />
+          <p className="text-gray-500 text-sm mb-8 -mt-6">
+            {lang === 'zh' ? '用 AI 辅助编程（Vibe Coding）构建的实用小工具，持续更新中' : 'Handy tools built with AI-assisted (Vibe) Coding — updated regularly'}
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {vibeTools.map((tool, i) => (
+              <div
+                key={i}
+                className="card-glow bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-on-scroll hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col gap-4"
+                style={{ transitionDelay: `${i * 60}ms` }}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="font-bold text-gray-900 text-sm leading-snug">
+                    {lang === 'zh' ? tool.name : tool.nameEn}
+                  </h3>
+                  <a
+                    href={tool.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-shrink-0 flex items-center gap-1 text-xs text-gray-400 hover:text-primary-600 border border-gray-200 hover:border-primary-300 px-2 py-1 rounded-lg transition"
+                  >
+                    <Github size={12} />
+                    <span>GitHub</span>
+                  </a>
+                </div>
+                <p className="text-gray-600 text-sm leading-relaxed flex-1">
+                  {lang === 'zh' ? tool.desc : tool.descEn}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {tool.tech.map((tag, j) => (
+                    <span key={j} className="text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full font-medium border border-primary-100">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div></div>
       </section>
