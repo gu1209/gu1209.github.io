@@ -245,9 +245,9 @@ const vibeTools = [
   {
     name: 'OAA · 网申助手',
     nameEn: 'OAA · Online Application Assistant',
-    desc: '一款 AI 驱动的网申填写助手，自动读取招聘平台的网申问题，结合个人经历智能生成填写内容，告别重复手填，大幅提升投递效率。使用 Claude API + Python 构建，Vibe Coding 出品。',
-    descEn: 'An AI-powered online job application assistant that reads application form questions and auto-generates tailored answers based on your background. No more manual form-filling. Built with Claude API + Python via Vibe Coding.',
-    tech: ['Python', 'Claude API', 'Vibe Coding'],
+    desc: '自动读取招聘平台的网申问题，结合个人经历生成填写内容，告别重复手填，大幅提升投递效率。',
+    descEn: 'Reads job application form questions and generates tailored answers based on your background. No more repetitive manual form-filling.',
+    tech: ['Python'],
     github: 'https://github.com/gu1209/onsite_apply_ass',
   },
 ];
@@ -1101,24 +1101,19 @@ export default function Home() {
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {vibeTools.map((tool, i) => (
-              <div
+              <a
                 key={i}
-                className="card-glow bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-on-scroll hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col gap-4"
+                href={tool.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card-glow bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-on-scroll hover:shadow-md hover:-translate-y-0.5 hover:border-primary-200 transition-all duration-200 flex flex-col gap-4"
                 style={{ transitionDelay: `${i * 60}ms` }}
               >
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="font-bold text-gray-900 text-sm leading-snug">
                     {lang === 'zh' ? tool.name : tool.nameEn}
                   </h3>
-                  <a
-                    href={tool.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-shrink-0 flex items-center gap-1 text-xs text-gray-400 hover:text-primary-600 border border-gray-200 hover:border-primary-300 px-2 py-1 rounded-lg transition"
-                  >
-                    <Github size={12} />
-                    <span>GitHub</span>
-                  </a>
+                  <ExternalLink size={14} className="flex-shrink-0 text-gray-300 group-hover:text-primary-400 mt-0.5" />
                 </div>
                 <p className="text-gray-600 text-sm leading-relaxed flex-1">
                   {lang === 'zh' ? tool.desc : tool.descEn}
@@ -1130,7 +1125,7 @@ export default function Home() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div></div>
