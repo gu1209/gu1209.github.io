@@ -2,10 +2,25 @@
 import { useState, useEffect, useCallback } from 'react';
 
 const KEY = 'portfolio_overrides';
+const CONTENT_KEY = 'portfolio_content';
+const NOTES_KEY = 'portfolio_notes';
+const NOW_KEY = 'portfolio_now';
+const HIDDEN_KEY = 'portfolio_hidden_sections';
+
+// ── Content types ──────────────────────────────────────────────────────────
+export interface ContentData {
+  translations: any;
+  experiences: any[];
+  projects: any[];
+  skillsData: any;
+  vibeTools: any[];
+  metrics: any;
+  notes: NoteItem[];
+  now: NowItem[];
+  contact: any;
+}
 
 // ── Notes store ───────────────────────────────────────────────────────────
-const NOTES_KEY = 'portfolio_notes';
-
 export interface NoteItem {
   id: string;
   title: string;
@@ -36,8 +51,6 @@ export function useNotesStore(defaults: NoteItem[]) {
 }
 
 // ── "Now" store ───────────────────────────────────────────────────────────
-const NOW_KEY = 'portfolio_now';
-
 export interface NowItem { emoji: string; category: string; categoryEn: string; content: string; }
 
 export function useNowStore(defaults: NowItem[]) {
@@ -55,12 +68,15 @@ export function useNowStore(defaults: NowItem[]) {
     if (typeof window !== 'undefined') localStorage.setItem(NOW_KEY, JSON.stringify(next));
   };
 
-  return { items, updateItem };
+  const setItemsRaw = (next: NowItem[]) => {
+    setItems(next);
+    if (typeof window !== 'undefined') localStorage.setItem(NOW_KEY, JSON.stringify(next));
+  };
+
+  return { items, updateItem, setItems: setItemsRaw };
 }
 
 // ── Hidden sections store ─────────────────────────────────────────────────
-const HIDDEN_KEY = 'portfolio_hidden_sections';
-
 export function useHiddenSections() {
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   useEffect(() => {
@@ -81,6 +97,7 @@ export function useHiddenSections() {
   return { isHidden, toggle };
 }
 
+// ── Admin content (original field-level overrides) ────────────────────────
 export function useAdminContent() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [overrides, setOverrides] = useState<Record<string, string>>({});
@@ -111,4 +128,53 @@ export function useAdminContent() {
   const logout = () => setIsAdmin(false);
 
   return { isAdmin, get, save, reset, login, logout };
+}
+
+// ── Full content store (loads from content.json, persists overrides) ──────
+export function useContentStore(defaults: ContentData) {
+  const [content, setContent] = useState<ContentData>(defaults);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CONTENT_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setContent({ ...defaults, ...parsed });
+      }
+    } catch {}
+    setLoaded(true);
+  }, []);
+
+  const persist = useCallback((next: ContentData) => {
+    setContent(next);
+    if (typeof window !== 'undefined') localStorage.setItem(CONTENT_KEY, JSON.stringify(next));
+  }, []);
+
+  const updateContent = useCallback((updater: (c: ContentData) => ContentData) => {
+    setContent(prev => {
+      const next = updater(prev);
+      if (typeof window !== 'undefined') localStorage.setItem(CONTENT_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  const importJSON = useCallback((data: Partial<ContentData>) => {
+    setContent(prev => {
+      const next = { ...prev, ...data };
+      if (typeof window !== 'undefined') localStorage.setItem(CONTENT_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  const exportJSON = useCallback(() => {
+    return content;
+  }, [content]);
+
+  const resetContent = useCallback(() => {
+    setContent(defaults);
+    if (typeof window !== 'undefined') localStorage.removeItem(CONTENT_KEY);
+  }, [defaults]);
+
+  return { content, updateContent, importJSON, exportJSON, resetContent, loaded };
 }

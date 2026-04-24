@@ -1,0 +1,502 @@
+{
+  "translations": {
+    "zh": {
+      "nav": {
+        "about": "关于我",
+        "experience": "实习经历",
+        "projects": "研究项目",
+        "skills": "技能与证书",
+        "tools": "Vibe小工具",
+        "now": "现在",
+        "notes": "学习笔记",
+        "contact": "联系方式"
+      },
+      "hero": {
+        "title": "顾杰",
+        "subtitle": "金融 × 技术 | 数据分析 | LLM应用",
+        "description": "天津大学金融硕士在读，专注于金融数据分析、机器学习与LLM在金融领域的应用。",
+        "contact": "联系我",
+        "github": "GitHub"
+      },
+      "about": {
+        "title": "关于我",
+        "education": "教育背景",
+        "intro": "天津大学（985）金融硕士在读，研究方向为机器学习在金融市场的应用。本科毕业于中国矿业大学（211）金融专业。具备扎实的Python数据分析能力、机器学习基础和金融专业知识。",
+        "strengths": "核心优势：CPA专业阶段4科通过 + 金融专业 + Python技术 + LLM应用经验，复合背景突出。",
+        "degree": "金融硕士",
+        "university": "天津大学",
+        "faculty": "管理与经济学部",
+        "major": "主修课程：大数据与金融风险、金融随机分析、金融计量经济学、金融数据分析、衍生金融工具、行为金融学、投资学、公司金融",
+        "period": "2024.09 - 2027.01（预计）",
+        "bachelor": "金融学士",
+        "bachelorUniv": "中国矿业大学（211）",
+        "bachelorFaculty": "经济管理学院",
+        "bachelorMajor": "主修课程：货币银行学、宏观经济学、微观经济学、管理学、商业银行经营管理、金融数据分析、大数据分析技术、金融经济学、证券投资学、基础会计学、Python数据分析",
+        "bachelorPeriod": "2020.09 - 2024.06",
+        "bachelorGpa": "GPA: 4.15/5.0，专业前15%，二等学业奖学金"
+      },
+      "experience": {
+        "title": "实习经历"
+      },
+      "projects": {
+        "title": "研究项目",
+        "tech": "技术栈",
+        "objective": "研究目标",
+        "methodology": "研究方法",
+        "design": "研究设计",
+        "status": "状态"
+      },
+      "skills": {
+        "title": "技能与证书",
+        "programming": "编程语言",
+        "dataTools": "数据分析工具",
+        "finance": "金融能力",
+        "certifications": "专业认证",
+        "languages": "语言能力"
+      },
+      "now": {
+        "title": "最近在…",
+        "subtitle": "动态更新，记录当下在做的事"
+      },
+      "notes": {
+        "title": "学习笔记",
+        "subtitle": "整理的备考笔记与错题复盘，持续更新中"
+      },
+      "contact": {
+        "title": "联系方式",
+        "email": "邮箱",
+        "github": "GitHub",
+        "phone": "电话",
+        "xiaohongshu": "小红书",
+        "bilibili": "B站",
+        "message": "寻求金融分析、数据科学或量化相关实习机会。欢迎联系！"
+      }
+    },
+    "en": {
+      "nav": {
+        "about": "About",
+        "experience": "Experience",
+        "projects": "Projects",
+        "skills": "Skills & Certs",
+        "tools": "Vibe Tools",
+        "now": "Now",
+        "notes": "Notes",
+        "contact": "Contact"
+      },
+      "hero": {
+        "title": "Kris Gu",
+        "subtitle": "Finance x Technology | Data Analytics | LLM Applications",
+        "description": "Master student at Tianjin University focusing on financial data analytics, ML and LLM in finance.",
+        "contact": "Contact Me",
+        "github": "GitHub"
+      },
+      "about": {
+        "title": "About Me",
+        "education": "Education",
+        "intro": "Master in Finance at Tianjin University (985). Bachelor in Finance from CUMT (211). Strong skills in Python data analytics, ML, and financial knowledge.",
+        "strengths": "Core: CPA 4 subjects + Finance + Python + LLM.",
+        "degree": "Master in Finance",
+        "university": "Tianjin University",
+        "faculty": "Faculty of Management and Economics",
+        "major": "Core: Big Data & Financial Risk, Financial Econometrics, Derivatives, Investment, Corporate Finance",
+        "period": "2024.09 - 2027.01 (expected)",
+        "bachelor": "Bachelor in Finance",
+        "bachelorUniv": "China University of Mining and Technology (211)",
+        "bachelorFaculty": "School of Economics & Management",
+        "bachelorMajor": "Core: Money & Banking, Macroeconomics, Financial Data Analysis, Securities Investment",
+        "bachelorPeriod": "Sep 2020 - Jun 2024",
+        "bachelorGpa": "GPA: 4.15/5.0, Top 15%"
+      },
+      "experience": {
+        "title": "Internship Experience"
+      },
+      "projects": {
+        "title": "Research Projects",
+        "tech": "Tech Stack",
+        "objective": "Objective",
+        "methodology": "Methodology",
+        "design": "Research Design",
+        "status": "Status"
+      },
+      "skills": {
+        "title": "Skills & Certifications",
+        "programming": "Programming",
+        "dataTools": "Data Tools",
+        "finance": "Finance Skills",
+        "certifications": "Certifications",
+        "languages": "Languages"
+      },
+      "now": {
+        "title": "Now",
+        "subtitle": "What I am currently into"
+      },
+      "notes": {
+        "title": "Study Notes",
+        "subtitle": "Exam prep notes & mistake reviews"
+      },
+      "contact": {
+        "title": "Get In Touch",
+        "email": "Email",
+        "github": "GitHub",
+        "phone": "Phone",
+        "xiaohongshu": "Xiaohongshu",
+        "bilibili": "Bilibili",
+        "message": "Seeking internships in financial analysis, data science, or quantitative roles."
+      }
+    }
+  },
+  "experiences": [
+    {
+      "company": "Momenta",
+      "companyEn": "Momenta",
+      "role": "资金分析实习生",
+      "roleEn": "Fund Analysis Intern",
+      "period": "2025年12月 - 至今",
+      "periodEn": "Dec 2025 - Present",
+      "logo": "/logos/momenta.svg",
+      "highlightsBold": [
+        0,
+        1,
+        2
+      ],
+      "highlights": [
+        "基于Coze平台搭建AI智能体询价系统，效率提升60%",
+        "开发市场资讯周报和日报生成skill，减少人工编译时间80%",
+        "搭建资金余额、流水监控、理财产品三大飞书仪表板",
+        "针对美国《1940年投资公司法》开展合规研究",
+        "处理美元、日元、韩元等多币种海外应付账款"
+      ],
+      "highlightsEn": [
+        "Built AI inquiry system on Coze, efficiency +60%",
+        "Developed market intelligence reports, manual time -80%",
+        "Built three Feishu dashboards for treasury",
+        "Conducted compliance research on US 1940 Act",
+        "Handled multi-currency overseas accounts payable"
+      ]
+    },
+    {
+      "company": "中化天津有限公司",
+      "companyEn": "Sinochem Tianjin",
+      "role": "产权交易实习生",
+      "roleEn": "Asset Transaction Intern",
+      "period": "2025年8月 - 2025年11月",
+      "periodEn": "Aug 2025 - Nov 2025",
+      "logo": "/logos/sinochem.svg",
+      "highlightsBold": [
+        1,
+        5
+      ],
+      "highlights": [
+        "参与多个资产处置与破产重整项目",
+        "蓝星清洗资产转让项目实现挂牌价50%溢价成交",
+        "为厦门长蓝破产项目制定完整工作流程",
+        "参与中化天津物流十五五规划研究",
+        "为上海写字楼出售项目提供分析支持",
+        "独立撰写3篇项目通讯稿"
+      ],
+      "highlightsEn": [
+        "Participated in multiple asset disposal projects",
+        "Blue Star Cleaning asset transfer achieved 50% premium",
+        "Developed workflow for Xiamen Changlan bankruptcy",
+        "Contributed to 15th Five-Year Plan research",
+        "Provided analytical support for Shanghai office sale",
+        "Independently wrote 3 project newsletters"
+      ]
+    },
+    {
+      "company": "中科曙光（存储产品事业部）",
+      "companyEn": "Sugon (Storage Division)",
+      "role": "项目管理实习生",
+      "roleEn": "Project Management Intern",
+      "period": "2025年3月 - 2025年6月",
+      "periodEn": "Mar 2025 - Jun 2025",
+      "logo": "/logos/sugon.svg",
+      "highlightsBold": [
+        0,
+        2,
+        3
+      ],
+      "highlights": [
+        "管理412d-1230和421SP1两个版本全生命周期",
+        "组织87场评审会议，独立主持20+场Bug评审",
+        "建立标准化评审登记模板，减少重复沟通30-50%",
+        "使用Jira搭建项目看板，研发信息检索效率提升40%",
+        "完成版本数据统计，开展延期Bug根因分析"
+      ],
+      "highlightsEn": [
+        "Managed full lifecycle of 2 product versions",
+        "Organized 87 review meetings, hosted 20+ bug reviews",
+        "Standardized review templates, reduced communication 30-50%",
+        "Built Jira Kanban, retrieval efficiency +40%",
+        "Completed version statistics and root cause analysis"
+      ]
+    },
+    {
+      "company": "东吴证券（研究所）",
+      "companyEn": "CSC Financial (Research)",
+      "role": "行业研究实习生",
+      "roleEn": "Industry Research Intern",
+      "period": "2024年10月 - 2025年3月",
+      "periodEn": "Oct 2024 - Mar 2025",
+      "logo": "/logos/csc.svg",
+      "highlightsBold": [
+        0,
+        1
+      ],
+      "highlights": [
+        "深度参与三花智控和厦门钨业深度报告，搭建DCF与PE/PEG估值模型",
+        "持续跟踪宁德时代、赣锋锂业等龙头，整理调研纪要20+篇",
+        "按月更新正极/负极/隔膜产量数据",
+        "协助分析毛利率、ROE、资本开支等财务指标",
+        "使用Choice/Wind金融终端产出研究报告"
+      ],
+      "highlightsEn": [
+        "Built DCF and PE/PEG models for Sanhua and Xiamen Tungsten",
+        "Tracked CATL and Ganfeng Lithium, compiled 20+ minutes",
+        "Updated monthly production data for components",
+        "Analyzed financial metrics for covered companies",
+        "Used Choice/Wind terminals for research reports"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "股票行业相似度与反转策略研究",
+      "titleEn": "Stock Industry Similarity and Reversal Strategy",
+      "subtitle": "基于年报MD&A文本的算法分类",
+      "subtitleEn": "Algorithmic Classification based on MD&A Text",
+      "tech": [
+        "Python",
+        "Pandas",
+        "BERT",
+        "GLM-4",
+        "Cosine Similarity",
+        "Louvain",
+        "T-test",
+        "ANOVA"
+      ],
+      "objective": "探索基于MD&A文本相似度的算法行业分类改进A股反转策略。",
+      "objectiveEn": "Explore algorithm-based industry classification to improve A-share reversal strategies.",
+      "methodology": "对比Embedding模型；Louvain社区检测；反转策略回测；Lead-Lag分析。",
+      "methodologyEn": "Compare embedding models; Louvain community detection; Reversal backtest; Lead-Lag analysis.",
+      "design": "使用2012-2024年A股年报MD&A文本，反转策略形成期{2,4,6,8}周。",
+      "designEn": "Use 2012-2024 A-share MD&A. Strategy formation: {2,4,6,8} weeks.",
+      "status": "进行中 (2025年8月 - 至今)",
+      "statusEn": "Ongoing (Aug 2025 - Present)"
+    },
+    {
+      "title": "投资者情绪指数与期货价格发现",
+      "titleEn": "Investor Sentiment Index and Futures Price Discovery",
+      "subtitle": "基于股吧文本挖掘的高频情绪指数",
+      "subtitleEn": "High-Frequency Sentiment from Forum Text Mining",
+      "tech": [
+        "Python",
+        "Requests",
+        "BeautifulSoup",
+        "FDA",
+        "Text Mining",
+        "Sentiment Lexicon",
+        "VAR"
+      ],
+      "objective": "构建高频投资者情绪指数，检验对期货价格发现的影响。",
+      "objectiveEn": "Construct high-frequency sentiment index and test impact on price discovery.",
+      "methodology": "每日爬取股吧帖子；情感词典构建指数；FDA混频融合；VAR模型检验。",
+      "methodologyEn": "Daily forum scraping; sentiment lexicon index; FDA fusion; VAR model.",
+      "design": "情绪指数构建流程：爬取、清洗、打分、聚合。VAR含期货收益率、情绪、成交量。",
+      "designEn": "Sentiment pipeline: scrape, clean, score, aggregate. VAR with returns, sentiment, volume.",
+      "status": "已结项 (2022年4月 - 2024年4月)",
+      "statusEn": "Completed (Apr 2022 - Apr 2024)"
+    },
+    {
+      "title": "招商银行数字金融训练营",
+      "titleEn": "CMB Digital Finance Camp",
+      "subtitle": "用户行为预测与AI营销智能体",
+      "subtitleEn": "User Behavior Prediction and AI Marketing Agent",
+      "tech": [
+        "Python",
+        "Pandas",
+        "Scikit-learn",
+        "BERT",
+        "Flask",
+        "API Design"
+      ],
+      "objective": "开发用户广告点击预测、资讯分类模型及AI营销智能体。",
+      "objectiveEn": "Develop ad click prediction, news classification, and AI marketing agent.",
+      "methodology": "移动窗口训练；BERT多分类；Flask API服务。",
+      "methodologyEn": "Moving window training; BERT multi-class; Flask API.",
+      "design": "端到端ML工作流。时间序列交叉验证。RESTful API。评估：AUC、准确率、F1。",
+      "designEn": "End-to-end ML. Time-series CV. RESTful API. Metrics: AUC, accuracy, F1.",
+      "status": "已完成 (2025年7月 - 2025年8月)",
+      "statusEn": "Completed (Jul 2025 - Aug 2025)"
+    }
+  ],
+  "skillsData": {
+    "programming": [
+      "Python",
+      "SQL",
+      "VBA"
+    ],
+    "dataTools": [
+      "Pandas",
+      "NumPy",
+      "Scikit-learn",
+      "BERT",
+      "MySQL",
+      "Wind/Choice",
+      "Power BI",
+      "Jira",
+      "Confluence"
+    ],
+    "finance": [
+      "财务分析",
+      "DCF估值",
+      "行业研究",
+      "财务建模",
+      "风险评估",
+      "资产估值"
+    ],
+    "certifications": [
+      "CPA：通过会计、财务成本管理、经济法、公司战略与风险管理（4科）",
+      "税务师（CTA）：通过财务与会计、税法一、税法二、涉税服务实务（4科）",
+      "初级会计专业技术资格证书",
+      "基金从业资格证书",
+      "CET-6（英语六级）"
+    ],
+    "certificationsEn": [
+      "CPA: 4 subjects passed",
+      "CTA: 4 subjects passed",
+      "Junior Accounting Qualification",
+      "Fund Practitioner Certificate",
+      "CET-6"
+    ],
+    "languages": [
+      "中文（母语）",
+      "English（CET-6，专业工作语言）"
+    ]
+  },
+  "vibeTools": [
+    {
+      "name": "OAA · 网申助手",
+      "nameEn": "OAA · Online Application Assistant",
+      "desc": "自动读取招聘平台的网申问题，结合个人经历生成填写内容。",
+      "descEn": "Reads application questions and generates tailored answers.",
+      "tech": [
+        "Python"
+      ],
+      "github": "https://github.com/gu1209/onsite_apply_ass"
+    }
+  ],
+  "metrics": {
+    "zh": [
+      {
+        "target": 4,
+        "decimals": 0,
+        "suffix": "",
+        "prefix": "",
+        "label": "段实习经历"
+      },
+      {
+        "target": 60,
+        "decimals": 0,
+        "suffix": "%",
+        "prefix": "",
+        "label": "效率提升"
+      },
+      {
+        "target": 80,
+        "decimals": 0,
+        "suffix": "%",
+        "prefix": "",
+        "label": "人工时间节省"
+      },
+      {
+        "target": 4,
+        "decimals": 0,
+        "suffix": "",
+        "prefix": "CPA ",
+        "label": "科目通过"
+      },
+      {
+        "target": 92.21,
+        "decimals": 2,
+        "suffix": "",
+        "prefix": "",
+        "label": "GPA 专业前10%"
+      }
+    ],
+    "en": [
+      {
+        "target": 4,
+        "decimals": 0,
+        "suffix": "",
+        "prefix": "",
+        "label": "Internships"
+      },
+      {
+        "target": 60,
+        "decimals": 0,
+        "suffix": "%",
+        "prefix": "",
+        "label": "Efficiency Gain"
+      },
+      {
+        "target": 80,
+        "decimals": 0,
+        "suffix": "%",
+        "prefix": "",
+        "label": "Time Saved"
+      },
+      {
+        "target": 4,
+        "decimals": 0,
+        "suffix": "",
+        "prefix": "CPA ",
+        "label": "Subjects Passed"
+      },
+      {
+        "target": 92.21,
+        "decimals": 2,
+        "suffix": "",
+        "prefix": "",
+        "label": "GPA Top 10%"
+      }
+    ]
+  },
+  "notes": [
+    {
+      "id": "default-1",
+      "title": "税二·错题复盘·综合提高",
+      "tag": "CTA 税法二",
+      "href": "https://share.mubu.com/doc/3TZehcyQt6R"
+    }
+  ],
+  "now": [
+    {
+      "emoji": "📚",
+      "category": "在读",
+      "categoryEn": "Reading",
+      "content": "点击编辑，填写你在读的书"
+    },
+    {
+      "emoji": "🎬",
+      "category": "在看",
+      "categoryEn": "Watching",
+      "content": "点击编辑，填写在看的剧或番"
+    },
+    {
+      "emoji": "💬",
+      "category": "在聊",
+      "categoryEn": "Thinking",
+      "content": "点击编辑，填写最近在思考的话题"
+    }
+  ],
+  "contact": {
+    "email": "gujie_kris@163.com",
+    "github": "https://github.com/gu1209",
+    "xiaohongshu": "https://xhslink.com/m/5Q4gGqHQfrc",
+    "bilibili": "https://b23.tv/qt7QGN9",
+    "phone": "+86 192 9224 4363",
+    "xhsUid": "293946035",
+    "biliName": "清祀朔九"
+  }
+}

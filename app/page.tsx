@@ -1,7 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles, Lock, RotateCcw, LogOut, BookOpen, ExternalLink, Plus, Trash2, Pencil, Sun, Moon, Eye, EyeOff } from 'lucide-react';
+import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles, Lock, RotateCcw, LogOut, BookOpen, ExternalLink, Plus, Trash2, Pencil, Sun, Moon, Eye, EyeOff, Settings } from 'lucide-react';
+import { useContentStore } from '@/lib/adminStore';
+import AdminPanel from '@/components/AdminPanel';
+import defaultContent from '@/public/content.json';
 import ResumeExportModal from '@/components/ResumeExportModal';
 import { STAR_DATA } from '@/lib/starData';
 import { useAdminContent, useNotesStore, NoteItem, useNowStore, NowItem, useHiddenSections } from '@/lib/adminStore';
@@ -413,6 +416,10 @@ export default function Home() {
   const [adminPwError, setAdminPwError] = useState(false);
   const adminCtx: AdminCtx = { isAdmin, get, save };
 
+  // Content store for full data editing
+  const { content: storeContent, updateContent, importJSON: contentImport, exportJSON: contentExport, resetContent } = useContentStore(defaultContent as any);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
+
   // Dark mode
   const [isDark, setIsDark] = useState(false);
   useEffect(() => {
@@ -425,10 +432,10 @@ export default function Home() {
   }, [isDark]);
 
   // Notes store (localStorage-backed)
-  const { notes, addNote, removeNote, updateNote } = useNotesStore(defaultNotes);
+  const { notes, addNote, removeNote, updateNote } = useNotesStore(storeContent.notes as NoteItem[]);
 
   // "Now" store
-  const { items: nowItems, updateItem: updateNowItem } = useNowStore(defaultNow);
+  const { items: nowItems, updateItem: updateNowItem } = useNowStore(storeContent.now as NowItem[]);
 
   // Section visibility (admin can hide sections from visitors)
   const { isHidden: secHidden, toggle: toggleSec } = useHiddenSections();
@@ -725,7 +732,7 @@ export default function Home() {
         <div className="bg-white border-y border-gray-100 py-10 px-6 relative">
           <Veil id="metrics" />
           <div className={`max-w-4xl mx-auto grid grid-cols-3 md:grid-cols-5 gap-8 ${dim('metrics')}`}>
-            {(lang === 'zh' ? METRICS_ZH : METRICS_EN).map((m, i) => (
+            {((lang === "zh" ? (storeContent.metrics as any)?.zh : (storeContent.metrics as any)?.en) ?? METRICS_ZH as any[]).map((m: any, i: number) => (
               <AnimatedStat key={i} {...m} />
             ))}
           </div>
@@ -819,7 +826,7 @@ export default function Home() {
             <div className="absolute left-5 top-5 bottom-5 w-px bg-gradient-to-b from-primary-400 via-primary-200 to-primary-50 hidden md:block" />
 
             <div className="space-y-5">
-              {experiences.map((exp, idx) => (
+              {(storeContent.experiences as any[]).map((exp, idx) => (
                 <div
                   key={idx}
                   className="flex items-start gap-5 animate-on-scroll"
@@ -867,7 +874,7 @@ export default function Home() {
                     </div>
 
                     <ul className="space-y-2.5">
-                      {(lang === 'en' ? exp.highlightsEn : exp.highlights).map((highlight, i) => (
+                      {(lang === 'en' ? exp.highlightsEn : exp.highlights).map((highlight: string, i: number) => (
                         <li
                           key={i}
                           className={`flex items-start gap-2.5 text-sm leading-relaxed ${
@@ -941,7 +948,7 @@ export default function Home() {
         <div className={dim('projects')}><div className="max-w-4xl mx-auto">
           <SectionHeading label={t.projects.title} />
           <div className="space-y-3">
-            {projects.map((project, idx) => {
+            {(storeContent.projects as any[]).map((project, idx) => {
               const isExpanded = expandedProject === idx;
               const title = lang === 'en' ? project.titleEn : project.title;
               const subtitle = lang === 'en' ? project.subtitleEn : project.subtitle;
@@ -1043,7 +1050,7 @@ export default function Home() {
                   <h3 className="font-semibold text-gray-900 text-sm">{t.skills[cat.key as keyof typeof t.skills]}</h3>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {(skillsData[cat.key as keyof typeof skillsData] as string[]).map((skill, j) => (
+                  {((storeContent.skillsData as any)?.[cat.key as keyof typeof storeContent.skillsData] as string[]).map((skill: string, j: number) => (
                     <span
                       key={j}
                       className="skill-tag-hover bg-gray-50 px-3 py-1.5 rounded-lg text-gray-700 text-xs font-medium border border-gray-200 hover:border-primary-300 hover:bg-primary-50 cursor-default"
@@ -1063,7 +1070,7 @@ export default function Home() {
               <h3 className="font-semibold text-gray-900 text-sm">{t.skills.certifications}</h3>
             </div>
             <div className="grid sm:grid-cols-2 gap-2.5">
-              {(lang === 'zh' ? skillsData.certifications : skillsData.certificationsEn).map((cert, i) => (
+              {(lang === 'zh' ? (storeContent.skillsData as any)?.certifications : (storeContent.skillsData as any)?.certificationsEn).map((cert: string, i: number) => (
                 <div key={i} className="flex items-start gap-2.5 bg-gray-50 px-4 py-3 rounded-xl border border-gray-100">
                   <span className="mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-primary-400" />
                   <E id={`cert.${lang}.${i}`} def={cert} cls="text-gray-700 text-sm leading-relaxed" />
@@ -1079,7 +1086,7 @@ export default function Home() {
               <h3 className="font-semibold text-gray-900 text-sm">{t.skills.languages}</h3>
             </div>
             <div className="flex flex-wrap gap-2.5">
-              {skillsData.languages.map((langItem, i) => (
+              {(storeContent.skillsData as any)?.languages.map((langItem: string, i: number) => (
                 <span key={i} className="bg-gray-50 px-4 py-2.5 rounded-xl text-gray-700 text-sm border border-gray-200 font-medium">
                   <E id={`lang.item.${i}`} def={langItem} />
                 </span>
@@ -1100,7 +1107,7 @@ export default function Home() {
             {lang === 'zh' ? '用 AI 辅助编程（Vibe Coding）构建的实用小工具，持续更新中' : 'Handy tools built with AI-assisted (Vibe) Coding — updated regularly'}
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {vibeTools.map((tool, i) => (
+            {(storeContent.vibeTools as any[]).map((tool: any, i: number) => (
               <a
                 key={i}
                 href={tool.github}
@@ -1119,7 +1126,7 @@ export default function Home() {
                   {lang === 'zh' ? tool.desc : tool.descEn}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
-                  {tool.tech.map((tag, j) => (
+                  {tool.tech.map((tag: string, j: number) => (
                     <span key={j} className="text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full font-medium border border-primary-100">
                       {tag}
                     </span>
@@ -1355,6 +1362,17 @@ export default function Home() {
 
       <CursorSparkle />
 
+      {showAdminPanel && (
+        <AdminPanel
+          content={storeContent}
+          onUpdate={updateContent}
+          onImport={contentImport}
+          onExport={contentExport}
+          onReset={resetContent}
+          onClose={() => setShowAdminPanel(false)}
+        />
+      )}
+
       <ResumeExportModal
         isOpen={isExportModalOpen}
         onClose={() => setIsExportModalOpen(false)}
@@ -1397,7 +1415,10 @@ export default function Home() {
         <div className="fixed bottom-0 left-0 right-0 z-[150] bg-amber-400 text-amber-900 px-6 py-2.5 flex items-center justify-between shadow-xl">
           <span className="text-sm font-semibold">⚙ 管理员编辑模式 — 点击任意高亮文字即可编辑，失焦自动保存到 localStorage</span>
           <div className="flex items-center gap-3">
-            <button onClick={reset} className="flex items-center gap-1 text-xs font-medium underline hover:no-underline">
+            <button onClick={() => setShowAdminPanel(true)} className="flex items-center gap-1.5 text-xs font-medium bg-amber-900/20 hover:bg-amber-900/30 px-3 py-1 rounded-lg transition">
+            <Settings size={12} /> 内容编辑器
+          </button>
+          <button onClick={reset} className="flex items-center gap-1 text-xs font-medium underline hover:no-underline">
               <RotateCcw size={12} /> 重置所有修改
             </button>
             <button onClick={logout} className="flex items-center gap-1.5 bg-amber-900 text-amber-100 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-amber-800 transition">
