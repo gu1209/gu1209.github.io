@@ -44,31 +44,31 @@ function E({ id, def, as = 'span', cls, style }: {
 // ============== TRANSLATION OBJECTS ==============
 const translations = {
   zh: {
-    nav: { about: '关于我', experience: '实习经历', projects: '研究项目', skills: '技能与证书', tools: 'Vibe小工具', now: '现在', notes: '学习笔记', contact: '联系方式' },
-    hero: { title: '顾杰', subtitle: '金融 × 技术 | 数据分析 | LLM应用', description: '天津大学金融硕士在读，专注于金融数据分析、机器学习与LLM在金融领域的应用。', contact: '联系我', github: 'GitHub' },
-    about: { title: '关于我', education: '教育背景', intro: '天津大学（985）金融硕士在读，研究方向为机器学习在金融市场的应用。本科毕业于中国矿业大学（211）金融专业。具备扎实的Python数据分析能力、机器学习基础和金融专业知识。', strengths: '核心优势：CPA专业阶段4科通过 + 金融专业 + Python技术 + LLM应用经验，复合背景突出。', degree: '金融硕士', university: '天津大学', faculty: '管理与经济学部', facultyEn: 'Faculty of Management and Economics', major: '主修课程：大数据与金融风险、金融随机分析、金融计量经济学、金融数据分析、衍生金融工具、行为金融学、投资学、公司金融', period: '2024.09 - 2027.01（预计）', bachelor: '金融学士', bachelorUniv: '中国矿业大学（211）', bachelorFaculty: '经济管理学院', bachelorMajor: '主修课程：货币金融学、宏观经济学、微观经济学、管理学、商业银行经营管理、金融数据分析、大数据分析技术、金融经济学、证券投资学、基础会计学、Python数据分析', bachelorPeriod: '2020.09 - 2024.06', bachelorGpa: 'GPA: 4.15/5.0，专业前15%，二等学业奖学金' },
+    nav: { about: '关于我', experience: '实习经历', projects: '项目经历', skills: '技能与证书', tools: 'Vibe Coding', now: '现在', notes: '学习笔记', contact: '联系方式' },
+    hero: { title: '顾杰', subtitle: 'AI Product × Vibe Coding | Agent 开发 | 金融数据分析', description: '天津大学金融硕士，专注于 AI Agent 架构设计、LLM 应用开发与 Vibe Coding 实践。用 AI 重新定义金融工作流。', contact: '联系我', github: 'GitHub' },
+    about: { title: '关于我', education: '教育背景', intro: '天津大学（985）金融硕士在读。我是一名 AI Product 实践者，擅长将 LLM 与 Agent 技术落地到真实业务场景中。在 Momenta 从零搭建了企业级 AI 智能助手系统，实现了从意图路由、RAG 上下文注入到多会话记忆的完整 Agent Harness 架构。同时是一名 Vibe Coding 爱好者，用 AI 辅助编程持续构建实用工具。', strengths: '核心优势：AI Agent 全栈实践 + CPA 4科金融专业 + Python/Vibe Coding 能力 + 4段跨领域实习，复合型 AI 产品人才。', degree: '金融硕士', university: '天津大学', faculty: '管理与经济学部', facultyEn: 'Faculty of Management and Economics', major: '主修课程：大数据与金融风险、金融随机分析、金融计量经济学、金融数据分析、衍生金融工具、行为金融学、投资学、公司金融', period: '2024.09 - 2027.01（预计）', bachelor: '金融学士', bachelorUniv: '中国矿业大学（211）', bachelorFaculty: '经济管理学院', bachelorMajor: '主修课程：货币金融学、宏观经济学、微观经济学、管理学、商业银行经营管理、金融数据分析、大数据分析技术、金融经济学、证券投资学、基础会计学、Python数据分析', bachelorPeriod: '2020.09 - 2024.06', bachelorGpa: 'GPA: 4.15/5.0，专业前15%，二等学业奖学金' },
     experience: { title: '实习经历' },
-    projects: { title: '研究项目', tech: '技术栈', objective: '研究目标', methodology: '研究方法', design: '研究设计', status: '状态' },
-    skills: { title: '技能与证书', programming: '编程语言', dataTools: '数据分析工具', finance: '金融能力', certifications: '专业认证', languages: '语言能力' },
+    projects: { title: '项目经历', tech: '技术栈', objective: '项目目标', methodology: '架构设计', design: '关键决策', status: '状态' },
+    skills: { title: '技能与证书', programming: '编程语言', dataTools: '数据分析工具', finance: '金融 & 产品', aiAgent: 'AI / Agent', certifications: '专业认证', languages: '语言能力' },
     now: { title: '最近在…', subtitle: '动态更新，记录当下在做的事' },
     notes: { title: '学习笔记', subtitle: '整理的备考笔记与错题复盘，持续更新中' },
     contact: {
       title: '联系方式', email: '邮箱', github: 'GitHub', phone: '电话', xiaohongshu: '小红书', bilibili: 'B站',
-      message: '寻求金融分析、数据科学或量化相关实习机会。欢迎联系！',
+      message: '寻求 AI 产品经理、AI Agent 开发、Vibe Coding 相关实习或全职机会。欢迎联系！',
     },
   },
   en: {
-    nav: { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills & Certs', tools: 'Vibe Tools', now: 'Now', notes: 'Notes', contact: 'Contact' },
-    hero: { title: 'Kris Gu', subtitle: 'Finance × Technology | Data Analytics | LLM Applications', description: "Master's student at Tianjin University focusing on financial data analytics, machine learning, and LLM applications in finance.", contact: 'Contact Me', github: 'GitHub' },
-    about: { title: 'About Me', education: 'Education', intro: "Master's in Finance at Tianjin University (985), research focus on machine learning in financial markets. Bachelor's in Finance from China University of Mining and Technology (211). Strong skills in Python data analytics, machine learning, and financial knowledge.", strengths: 'Core strengths: CPA 4 subjects passed + Finance expertise + Python programming + LLM application experience.', degree: "Master's in Finance", university: 'Tianjin University', faculty: 'Faculty of Management and Economics', major: 'Core Courses: Big Data & Financial Risk, Financial Stochastic Analysis, Financial Econometrics, Financial Data Analysis, Derivatives, Behavioral Finance, Investment, Corporate Finance', period: '2024.09 - 2027.01 (expected)', bachelor: 'Bachelor in Finance', bachelorUniv: 'China University of Mining and Technology (211)', bachelorFaculty: 'School of Economics & Management', bachelorMajor: 'Core Courses: Money & Banking, Macroeconomics, Microeconomics, Management, Commercial Bank Management, Financial Data Analysis, Big Data Analytics, Financial Economics, Securities Investment, Basic Accounting, Python Data Analysis', bachelorPeriod: 'Sep 2020 - Jun 2024', bachelorGpa: 'GPA: 4.15/5.0, Top 15% in major, Second-class Academic Scholarship' },
+    nav: { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills & Certs', tools: 'Vibe Coding', now: 'Now', notes: 'Notes', contact: 'Contact' },
+    hero: { title: 'Kris Gu', subtitle: 'AI Product × Vibe Coding | Agent Development | Financial Data Analytics', description: "Master's in Finance at Tianjin University, focused on AI Agent architecture, LLM application development, and Vibe Coding practice. Redefining financial workflows with AI.", contact: 'Contact Me', github: 'GitHub' },
+    about: { title: 'About Me', education: 'Education', intro: "Master's in Finance at Tianjin University (985). I'm an AI Product practitioner skilled in landing LLM and Agent technologies in real business scenarios. At Momenta, I built an enterprise AI assistant system from scratch, implementing a complete Agent Harness architecture with intent routing, RAG context injection, and multi-session memory. Also a Vibe Coding enthusiast, continuously building practical tools with AI-assisted programming.", strengths: 'Core strengths: Full-stack AI Agent practice + CPA 4 subjects + Python/Vibe Coding + 4 cross-domain internships — a compound AI product talent.', degree: "Master's in Finance", university: 'Tianjin University', faculty: 'Faculty of Management and Economics', major: 'Core Courses: Big Data & Financial Risk, Financial Stochastic Analysis, Financial Econometrics, Financial Data Analysis, Derivatives, Behavioral Finance, Investment, Corporate Finance', period: '2024.09 - 2027.01 (expected)', bachelor: 'Bachelor in Finance', bachelorUniv: 'China University of Mining and Technology (211)', bachelorFaculty: 'School of Economics & Management', bachelorMajor: 'Core Courses: Money & Banking, Macroeconomics, Microeconomics, Management, Commercial Bank Management, Financial Data Analysis, Big Data Analytics, Financial Economics, Securities Investment, Basic Accounting, Python Data Analysis', bachelorPeriod: 'Sep 2020 - Jun 2024', bachelorGpa: 'GPA: 4.15/5.0, Top 15% in major, Second-class Academic Scholarship' },
     experience: { title: 'Internship Experience' },
-    projects: { title: 'Research Projects', tech: 'Tech Stack', objective: 'Objective', methodology: 'Methodology', design: 'Research Design', status: 'Status' },
-    skills: { title: 'Skills & Certifications', programming: 'Programming', dataTools: 'Data Tools', finance: 'Finance Skills', certifications: 'Certifications', languages: 'Languages' },
+    projects: { title: 'Projects', tech: 'Tech Stack', objective: 'Objective', methodology: 'Architecture', design: 'Key Decisions', status: 'Status' },
+    skills: { title: 'Skills & Certifications', programming: 'Programming', dataTools: 'Data Tools', finance: 'Finance & Product', aiAgent: 'AI / Agent', certifications: 'Certifications', languages: 'Languages' },
     now: { title: 'Now', subtitle: 'What I\'m currently into — updated live' },
     notes: { title: 'Study Notes', subtitle: 'Exam prep notes & mistake reviews — updated regularly' },
     contact: {
       title: 'Get In Touch', email: 'Email', github: 'GitHub', phone: 'Phone', xiaohongshu: 'Xiaohongshu', bilibili: 'Bilibili',
-      message: 'Seeking internships in financial analysis, data science, or quantitative roles. Feel free to reach out!',
+      message: 'Seeking opportunities in AI Product Management, AI Agent Development, or Vibe Coding roles. Feel free to reach out!',
     },
   },
 };
@@ -78,8 +78,8 @@ const experiences = [
   {
     company: 'Momenta',
     companyEn: 'Momenta',
-    role: '资金分析实习生',
-    roleEn: 'Fund Analysis Intern',
+    role: 'AI 产品 & 资金分析实习生',
+    roleEn: 'AI Product & Fund Analysis Intern',
     period: '2025年12月 - 至今',
     periodEn: 'Dec 2025 - Present',
     highlights: [
@@ -177,6 +177,22 @@ const experiences = [
 
 const projects = [
   {
+    title: '企业资金管理系统 AI Agent',
+    titleEn: 'AI Agent for Enterprise Treasury Management',
+    subtitle: '从零搭建 Agent Harness 全栈架构 — Planning / Prompt / RAG / Memory / Skill / Multi-Agent 六层设计',
+    subtitleEn: 'Built Agent Harness from scratch — 6-layer architecture: Planning, Prompt, RAG, Memory, Skill, Multi-Agent',
+    tech: ['TypeScript', 'Node.js', 'Claude Code CLI', 'MCP', 'RAG', 'Vue 3', 'Element Plus', 'Pinia', '飞书 API'],
+    objective: '为企业资金管理系统设计并实现内置 AI 智能助手模块。核心挑战不是"调用 LLM"，而是在企业内网约束下，从零搭建一个完整的 Agent Harness（脚手架层），让 LLM 具备感知真实数据、调用工具、跨会话记忆和个性化响应的能力。',
+    objectiveEn: 'Designed and implemented an AI assistant module for enterprise treasury management. The core challenge was not "calling LLM API" but building a complete Agent Harness from scratch under enterprise intranet constraints — enabling LLM to perceive real data, invoke tools, maintain cross-session memory, and deliver personalized responses.',
+    methodology: '架构分六层实现：(1) Planning 层：双模式路由（Chat 模式直调 LLM Gateway vs Agent 模式 spawn Claude Code CLI 子进程执行 ReAct 循环）；(2) Prompt 层：角色分化的 System Prompt（Chat 不提工具避免幻觉，Agent 明确告知工具能力）；(3) RAG 层：结构化财务数据全量注入（非向量数据库），用户可控上下文选择；(4) Memory 层：L2 会话历史持久化（60条滑动窗口），L3 个人化长期记忆设计阶段；(5) Skill 层：预定义技能执行器（balance / market-intel / asset-prices 等），结果带 TTL 缓存；(6) Multi-Agent 层：Coordinator + 专家 Agent Swarm 架构设计（待实现）。',
+    methodologyEn: 'Architecture implemented in 6 layers: (1) Planning: Dual-mode routing (Chat mode → LLM Gateway vs Agent mode → Claude Code CLI subprocess with ReAct loop); (2) Prompt: Role-differentiated System Prompts (Chat omits tools to prevent hallucination, Agent explicitly declares tool capabilities); (3) RAG: Structured financial data full injection (no vector DB), user-controlled context selection; (4) Memory: L2 session history persistence (60-item sliding window), L3 personalized long-term memory in design; (5) Skill: Predefined skill executor with TTL cache; (6) Multi-Agent: Coordinator + expert Agent Swarm architecture design.',
+    design: '关键工程决策：Claude Code CLI 子进程模式绕过企业内网证书限制，以进程隔离换取完整 Agent 能力；结构化全量注入替代向量 RAG（财务数据实时性强、结构化、体量小 <2K tokens）；场景化引导模板区分"自动注入发送"与"填充模板不发送"解决冷启动问题；踩过 key 坑：Chat 模式 System Prompt 提及不存在的工具能力会导致 LLM 捏造查询结果。技术栈：Vue 3 + TypeScript + Element Plus + Pinia（前端），Node.js + Express + TypeScript（后端），Claude Code CLI（Agent 运行时），飞书多维表格 API（数据源）。',
+    designEn: 'Key engineering decisions: Claude Code CLI subprocess mode bypasses enterprise certificate restrictions, trading process isolation for complete Agent capabilities; Structured full injection over vector RAG (financial data is real-time, structured, small <2K tokens); Scenario-guided templates differentiate "auto-inject & send" vs "fill template & wait" to solve cold start; Key lesson: mentioning non-existent tool capabilities in Chat mode System Prompt causes LLM to hallucinate query results. Tech stack: Vue 3 + TypeScript + Element Plus + Pinia (frontend), Node.js + Express + TypeScript (backend), Claude Code CLI (Agent runtime), Feishu API (data source).',
+    status: '已完成 (2025年12月 - 至今)',
+    statusEn: 'Completed (Dec 2025 - Present)',
+    featured: true,
+  },
+  {
     title: '股票行业相似度与反转策略研究',
     titleEn: 'Stock Industry Similarity and Reversal Strategy Research',
     subtitle: '基于年报MD&A文本的算法分类与信息扩散效应',
@@ -224,9 +240,10 @@ const projects = [
 ];
 
 const skillsData = {
-  programming: ['Python', 'SQL', 'VBA'],
+  aiAgent: ['Claude Code', 'Coze', 'LangChain', 'MCP', 'Agent 架构设计', 'RAG', 'Prompt Engineering', 'ReAct', 'Memory 管理'],
+  programming: ['Python', 'TypeScript', 'JavaScript', 'SQL', 'VBA'],
   dataTools: ['Pandas', 'NumPy', 'Scikit-learn', 'BERT', 'MySQL', 'Wind/Choice', 'Power BI', 'Jira', 'Confluence'],
-  finance: ['财务分析', 'DCF估值', '行业研究', '财务建模', '风险评估', '资产估值'],
+  finance: ['AI 产品设计', '财务分析', 'DCF估值', '行业研究', '财务建模', '风险评估'],
   certifications: [
     'CPA：通过会计、财务成本管理、经济法、公司战略与风险管理（4科）',
     '税务师（CTA）：通过财务与会计、税法一、税法二、涉税服务实务（4科）',
@@ -248,17 +265,34 @@ const vibeTools = [
   {
     name: 'OAA · 网申助手',
     nameEn: 'OAA · Online Application Assistant',
-    desc: '自动读取招聘平台的网申问题，结合个人经历生成填写内容，告别重复手填，大幅提升投递效率。',
-    descEn: 'Reads job application form questions and generates tailored answers based on your background. No more repetitive manual form-filling.',
-    tech: ['Python'],
+    desc: '自动读取招聘平台的网申问题，结合个人经历生成填写内容，告别重复手填，大幅提升投递效率。纯 Vibe Coding 驱动，从需求到上线仅用数小时。',
+    descEn: 'Auto-reads job application questions and generates tailored answers from your resume. Built entirely with Vibe Coding — from idea to production in hours.',
+    tech: ['Python', 'Claude Code', 'Vibe Coding'],
     github: 'https://github.com/gu1209/onsite_apply_ass',
+  },
+  {
+    name: '财务 AI Agent 系统',
+    nameEn: 'Financial AI Agent System',
+    desc: '为企业资金管理系统搭建 AI 智能助手，实现双模式路由、RAG 上下文注入、多会话记忆、技能执行器等完整 Agent Harness 架构。',
+    descEn: 'AI assistant for enterprise treasury with dual-mode routing, RAG context injection, multi-session memory, and skill executor — a complete Agent Harness.',
+    tech: ['TypeScript', 'Claude Code CLI', 'MCP', 'Node.js', 'Vue 3'],
+    github: 'https://github.com/gu1209',
+  },
+  {
+    name: '市场资讯自动化',
+    nameEn: 'Market Intelligence Automation',
+    desc: '开发市场资讯周报/日报自动生成 Skill，覆盖美国/中国/全球经济三大维度，自动筛选信息并生成飞书云文档推送。',
+    descEn: 'Automated weekly/daily market intelligence reports covering US/China/Global economy. Auto-filters info and generates Feishu docs for team distribution.',
+    tech: ['Claude Code', 'Skill', '飞书 API', 'Vibe Coding'],
+    github: 'https://github.com/gu1209',
   },
 ];
 
 const skillCategories = [
+  { key: 'aiAgent', icon: Sparkles, label: 'AI / Agent' },
   { key: 'programming', icon: Code, label: '编程语言' },
   { key: 'dataTools', icon: Database, label: '数据分析工具' },
-  { key: 'finance', icon: BarChart3, label: '金融能力' },
+  { key: 'finance', icon: BarChart3, label: '金融 & 产品' },
 ];
 
 // ── Study notes default data ──────────────────────────────────────────────
@@ -348,17 +382,17 @@ function AnimatedStat({ target, decimals = 0, suffix = '', prefix = '', label }:
 
 const METRICS_ZH = [
   { target: 4,     decimals: 0, suffix: '',   prefix: '',     label: '段实习经历' },
-  { target: 60,    decimals: 0, suffix: '%',  prefix: '',     label: '效率提升' },
+  { target: 60,    decimals: 0, suffix: '%',  prefix: '',     label: 'AI 效率提升' },
   { target: 80,    decimals: 0, suffix: '%',  prefix: '',     label: '人工时间节省' },
-  { target: 4,     decimals: 0, suffix: '',   prefix: 'CPA ', label: '科目通过' },
-  { target: 92.21, decimals: 2, suffix: '',   prefix: '',     label: 'GPA 专业前10%' },
+  { target: 3,     decimals: 0, suffix: '',   prefix: '',     label: '个 Vibe Coding 工具' },
+  { target: 6,     decimals: 0, suffix: '',   prefix: '',     label: '层 Agent 架构' },
 ];
 const METRICS_EN = [
   { target: 4,     decimals: 0, suffix: '',   prefix: '',     label: 'Internships' },
-  { target: 60,    decimals: 0, suffix: '%',  prefix: '',     label: 'Efficiency Gain' },
+  { target: 60,    decimals: 0, suffix: '%',  prefix: '',     label: 'AI Efficiency Gain' },
   { target: 80,    decimals: 0, suffix: '%',  prefix: '',     label: 'Time Saved' },
-  { target: 4,     decimals: 0, suffix: '',   prefix: 'CPA ', label: 'Subjects Passed' },
-  { target: 92.21, decimals: 2, suffix: '',   prefix: '',     label: 'GPA Top 10%' },
+  { target: 3,     decimals: 0, suffix: '',   prefix: '',     label: 'Vibe Coding Tools' },
+  { target: 6,     decimals: 0, suffix: '',   prefix: '',     label: 'Agent Layers' },
 ];
 
 // ── "Now" default items ───────────────────────────────────────────────────
@@ -627,12 +661,12 @@ export default function Home() {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="pt-28 pb-20 px-6 relative bg-white">
+      <section className="pt-28 pb-20 px-6 relative bg-white hero-mesh">
         {/* Background decorations — overflow-hidden scoped here so content isn't clipped */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {/* Dot-grid background decoration */}
           <div
-            className="absolute inset-0 opacity-[0.4]"
+            className="absolute inset-0 opacity-[0.25]"
             style={{
               backgroundImage: 'radial-gradient(circle, #cbd5e1 1px, transparent 1px)',
               backgroundSize: '28px 28px',
@@ -644,15 +678,37 @@ export default function Home() {
           <div className="absolute top-0 left-0 w-[600px] h-[400px] bg-gradient-to-br from-primary-50/70 to-transparent rounded-full blur-3xl" />
           {/* Soft radial glow bottom-right */}
           <div className="absolute bottom-0 right-0 w-[500px] h-[350px] bg-gradient-to-tl from-violet-50/60 to-transparent rounded-full blur-3xl" />
+          {/* Floating tech pills */}
+          <div className="absolute top-16 right-[10%] float-pill hidden lg:block">
+            <span className="text-xs font-medium bg-violet-50 text-violet-600 px-3 py-1.5 rounded-full border border-violet-100 shadow-sm">Claude Code</span>
+          </div>
+          <div className="absolute top-32 right-[25%] float-pill float-pill-delay-1 hidden lg:block">
+            <span className="text-xs font-medium bg-primary-50 text-primary-600 px-3 py-1.5 rounded-full border border-primary-100 shadow-sm">Agent</span>
+          </div>
+          <div className="absolute bottom-24 left-[5%] float-pill float-pill-delay-2 hidden lg:block">
+            <span className="text-xs font-medium bg-amber-50 text-amber-600 px-3 py-1.5 rounded-full border border-amber-100 shadow-sm">Vibe Coding</span>
+          </div>
+          <div className="absolute bottom-40 right-[15%] float-pill float-pill-delay-3 hidden lg:block">
+            <span className="text-xs font-medium bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-full border border-emerald-100 shadow-sm">MCP</span>
+          </div>
+          <div className="absolute top-48 left-[8%] float-pill float-pill-delay-1 hidden lg:block">
+            <span className="text-xs font-medium bg-rose-50 text-rose-600 px-3 py-1.5 rounded-full border border-rose-100 shadow-sm">RAG</span>
+          </div>
         </div>
 
         <div className="max-w-6xl mx-auto relative">
           <div className="flex flex-col md:flex-row gap-14 items-center">
             {/* Left content */}
             <div className="flex-1 space-y-5">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-50 text-primary-700 rounded-full text-xs font-medium border border-primary-100">
-                <span className="w-1.5 h-1.5 bg-primary-500 rounded-full" />
-                {lang === 'zh' ? '欢迎访问我的个人主页' : 'Welcome to my portfolio'}
+              <div className="flex flex-wrap items-center gap-2.5">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-50 text-primary-700 rounded-full text-xs font-medium border border-primary-100">
+                  <span className="w-1.5 h-1.5 bg-primary-500 rounded-full" />
+                  {lang === 'zh' ? '欢迎访问我的个人主页' : 'Welcome to my portfolio'}
+                </div>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-primary-500 text-white rounded-full text-xs font-bold shadow-md pulse-badge">
+                  <Sparkles size={11} />
+                  AI Product & Vibe Coding
+                </span>
               </div>
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
                 <E id={`hero.${lang}.title`} def={t.hero.title} />
@@ -673,9 +729,9 @@ export default function Home() {
               {/* Quick-stat chips */}
               <div className="flex flex-wrap gap-2.5 pt-1">
                 {[
-                  lang === 'zh' ? '4段实习经历' : '4 Internships',
+                  lang === 'zh' ? 'AI Agent 全栈实践' : 'AI Agent Full-Stack',
+                  lang === 'zh' ? 'Vibe Coding 持续产出' : 'Vibe Coding Builder',
                   lang === 'zh' ? 'CPA 4科通过' : 'CPA 4 Subjects',
-                  lang === 'zh' ? '3个研究项目' : '3 Research Projects',
                 ].map((chip, i) => (
                   <span key={i} className="stat-chip text-sm text-gray-600 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg font-medium cursor-default">
                     {chip}
@@ -717,7 +773,7 @@ export default function Home() {
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
                     </div>
                     <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
-                      {lang === 'zh' ? '开放工作机会' : 'Open to opportunities'}
+                      {lang === 'zh' ? '寻求 AI 产品 / Agent 岗位' : 'Seeking AI Product / Agent roles'}
                     </span>
                   </div>
                 </div>
@@ -954,12 +1010,15 @@ export default function Home() {
               const subtitle = lang === 'en' ? project.subtitleEn : project.subtitle;
               const status = lang === 'en' ? project.statusEn : project.status;
               const isOngoing = status.includes('进行') || status.includes('Ongoing');
+              const isFeatured = (project as any).featured;
 
               return (
                 <div
                   key={idx}
                   className={`bg-white rounded-2xl border shadow-sm overflow-hidden transition-all duration-200 animate-on-scroll ${
-                    isExpanded ? 'border-primary-200 shadow-md' : 'border-gray-100 hover:border-gray-200 hover:shadow-md'
+                    isFeatured && !isExpanded ? 'border-amber-200 shadow-md ring-1 ring-amber-100/50' : ''
+                  } ${
+                    isExpanded ? 'border-primary-200 shadow-md' : (!isFeatured ? 'border-gray-100 hover:border-gray-200 hover:shadow-md' : 'hover:border-amber-300 hover:shadow-lg')
                   }`}
                   style={{ transitionDelay: `${idx * 70}ms` }}
                 >
@@ -970,6 +1029,11 @@ export default function Home() {
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2 mb-2.5">
+                        {isFeatured && (
+                          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-sm">
+                            {lang === 'zh' ? '⭐ 核心项目' : '⭐ Featured'}
+                          </span>
+                        )}
                         <span className={`text-xs font-medium px-2.5 py-1 rounded-full border ${
                           isOngoing
                             ? 'bg-green-50 text-green-700 border-green-200'
@@ -1038,7 +1102,7 @@ export default function Home() {
           <SectionHeading label={t.skills.title} />
 
           {/* 3-column skill categories */}
-          <div className="grid md:grid-cols-3 gap-5 mb-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-5">
             {skillCategories.map((cat, i) => (
               <div
                 key={cat.key}
@@ -1099,13 +1163,17 @@ export default function Home() {
 
       {/* ── Vibe Tools ── */}
       {(!secHidden('tools') || isAdmin) && (
-      <section id="tools" className="py-20 px-6 scroll-mt-24 bg-gray-50/50 relative">
+      <section id="tools" className="py-20 px-6 scroll-mt-24 bg-gradient-to-br from-violet-50/50 via-white to-primary-50/50 relative">
         <Veil id="tools" />
         <div className={dim('tools')}><div className="max-w-6xl mx-auto">
-          <SectionHeading label={lang === 'zh' ? 'Kris的Vibe Coding小工具' : "Kris's Vibe Coding Tools"} />
-          <p className="text-gray-500 text-sm mb-8 -mt-6">
-            {lang === 'zh' ? '用 AI 辅助编程（Vibe Coding）构建的实用小工具，持续更新中' : 'Handy tools built with AI-assisted (Vibe) Coding — updated regularly'}
-          </p>
+          <SectionHeading label={lang === 'zh' ? 'Vibe Coding 作品' : 'Vibe Coding Portfolio'} />
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 border border-violet-100 shadow-sm mb-8 -mt-4">
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {lang === 'zh'
+                ? 'Vibe Coding 是一种用 AI 辅助编程的工作方式——通过自然语言描述需求，让 AI 生成代码并迭代。以下是我用 Vibe Coding 构建的工具和产品，从想法到上线往往只需数小时。这不仅是编程效率的提升，更是一种"把想法快速变成产品"的能力。'
+                : 'Vibe Coding is an AI-assisted programming approach — describe what you want in natural language, let AI generate code and iterate. Below are tools I\'ve built with Vibe Coding, often going from idea to production in hours. It\'s not just about coding efficiency — it\'s about turning ideas into products fast.'}
+            </p>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {(storeContent.vibeTools as any[]).map((tool: any, i: number) => (
               <a
@@ -1113,21 +1181,26 @@ export default function Home() {
                 href={tool.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="card-glow bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-on-scroll hover:shadow-md hover:-translate-y-0.5 hover:border-primary-200 transition-all duration-200 flex flex-col gap-4"
+                className="card-glow bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-on-scroll hover:shadow-md hover:-translate-y-1 hover:border-violet-200 transition-all duration-200 flex flex-col gap-4 group"
                 style={{ transitionDelay: `${i * 60}ms` }}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-bold text-gray-900 text-sm leading-snug">
-                    {lang === 'zh' ? tool.name : tool.nameEn}
-                  </h3>
-                  <ExternalLink size={14} className="flex-shrink-0 text-gray-300 group-hover:text-primary-400 mt-0.5" />
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-primary-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                      {tool.name.charAt(0)}
+                    </div>
+                    <h3 className="font-bold text-gray-900 text-sm leading-snug">
+                      {lang === 'zh' ? tool.name : tool.nameEn}
+                    </h3>
+                  </div>
+                  <ExternalLink size={14} className="flex-shrink-0 text-gray-300 group-hover:text-violet-500 transition-colors mt-0.5" />
                 </div>
                 <p className="text-gray-600 text-sm leading-relaxed flex-1">
                   {lang === 'zh' ? tool.desc : tool.descEn}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {tool.tech.map((tag: string, j: number) => (
-                    <span key={j} className="text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full font-medium border border-primary-100">
+                    <span key={j} className="text-xs bg-violet-50 text-violet-700 px-2.5 py-1 rounded-full font-medium border border-violet-100">
                       {tag}
                     </span>
                   ))}
@@ -1355,7 +1428,7 @@ export default function Home() {
               <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center text-white text-sm font-bold">KG</div>
               <span className="font-medium">Kris Gu</span>
             </div>
-            <p className="text-gray-500 text-sm">© {new Date().getFullYear()} · Built with Next.js & Tailwind CSS</p>
+            <p className="text-gray-500 text-sm">© {new Date().getFullYear()} · Built with Next.js & Vibe Coding</p>
           </div>
         </div>
       </footer>
