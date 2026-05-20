@@ -76,25 +76,23 @@ const translations = {
 // ============== DATA ==============
 const experiences = [
   {
-    company: 'Momenta',
+    company: 'Momenta（初速度）',
     companyEn: 'Momenta',
-    role: 'AI 产品 & 资金分析实习生',
-    roleEn: 'AI Product & Fund Analysis Intern',
-    period: '2025年12月 - 至今',
-    periodEn: 'Dec 2025 - Present',
-    highlights: [
-      '基于Coze平台搭建AI智能体询价系统，支持自然语言查询（如"向外资行询问1000万美元，三个月双币存款的价格"），集成QQ邮箱（IMAP收取+Outlook自动转发）自动抓取银行回复，AI提取价格/期限/风险等级生成结构化表格，效率提升60%',
-      '开发市场资讯周报和日报生成skill，覆盖美国/中国/全球经济三大维度，基于Momenta重点关注自动筛选信息，全自动生成飞书云文档并推送至财务团队，减少人工编译时间80%',
-      '搭建资金余额、流水监控、理财产品三大飞书仪表板看板，利用Claude Code开发每日数据报告自动化生成skill，实现余额分布、流水预测、理财到期等多维度监控',
-      '针对美国《1940年投资公司法》开展合规研究，梳理资本保值投资定义与适用条件，评估Momenta理财结构是否符合90%资本保值要求，提出投资限制建议支持上市筹备',
-      '处理美元、日元、韩元等多币种海外应付账款，主要为供应商货款支付，使用花旗银行网银完成跨境付款操作',
+    role: '资金分析实习生（AI 应用与数字化方向）',
+    roleEn: 'Fund Analysis Intern (AI Application & Digitalization)',
+    period: '2025.12 - 2026.05',
+    periodEn: 'Dec 2025 - May 2026',
+        highlights: [
+      'AI 智能助手产品设计与落地：从财务团队日常高频问询出发，梳理用户需求场景（持仓分析、申购建议、汇率风险等），设计意图识别规则与场景化 Prompt 模板；后端通过 SQL 查询 + 语义层规则映射实现数据检索，借助 Claude Code 完成开发，独立推动从方案设计到上线交付的全流程，系统已投入团队日常使用',
+      '自动化工作流重构：梳理理财询价与市场资讯采集的人工流程，设计自动化方案（到期自动询价、归集报价、联网检索标的信息），借助 AI Coding 将其落地为"智能询价归集系统"和"市场资讯 Skill"，将单次 1-2 小时的案头工作压缩至 2 分钟',
+      '飞书生态集成与内部工具建设：基于飞书开放平台 API，打通群聊消息 → 审批流 → 多维表格的数据链路，实现理财申购全流程自动落表与闭环管理；为内部上线多个消息推送与信息收集 Bot，深度实践飞书自建应用、多维表格自动化及 API 调用',
+      '资金数据系统搭建：围绕约 $1.3B 资金池的管理需求，搭建资金余额、理财明细、流动性预估等数据看板；对接招商银行 CBS API 与境外银行流水数据，替代传统手工周报制作',
     ],
-    highlightsEn: [
-      'Built AI inquiry system on Coze platform supporting natural language queries (e.g., "inquire about 10M USD three-month dual-currency deposit rates from foreign banks"), integrated QQ email (IMAP retrieval + Outlook auto-forward) to auto-capture bank responses, AI extracts price/tenor/risk level to generate structured tables, efficiency improved by 60%',
-      'Developed market intelligence weekly/daily report generation skills covering US/China/Global economy dimensions, auto-filtering based on Momenta focus areas, fully automated Feishu doc creation and distribution to finance team, reducing manual compilation time by 80%',
-      'Built three Feishu dashboard boards: fund balance, cash flow monitoring, wealth management products, leveraged Claude Code to develop daily data report automation skills, enabling multi-dimensional monitoring of balance distribution, cash flow forecasting, wealth maturity tracking',
-      'Conducted compliance research on US Investment Company Act of 1940, sorted out definitions and conditions for capital preservation investments, assessed whether Momenta\'s wealth structure meets 90% capital preservation requirement, provided investment restriction recommendations for IPO preparation',
-      'Handled multi-currency overseas accounts payable in USD, JPY, KRW, primarily for supplier goods payments, used Citibank online banking for cross-border payments',
+        highlightsEn: [
+      'AI Assistant product design & delivery: started from finance team\'s daily high-frequency inquiries, mapped user scenarios (position analysis, purchase recommendations, FX risk, etc.), designed intent recognition rules and scenario-based prompt templates; backend uses SQL + semantic-layer rule mapping for data retrieval, built with Claude Code, independently drove end-to-end delivery from design to production, now in daily team use',
+      'Workflow automation redesign: analyzed manual processes for wealth product inquiry and market intelligence collection, designed automation (auto-inquiry at maturity, response aggregation, web search for product info), delivered "Smart Inquiry System" and "Market Intelligence Skill" via AI Coding, reduced per-task time from 1-2 hours to 2 minutes',
+      'Feishu ecosystem integration & internal tools: built data pipeline linking group chat → approval workflow → Bitable via Feishu Open API, achieving end-to-end auto-logging and closed-loop wealth subscription management; launched multiple notification bots and data-collection bots, deep hands-on with Feishu custom apps, Bitable automation, and API integration',
+      'Treasury data system: built dashboards for fund balances, wealth product details, and liquidity forecasting around ~$1.3B capital pool; integrated CMB CBS API and overseas bank transaction data, replacing traditional manual weekly reporting',
     ],
     highlightsBold: [0, 1, 2],
     logo: '/logos/momenta.svg',
