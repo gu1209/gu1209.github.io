@@ -445,5 +445,6 @@
     "phone": "+86 192 9224 4363",
     "xhsUid": "293946035",
     "biliName": "清祀朔九"
-  }
+  },
+  "sectionOrder": ["about", "experience", "projects", "skills", "tools", "metrics", "now", "notes"]
 }

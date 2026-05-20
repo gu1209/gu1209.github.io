@@ -18,6 +18,7 @@ export interface ContentData {
   notes: NoteItem[];
   now: NowItem[];
   contact: any;
+  sectionOrder: string[];
 }
 
 // ── Notes store ───────────────────────────────────────────────────────────

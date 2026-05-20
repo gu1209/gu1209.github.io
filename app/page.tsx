@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, createContext, useContext } from 'react';
+import { useState, useEffect, useRef, createContext, useContext, Fragment } from 'react';
 import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles, Lock, RotateCcw, LogOut, BookOpen, ExternalLink, Plus, Trash2, Pencil, Sun, Moon, Eye, EyeOff, Settings } from 'lucide-react';
 import { useContentStore } from '@/lib/adminStore';
 import AdminPanel from '@/components/AdminPanel';
@@ -783,9 +783,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Metrics strip ── */}
-      {(!secHidden('metrics') || isAdmin) && (
-        <div className="bg-white border-y border-gray-100 py-10 px-6 relative">
+      {/* ── Section order config ── */}
+      {(() => {
+        const sectionOrder = (storeContent.sectionOrder as string[]) || ['about', 'experience', 'projects', 'skills', 'tools', 'metrics', 'now', 'notes'];
+        const order = (id: string) => sectionOrder.indexOf(id);
+
+        return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {/* ── Metrics strip ── */}
+          {(!secHidden('metrics') || isAdmin) && (
+            <div className="bg-white border-y border-gray-100 py-10 px-6 relative" style={{ order: order('metrics') }}>
           <Veil id="metrics" />
           <div className={`max-w-4xl mx-auto grid grid-cols-3 md:grid-cols-5 gap-8 ${dim('metrics')}`}>
             {((lang === "zh" ? (storeContent.metrics as any)?.zh : (storeContent.metrics as any)?.en) ?? METRICS_ZH as any[]).map((m: any, i: number) => (
@@ -797,7 +804,7 @@ export default function Home() {
 
       {/* ── About & Education ── */}
       {(!secHidden('about') || isAdmin) && (
-      <section id="about" className="py-20 px-6 scroll-mt-24 bg-gray-50/50 relative">
+      <section id="about" className="py-20 px-6 scroll-mt-24 bg-gray-50/50 relative" style={{ order: order('about') }}>
         <Veil id="about" />
         <div className={dim('about')}><div className="max-w-4xl mx-auto">
           <SectionHeading label={t.about.title} />
@@ -872,7 +879,7 @@ export default function Home() {
 
       {/* ── Experience — Timeline ── */}
       {(!secHidden('experience') || isAdmin) && (
-      <section id="experience" className="py-20 px-6 scroll-mt-24 relative">
+      <section id="experience" className="py-20 px-6 scroll-mt-24 relative" style={{ order: order('experience') }}>
         <Veil id="experience" />
         <div className={dim('experience')}><div className="max-w-4xl mx-auto">
           <SectionHeading label={t.experience.title} />
@@ -999,7 +1006,7 @@ export default function Home() {
 
       {/* ── Projects — Accordion ── */}
       {(!secHidden('projects') || isAdmin) && (
-      <section id="projects" className="py-20 px-6 scroll-mt-24 bg-gray-50/50 relative">
+      <section id="projects" className="py-20 px-6 scroll-mt-24 bg-gray-50/50 relative" style={{ order: order('projects') }}>
         <Veil id="projects" />
         <div className={dim('projects')}><div className="max-w-4xl mx-auto">
           <SectionHeading label={t.projects.title} />
@@ -1096,7 +1103,7 @@ export default function Home() {
 
       {/* ── Skills ── */}
       {(!secHidden('skills') || isAdmin) && (
-      <section id="skills" className="py-20 px-6 scroll-mt-24 relative">
+      <section id="skills" className="py-20 px-6 scroll-mt-24 relative" style={{ order: order('skills') }}>
         <Veil id="skills" />
         <div className={dim('skills')}><div className="max-w-6xl mx-auto">
           <SectionHeading label={t.skills.title} />
@@ -1163,7 +1170,7 @@ export default function Home() {
 
       {/* ── Vibe Tools ── */}
       {(!secHidden('tools') || isAdmin) && (
-      <section id="tools" className="py-20 px-6 scroll-mt-24 bg-gradient-to-br from-violet-50/50 via-white to-primary-50/50 relative">
+      <section id="tools" className="py-20 px-6 scroll-mt-24 bg-gradient-to-br from-violet-50/50 via-white to-primary-50/50 relative" style={{ order: order('tools') }}>
         <Veil id="tools" />
         <div className={dim('tools')}><div className="max-w-6xl mx-auto">
           <SectionHeading label={lang === 'zh' ? 'Vibe Coding 作品' : 'Vibe Coding Portfolio'} />
@@ -1214,7 +1221,7 @@ export default function Home() {
 
       {/* ── Now ── */}
       {(!secHidden('now') || isAdmin) && (
-      <section id="now" className="py-20 px-6 scroll-mt-24 relative">
+      <section id="now" className="py-20 px-6 scroll-mt-24 relative" style={{ order: order('now') }}>
         <Veil id="now" />
         <div className={dim('now')}><div className="max-w-6xl mx-auto">
           <SectionHeading label={t.now.title} />
@@ -1247,7 +1254,7 @@ export default function Home() {
 
       {/* ── Notes ── */}
       {(!secHidden('notes') || isAdmin) && (
-      <section id="notes" className="py-20 px-6 bg-gray-50 scroll-mt-24 relative">
+      <section id="notes" className="py-20 px-6 bg-gray-50 scroll-mt-24 relative" style={{ order: order('notes') }}>
         <Veil id="notes" />
         <div className={dim('notes')}><div className="max-w-6xl mx-auto">
           <div className="flex items-start justify-between mb-2">
@@ -1354,6 +1361,10 @@ export default function Home() {
         </div></div>
       </section>
       )}
+
+        </div>
+        );
+      })()}
 
       {/* ── Contact ── */}
       <section id="contact" className="py-20 px-6 bg-gradient-to-br from-primary-600 to-primary-800 text-white scroll-mt-24">

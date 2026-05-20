@@ -91,6 +91,12 @@ export default function AdminPanel({ content, onUpdate, onImport, onExport, onRe
     );
   };
 
+  const sectionLabels: Record<string, string> = {
+    about: '关于我', experience: '实习经历', projects: '项目经历',
+    skills: '技能与证书', tools: 'Vibe Coding 作品', metrics: '数据指标',
+    now: '最近在…', notes: '学习笔记',
+  };
+
   // ── Update nested translation field ──
   const updateTrans = (lang: string, section: string, field: string, value: string) => {
     onUpdate(c => {
@@ -428,6 +434,23 @@ export default function AdminPanel({ content, onUpdate, onImport, onExport, onRe
             <Field label="B站链接" value={content?.contact?.bilibili || ''} onChange={v => onUpdate(c => ({ ...c, contact: { ...c.contact, bilibili: v } }))} />
             <Field label="B站名称" value={content?.contact?.biliName || ''} onChange={v => onUpdate(c => ({ ...c, contact: { ...c.contact, biliName: v } }))} />
             <Field label="电话" value={content?.contact?.phone || ''} onChange={v => onUpdate(c => ({ ...c, contact: { ...c.contact, phone: v } }))} />
+          </Section>
+
+          {/* ══ SECTION ORDER ══ */}
+          <Section id="sectionOrder" title="板块排序 (拖拽调整大板块顺序)">
+            <p className="text-xs text-gray-400 mb-3">调整页面大板块的显示顺序。保存后导出 JSON 再同步推送即可生效。</p>
+            {(content?.sectionOrder || []).map((id: string, idx: number) => (
+              <div key={id} className="flex items-center gap-2 mb-1.5">
+                <span className="text-xs text-gray-400 w-5 text-right">{idx + 1}.</span>
+                <span className="flex-1 text-sm bg-white border border-gray-200 rounded-lg px-3 py-1.5 font-medium text-gray-700">
+                  {sectionLabels[id] || id}
+                </span>
+                <button onClick={() => moveArrayItem('sectionOrder', idx, 'up')} disabled={idx === 0}
+                  className="text-gray-400 hover:text-primary-600 disabled:opacity-20 disabled:cursor-not-allowed p-0.5" title="上移"><ChevronUp size={14} /></button>
+                <button onClick={() => moveArrayItem('sectionOrder', idx, 'down')} disabled={idx === (content?.sectionOrder || []).length - 1}
+                  className="text-gray-400 hover:text-primary-600 disabled:opacity-20 disabled:cursor-not-allowed p-0.5" title="下移"><ChevronDown size={14} /></button>
+              </div>
+            ))}
           </Section>
 
           {/* ══ JSON PREVIEW ══ */}
