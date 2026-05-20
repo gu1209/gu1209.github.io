@@ -136,6 +136,18 @@ export default function AdminPanel({ content, onUpdate, onImport, onExport, onRe
     });
   };
 
+  // ── Move item up/down in array ──
+  const moveArrayItem = (key: string, idx: number, direction: 'up' | 'down') => {
+    onUpdate(c => {
+      const next = JSON.parse(JSON.stringify(c));
+      const arr = next[key];
+      const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+      if (targetIdx < 0 || targetIdx >= arr.length) return next;
+      [arr[idx], arr[targetIdx]] = [arr[targetIdx], arr[idx]];
+      return next;
+    });
+  };
+
   return (
     <div className="fixed inset-0 z-[180] flex">
       {/* Backdrop */}
@@ -147,7 +159,9 @@ export default function AdminPanel({ content, onUpdate, onImport, onExport, onRe
         <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <h2 className="font-bold text-gray-900 text-sm">内容编辑器</h2>
-            <span className="text-xs text-gray-400">修改实时保存</span>
+            <span className="text-xs text-gray-400">修改实时保存 · 导出后运行</span>
+            <code className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-mono">npm run sync 文件名</code>
+            <span className="text-xs text-gray-400">一键推送</span>
           </div>
           <div className="flex items-center gap-1.5">
             <button onClick={handleExport} title="导出 JSON" className="p-1.5 rounded-lg hover:bg-primary-50 text-gray-500 hover:text-primary-600 transition">
@@ -226,9 +240,11 @@ export default function AdminPanel({ content, onUpdate, onImport, onExport, onRe
               <div key={idx} className="mb-4 pb-4 border-b border-gray-100 last:border-0 last:pb-0 last:mb-0">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-bold text-gray-600">经历 #{idx + 1}</span>
-                  <button onClick={() => { if (confirm('删除此经历？')) removeArrayItem('experiences', idx); }} className="text-red-400 hover:text-red-600">
-                    <Trash2 size={14} />
-                  </button>
+                  <div className="flex items-center gap-0.5">
+                    <button onClick={() => moveArrayItem('experiences', idx, 'up')} disabled={idx === 0} className="text-gray-400 hover:text-primary-600 disabled:opacity-20 disabled:cursor-not-allowed p-0.5" title="上移"><ChevronUp size={14} /></button>
+                    <button onClick={() => moveArrayItem('experiences', idx, 'down')} disabled={idx === (content?.experiences || []).length - 1} className="text-gray-400 hover:text-primary-600 disabled:opacity-20 disabled:cursor-not-allowed p-0.5" title="下移"><ChevronDown size={14} /></button>
+                    <button onClick={() => { if (confirm('删除此经历？')) removeArrayItem('experiences', idx); }} className="text-red-400 hover:text-red-600 p-0.5" title="删除"><Trash2 size={14} /></button>
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-x-4">
                   <Field label="公司 (中文)" value={exp.company || ''} onChange={v => updateArrayItem('experiences', idx, 'company', v)} />
@@ -286,9 +302,11 @@ export default function AdminPanel({ content, onUpdate, onImport, onExport, onRe
               <div key={idx} className="mb-4 pb-4 border-b border-gray-100 last:border-0 last:pb-0 last:mb-0">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-bold text-gray-600">项目 #{idx + 1}</span>
-                  <button onClick={() => { if (confirm('删除此项目？')) removeArrayItem('projects', idx); }} className="text-red-400 hover:text-red-600">
-                    <Trash2 size={14} />
-                  </button>
+                  <div className="flex items-center gap-0.5">
+                    <button onClick={() => moveArrayItem('projects', idx, 'up')} disabled={idx === 0} className="text-gray-400 hover:text-primary-600 disabled:opacity-20 disabled:cursor-not-allowed p-0.5" title="上移"><ChevronUp size={14} /></button>
+                    <button onClick={() => moveArrayItem('projects', idx, 'down')} disabled={idx === (content?.projects || []).length - 1} className="text-gray-400 hover:text-primary-600 disabled:opacity-20 disabled:cursor-not-allowed p-0.5" title="下移"><ChevronDown size={14} /></button>
+                    <button onClick={() => { if (confirm('删除此项目？')) removeArrayItem('projects', idx); }} className="text-red-400 hover:text-red-600 p-0.5" title="删除"><Trash2 size={14} /></button>
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-x-4">
                   <Field label="标题 (中文)" value={proj.title || ''} onChange={v => updateArrayItem('projects', idx, 'title', v)} />
@@ -333,7 +351,11 @@ export default function AdminPanel({ content, onUpdate, onImport, onExport, onRe
               <div key={idx} className="mb-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-bold text-gray-600">工具 #{idx + 1}</span>
-                  <button onClick={() => removeArrayItem('vibeTools', idx)} className="text-red-400 hover:text-red-600"><Trash2 size={14} /></button>
+                  <div className="flex items-center gap-0.5">
+                    <button onClick={() => moveArrayItem('vibeTools', idx, 'up')} disabled={idx === 0} className="text-gray-400 hover:text-primary-600 disabled:opacity-20 disabled:cursor-not-allowed p-0.5" title="上移"><ChevronUp size={14} /></button>
+                    <button onClick={() => moveArrayItem('vibeTools', idx, 'down')} disabled={idx === (content?.vibeTools || []).length - 1} className="text-gray-400 hover:text-primary-600 disabled:opacity-20 disabled:cursor-not-allowed p-0.5" title="下移"><ChevronDown size={14} /></button>
+                    <button onClick={() => removeArrayItem('vibeTools', idx)} className="text-red-400 hover:text-red-600 p-0.5" title="删除"><Trash2 size={14} /></button>
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-x-4">
                   <Field label="名称 (中文)" value={tool.name || ''} onChange={v => updateArrayItem('vibeTools', idx, 'name', v)} />
