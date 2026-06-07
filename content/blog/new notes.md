@@ -1,6 +1,6 @@
 ---
 title: 未命名
-titleEn: Welcome to My Blog
+titleEn: new notes
 date: 2026-06-08
 tags:
   - 个人主页
