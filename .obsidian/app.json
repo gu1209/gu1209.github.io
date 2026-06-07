@@ -3,16 +3,21 @@
   "newFileFolderPath": "content/blog",
   "attachmentFolderPath": "public/images/blog",
   "userIgnoreFilters": [
-    "node_modules/",
-    ".next/",
-    "out/",
-    ".git/",
+    "node_modules",
+    ".next",
+    "out",
+    ".git",
     "package-lock.json",
-    "public/fonts/",
     "*.ttf",
-    "*.otf",
-    "*.pack",
-    "*.idx"
+    "*.otf"
   ],
-  "showUnsupportedFiles": false
+  "showUnsupportedFiles": false,
+  "readableLineLength": false,
+  "strictLineBreaks": false,
+  "showFrontmatter": true,
+  "foldHeading": true,
+  "foldIndent": true,
+  "showLineNumber": false,
+  "useTab": false,
+  "tabSize": 2
 }
