@@ -21,15 +21,20 @@ export default function NewPostPage() {
   const [preview, setPreview] = useState(false);
 
   function generateSlug(): string {
-    const d = date.replace(/-/g, '-');
-    const t = title || titleEn || 'untitled';
-    // Simple slug generation: lowercase, replace non-alphanumeric with dashes
+    const d = date;
+    // Prefer English title for slug; fallback to date-based slug
+    const t = titleEn || title || '';
     const slugPart = t
       .toLowerCase()
-      .replace(/[^a-z0-9一-鿿]+/g, '-')
+      .replace(/[^a-z0-9]+/g, '-')  // only keep ASCII alphanumeric
+      .replace(/-+/g, '-')
       .replace(/^-+|-+$/g, '')
       .slice(0, 60);
-    return `${d}-${slugPart}`;
+    if (slugPart && slugPart.length > 0) {
+      return `${d}-${slugPart}`;
+    }
+    // Fallback: date-based slug
+    return `${d}-post`;
   }
 
   async function handleSave(publishDraft = false) {

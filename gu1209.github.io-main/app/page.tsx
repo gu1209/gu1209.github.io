@@ -7,7 +7,8 @@ import AdminPanel from '@/components/AdminPanel';
 import defaultContent from '@/public/content.json';
 import ResumeExportModal from '@/components/ResumeExportModal';
 import { STAR_DATA } from '@/lib/starData';
-import { useAdminContent, useNotesStore, NoteItem, useNowStore, NowItem, useHiddenSections } from '@/lib/adminStore';
+import { useAdminContent, useHiddenSections } from '@/lib/adminStore';
+import { adminApi } from '@/lib/adminApi';
 
 // ── Admin context ──────────────────────────────────────────────────────────
 type AdminCtx = { isAdmin: boolean; get: (id: string, def: string) => string; save: (id: string, val: string) => void; };
@@ -50,8 +51,6 @@ const translations = {
     experience: { title: '实习经历' },
     projects: { title: '项目经历', tech: '技术栈', objective: '项目目标', methodology: '架构设计', design: '关键决策', status: '状态' },
     skills: { title: '技能与证书', programming: '编程语言', dataTools: '数据分析工具', finance: '金融 & 产品', aiAgent: 'AI / Agent', certifications: '专业认证', languages: '语言能力' },
-    now: { title: '最近在…', subtitle: '动态更新，记录当下在做的事' },
-    notes: { title: '学习笔记', subtitle: '整理的备考笔记与错题复盘，持续更新中' },
     contact: {
       title: '联系方式', email: '邮箱', github: 'GitHub', phone: '电话', xiaohongshu: '小红书', bilibili: 'B站',
       message: '寻求 AI 产品经理、AI Agent 开发、Vibe Coding 相关实习或全职机会。欢迎联系！',
@@ -64,8 +63,6 @@ const translations = {
     experience: { title: 'Internship Experience' },
     projects: { title: 'Projects', tech: 'Tech Stack', objective: 'Objective', methodology: 'Architecture', design: 'Key Decisions', status: 'Status' },
     skills: { title: 'Skills & Certifications', programming: 'Programming', dataTools: 'Data Tools', finance: 'Finance & Product', aiAgent: 'AI / Agent', certifications: 'Certifications', languages: 'Languages' },
-    now: { title: 'Now', subtitle: 'What I\'m currently into — updated live' },
-    notes: { title: 'Study Notes', subtitle: 'Exam prep notes & mistake reviews — updated regularly' },
     contact: {
       title: 'Get In Touch', email: 'Email', github: 'GitHub', phone: 'Phone', xiaohongshu: 'Xiaohongshu', bilibili: 'Bilibili',
       message: 'Seeking opportunities in AI Product Management, AI Agent Development, or Vibe Coding roles. Feel free to reach out!',
@@ -293,15 +290,6 @@ const skillCategories = [
   { key: 'finance', icon: BarChart3, label: '金融 & 产品' },
 ];
 
-// ── Study notes default data ──────────────────────────────────────────────
-const defaultNotes: NoteItem[] = [
-  {
-    id: 'default-1',
-    title: '税二·错题复盘·综合提高（做题不顺畅）',
-    tag: 'CTA 税法二',
-    href: 'https://share.mubu.com/doc/3TZehcyQt6R',
-  },
-];
 
 // ── Xiaohongshu icon (inline SVG) ────────────────────────────────────────
 function XhsIcon({ size = 28 }: { size?: number }) {
@@ -393,12 +381,6 @@ const METRICS_EN = [
   { target: 6,     decimals: 0, suffix: '',   prefix: '',     label: 'Agent Layers' },
 ];
 
-// ── "Now" default items ───────────────────────────────────────────────────
-const defaultNow: NowItem[] = [
-  { emoji: '📚', category: '在读', categoryEn: 'Reading',  content: '点击编辑，填写你在读的书' },
-  { emoji: '🎬', category: '在看', categoryEn: 'Watching', content: '点击编辑，填写在看的剧或番' },
-  { emoji: '💬', category: '在聊', categoryEn: 'Thinking', content: '点击编辑，填写最近在思考的话题' },
-];
 
 /** Mouse cursor sparkle effect */
 function CursorSparkle() {
@@ -463,15 +445,8 @@ export default function Home() {
     localStorage.setItem('portfolio_dark', isDark ? '1' : '0');
   }, [isDark]);
 
-  // Notes store (localStorage-backed)
-  const { notes, addNote, removeNote, updateNote } = useNotesStore(storeContent.notes as NoteItem[]);
-
-  // "Now" store
-  const { items: nowItems, updateItem: updateNowItem } = useNowStore(storeContent.now as NowItem[]);
-
   // Section visibility (admin can hide sections from visitors)
   const { isHidden: secHidden, toggle: toggleSec } = useHiddenSections();
-  // Returns null for non-admin when section is hidden; dims content for admin
   const Veil = ({ id }: { id: string }) => !isAdmin ? null : (
     <button
       onClick={() => toggleSec(id)}
@@ -492,16 +467,6 @@ export default function Home() {
       .then(setHitokoto)
       .catch(() => {});
   }, []);
-  type NoteForm = { mode: 'add' | 'edit'; id?: string; title: string; tag: string; href: string };
-  const [noteForm, setNoteForm] = useState<NoteForm | null>(null);
-  const openAddNote  = () => setNoteForm({ mode: 'add',  title: '', tag: '', href: '' });
-  const openEditNote = (n: NoteItem) => setNoteForm({ mode: 'edit', id: n.id, title: n.title, tag: n.tag, href: n.href });
-  const submitNoteForm = () => {
-    if (!noteForm || !noteForm.title.trim() || !noteForm.href.trim()) return;
-    if (noteForm.mode === 'add') addNote({ title: noteForm.title.trim(), tag: noteForm.tag.trim(), href: noteForm.href.trim() });
-    else if (noteForm.id) updateNote(noteForm.id, { title: noteForm.title.trim(), tag: noteForm.tag.trim(), href: noteForm.href.trim() });
-    setNoteForm(null);
-  };
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -1227,149 +1192,6 @@ export default function Home() {
       </section>
       )}
 
-      {/* ── Now ── */}
-      {(!secHidden('now') || isAdmin) && (
-      <section id="now" className="py-20 px-6 scroll-mt-24 relative" style={{ order: order('now') }}>
-        <Veil id="now" />
-        <div className={dim('now')}><div className="max-w-6xl mx-auto">
-          <SectionHeading label={t.now.title} />
-          <p className="text-gray-500 text-sm mb-8 -mt-6">{t.now.subtitle}</p>
-          <div className="grid sm:grid-cols-3 gap-5">
-            {nowItems.map((item, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{item.emoji}</span>
-                  <span className="text-xs font-semibold text-primary-600 bg-primary-50 border border-primary-100 px-2.5 py-1 rounded-lg">
-                    {lang === 'zh' ? item.category : item.categoryEn}
-                  </span>
-                </div>
-                {isAdmin ? (
-                  <textarea
-                    value={item.content}
-                    onChange={e => updateNowItem(i, e.target.value)}
-                    rows={3}
-                    className="text-sm text-gray-700 border border-dashed border-primary-300 rounded-xl px-3 py-2 resize-none focus:outline-none focus:border-primary-500 bg-primary-50/30 leading-relaxed"
-                  />
-                ) : (
-                  <p className="text-sm text-gray-700 leading-relaxed">{item.content}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div></div>
-      </section>
-      )}
-
-      {/* ── Notes ── */}
-      {(!secHidden('notes') || isAdmin) && (
-      <section id="notes" className="py-20 px-6 bg-gray-50 scroll-mt-24 relative" style={{ order: order('notes') }}>
-        <Veil id="notes" />
-        <div className={dim('notes')}><div className="max-w-6xl mx-auto">
-          <div className="flex items-start justify-between mb-2">
-            <SectionHeading label={t.notes.title} />
-            {isAdmin && (
-              <button
-                onClick={openAddNote}
-                className="flex items-center gap-1.5 text-sm bg-primary-600 text-white px-3 py-2 rounded-xl hover:bg-primary-700 transition font-medium mt-1"
-              >
-                <Plus size={15} /> 添加笔记
-              </button>
-            )}
-          </div>
-          <p className="text-gray-500 text-sm mb-8 -mt-6">{t.notes.subtitle}</p>
-
-          {/* Add / Edit form */}
-          {noteForm && (
-            <div className="bg-white border border-primary-200 rounded-2xl p-5 mb-6 shadow-sm">
-              <p className="text-sm font-semibold text-gray-700 mb-3">
-                {noteForm.mode === 'add' ? '添加笔记' : '编辑笔记'}
-              </p>
-              <div className="flex flex-col gap-2.5">
-                <input
-                  value={noteForm.title}
-                  onChange={e => setNoteForm(f => f && { ...f, title: e.target.value })}
-                  placeholder="笔记标题 *"
-                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-primary-400"
-                />
-                <input
-                  value={noteForm.tag}
-                  onChange={e => setNoteForm(f => f && { ...f, tag: e.target.value })}
-                  placeholder="分类标签（如：CTA 税法二）"
-                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-primary-400"
-                />
-                <input
-                  value={noteForm.href}
-                  onChange={e => setNoteForm(f => f && { ...f, href: e.target.value })}
-                  placeholder="文档链接 * （https://...）"
-                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-primary-400"
-                />
-              </div>
-              <div className="flex gap-2 mt-3">
-                <button
-                  onClick={submitNoteForm}
-                  disabled={!noteForm.title.trim() || !noteForm.href.trim()}
-                  className="px-4 py-1.5 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  保存
-                </button>
-                <button
-                  onClick={() => setNoteForm(null)}
-                  className="px-4 py-1.5 text-gray-500 hover:bg-gray-100 rounded-lg text-sm transition"
-                >
-                  取消
-                </button>
-              </div>
-            </div>
-          )}
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {notes.map(note => (
-              <div key={note.id} className="relative group">
-                <a
-                  href={note.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col gap-3 h-full"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-primary-50 border border-primary-100 flex items-center justify-center flex-shrink-0">
-                      <BookOpen size={18} className="text-primary-600" />
-                    </div>
-                    <ExternalLink size={14} className="text-gray-300 group-hover:text-primary-400 transition-colors flex-shrink-0 mt-1" />
-                  </div>
-                  <p className="flex-1 text-gray-800 font-medium text-sm leading-snug">{note.title}</p>
-                  {note.tag && (
-                    <span className="self-start text-xs font-medium bg-primary-50 text-primary-600 border border-primary-100 px-2.5 py-1 rounded-lg">
-                      {note.tag}
-                    </span>
-                  )}
-                </a>
-                {/* Admin controls */}
-                {isAdmin && (
-                  <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={e => { e.preventDefault(); openEditNote(note); }}
-                      className="w-6 h-6 bg-white border border-gray-200 rounded-md flex items-center justify-center hover:bg-primary-50 hover:border-primary-300 shadow-sm transition"
-                      title="编辑"
-                    >
-                      <Pencil size={11} className="text-gray-500" />
-                    </button>
-                    <button
-                      onClick={e => { e.preventDefault(); if (confirm('删除这条笔记？')) removeNote(note.id); }}
-                      className="w-6 h-6 bg-white border border-gray-200 rounded-md flex items-center justify-center hover:bg-red-50 hover:border-red-300 shadow-sm transition"
-                      title="删除"
-                    >
-                      <Trash2 size={11} className="text-red-400" />
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div></div>
-      </section>
-      )}
-
         </div>
         );
       })()}
@@ -1483,8 +1305,10 @@ export default function Home() {
               onChange={e => { setAdminPwInput(e.target.value); setAdminPwError(false); }}
               onKeyDown={e => {
                 if (e.key === 'Enter') {
-                  if (login(adminPwInput)) { setShowAdminLogin(false); setAdminPwInput(''); }
-                  else { setAdminPwError(true); setAdminPwInput(''); }
+                  if (login(adminPwInput)) {
+                    setShowAdminLogin(false); setAdminPwInput('');
+                    adminApi.login(adminPwInput).catch(() => {});
+                  } else { setAdminPwError(true); setAdminPwInput(''); }
                 }
               }}
               autoFocus placeholder="密码"
@@ -1493,7 +1317,12 @@ export default function Home() {
             {adminPwError && <p className="text-xs text-red-500 mb-2">密码错误</p>}
             <div className="flex gap-2">
               <button
-                onClick={() => { if (login(adminPwInput)) { setShowAdminLogin(false); setAdminPwInput(''); } else { setAdminPwError(true); setAdminPwInput(''); } }}
+                onClick={() => {
+                  if (login(adminPwInput)) {
+                    setShowAdminLogin(false); setAdminPwInput('');
+                    adminApi.login(adminPwInput).catch(() => {});
+                  } else { setAdminPwError(true); setAdminPwInput(''); }
+                }}
                 className="flex-1 bg-primary-600 text-white py-2 rounded-xl text-sm font-medium hover:bg-primary-700 transition"
               >进入</button>
               <button onClick={() => { setShowAdminLogin(false); setAdminPwInput(''); setAdminPwError(false); }} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl text-sm transition">取消</button>
@@ -1507,6 +1336,9 @@ export default function Home() {
         <div className="fixed bottom-0 left-0 right-0 z-[150] bg-amber-400 text-amber-900 px-6 py-2.5 flex items-center justify-between shadow-xl">
           <span className="text-sm font-semibold">⚙ 管理员编辑模式 — 点击任意高亮文字即可编辑，失焦自动保存到 localStorage</span>
           <div className="flex items-center gap-3">
+            <a href="/admin/" className="flex items-center gap-1.5 text-xs font-medium bg-amber-900/20 hover:bg-amber-900/30 px-3 py-1 rounded-lg transition">
+              🔧 管理面板
+            </a>
             <button onClick={() => setShowAdminPanel(true)} className="flex items-center gap-1.5 text-xs font-medium bg-amber-900/20 hover:bg-amber-900/30 px-3 py-1 rounded-lg transition">
             <Settings size={12} /> 内容编辑器
           </button>
