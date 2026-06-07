@@ -42,15 +42,20 @@ function normalizeFrontmatter(data: Record<string, any>, filename: string): Blog
     filename.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/-/g, ' ').replace(/\.md$/, '');
 
   // Date: support 'date', 'created', 'publishDate', or file creation time
-  let date = data.date || data.created || data.publishDate || '';
-  if (!date || date === '') {
+  let date: string = '';
+  const rawDate = data.date || data.created || data.publishDate;
+  if (rawDate instanceof Date) {
+    // YAML auto-parses date strings as Date objects — convert back to string
+    date = rawDate.toISOString().slice(0, 10);
+  } else if (typeof rawDate === 'string' && rawDate.match(/^\d{4}-\d{2}-\d{2}/)) {
+    date = rawDate.slice(0, 10);
+  } else if (rawDate && typeof rawDate === 'string') {
+    date = rawDate.slice(0, 10);
+  }
+  if (!date) {
     // Try to extract date from filename (YYYY-MM-DD-xxx.md)
     const dateMatch = filename.match(/^(\d{4}-\d{2}-\d{2})/);
     date = dateMatch ? dateMatch[1] : new Date().toISOString().split('T')[0];
-  }
-  // Ensure YYYY-MM-DD format
-  if (typeof date === 'string' && date.match(/^\d{4}-\d{2}-\d{2}/)) {
-    date = date.slice(0, 10);
   }
 
   // Tags: support arrays, comma-separated, space-separated, or Obsidian's [[links]]
