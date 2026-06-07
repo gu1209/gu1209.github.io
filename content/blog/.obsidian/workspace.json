@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "未命名.md",
+                "file": "new notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "未命名"
+              "title": "new notes"
             }
           }
         ],
@@ -209,12 +209,12 @@
   },
   "active": "a4bf62c4cf3a50e5",
   "lastOpenFiles": [
+    "这是一个测试的blog.md",
+    "new notes.md",
     "templates/blog-template.md",
     "templates/blog-template.md.tmp.14440.64c2add2ad42",
     "templates",
     "blog-template.md.tmp.14440.fa50f4067213",
-    "未命名.md",
-    "这是一个测试的blog.md",
     "blog-template.md",
     "一个新的测试博客.md",
     "hello-world.md"

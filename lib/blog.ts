@@ -79,13 +79,35 @@ function normalizeFrontmatter(data: Record<string, any>, filename: string): Blog
   return { title, titleEn: data.titleEn, date, tags, excerpt, excerptEn, draft };
 }
 
+/** Generate URL-safe ASCII slug from titleEn, or fall back to filename */
+function getSlug(filePath: string): string {
+  const filename = path.basename(filePath);
+  // Try to read frontmatter to get titleEn
+  try {
+    if (fs.existsSync(filePath)) {
+      const raw = fs.readFileSync(filePath, 'utf-8');
+      const { data } = matter(raw);
+      if (data.titleEn && typeof data.titleEn === 'string') {
+        const slug = data.titleEn
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/-+/g, '-')
+          .replace(/^-+|-+$/g, '');
+        if (slug) return slug;
+      }
+    }
+  } catch {}
+  // Fallback: filename minus .md and leading date prefix
+  return filename.replace(/\.md$/, '').replace(/^\d{4}-\d{2}-\d{2}-/, '');
+}
+
 /** Parse a single markdown file into a BlogPost */
 function parsePost(filePath: string): BlogPost | null {
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, 'utf-8');
   const { data, content } = matter(raw);
   const filename = path.basename(filePath);
-  const slug = filename.replace(/\.md$/, '');
+  const slug = getSlug(filePath);
 
   // Merge raw content into data for excerpt extraction
   const frontmatter = normalizeFrontmatter({ ...data, content }, filename);
@@ -124,5 +146,5 @@ export function getAllSlugs(): string[] {
   if (!fs.existsSync(BLOG_DIR)) return [];
   return fs.readdirSync(BLOG_DIR)
     .filter(f => f.endsWith('.md') && !f.startsWith('.'))
-    .map(f => f.replace(/\.md$/, ''));
+    .map(f => getSlug(path.join(BLOG_DIR, f)));
 }
