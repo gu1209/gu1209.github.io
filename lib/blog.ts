@@ -98,7 +98,9 @@ function parsePost(filePath: string): BlogPost | null {
 export function getAllPosts(): BlogPost[] {
   if (!fs.existsSync(BLOG_DIR)) return [];
 
-  const files = fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.md'));
+  const files = fs.readdirSync(BLOG_DIR).filter(f =>
+    f.endsWith('.md') && !f.startsWith('.') // skip hidden/template files
+  );
   const posts = files
     .map(file => parsePost(path.join(BLOG_DIR, file)))
     .filter((p): p is BlogPost => p !== null);
@@ -121,6 +123,6 @@ export function getPostBySlug(slug: string): BlogPost | null {
 export function getAllSlugs(): string[] {
   if (!fs.existsSync(BLOG_DIR)) return [];
   return fs.readdirSync(BLOG_DIR)
-    .filter(f => f.endsWith('.md'))
+    .filter(f => f.endsWith('.md') && !f.startsWith('.'))
     .map(f => f.replace(/\.md$/, ''));
 }

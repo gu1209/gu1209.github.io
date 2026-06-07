@@ -1,5 +1,18 @@
 {
   "newFileLocation": "folder",
   "newFileFolderPath": "content/blog",
-  "attachmentFolderPath": "public/images/blog"
+  "attachmentFolderPath": "public/images/blog",
+  "userIgnoreFilters": [
+    "node_modules/",
+    ".next/",
+    "out/",
+    ".git/",
+    "package-lock.json",
+    "public/fonts/",
+    "*.ttf",
+    "*.otf",
+    "*.pack",
+    "*.idx"
+  ],
+  "showUnsupportedFiles": false
 }

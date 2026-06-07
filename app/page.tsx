@@ -538,7 +538,7 @@ export default function Home() {
       />
 
       {/* ── Main Content ── */}
-      <main className="lg:ml-56">
+      <main className="lg:ml-[var(--sidebar-w)] transition-[margin] duration-200">
 
       {/* ── Hero ── */}
       <section className="pt-8 lg:pt-14 pb-20 px-6 relative bg-white hero-mesh">
