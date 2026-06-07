@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "hello-world.md",
+                "file": "这是一个测试的blog.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "hello-world"
+              "title": "这是一个测试的blog"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "hello-world.md",
+                "file": "这是一个测试的blog.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "hello-world 的反向链接列表"
+              "title": "这是一个测试的blog 的反向链接列表"
             }
           },
           {
@@ -194,6 +194,7 @@
   },
   "active": "3128fc11f7db41f2",
   "lastOpenFiles": [
+    "一个新的测试博客.md",
     "这是一个测试的blog.md",
     "hello-world.md"
   ]
