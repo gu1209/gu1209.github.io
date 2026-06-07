@@ -1,0 +1,448 @@
+{
+  "translations": {
+    "zh": {
+      "nav": {
+        "about": "关于我",
+        "experience": "实习经历",
+        "projects": "项目经历",
+        "skills": "技能与证书",
+        "tools": "Vibe Coding",
+        "now": "现在",
+        "notes": "学习笔记",
+        "contact": "联系方式"
+      },
+      "hero": {
+        "title": "顾杰",
+        "subtitle": "AI Product × Vibe Coding | Agent 开发 | 金融数据分析",
+        "description": "天津大学金融硕士，专注于 AI Agent 架构设计、LLM 应用开发与 Vibe Coding 实践。用 AI 重新定义金融工作流。",
+        "contact": "联系我",
+        "github": "GitHub"
+      },
+      "about": {
+        "title": "关于我",
+        "education": "教育背景",
+        "intro": "天津大学（985）金融硕士在读。我是一名 AI Product 实践者，擅长将 LLM 与 Agent 技术落地到真实业务场景中。在 Momenta 从零搭建了企业级 AI 智能助手系统，实现了从意图路由、RAG 上下文注入到多会话记忆的完整 Agent Harness 架构。同时是一名 Vibe Coding 爱好者，用 AI 辅助编程持续构建实用工具。",
+        "strengths": "核心优势：AI Agent 全栈实践 + CPA 4科金融专业 + Python/Vibe Coding 能力 + 4段跨领域实习，复合型 AI 产品人才。",
+        "degree": "金融硕士",
+        "university": "天津大学",
+        "faculty": "管理与经济学部",
+        "major": "主修课程：大数据与金融风险、金融随机分析、金融计量经济学、金融数据分析、衍生金融工具、行为金融学、投资学、公司金融",
+        "period": "2024.09 - 2027.01（预计）",
+        "bachelor": "金融学士",
+        "bachelorUniv": "中国矿业大学（211）",
+        "bachelorFaculty": "经济管理学院",
+        "bachelorMajor": "主修课程：货币金融学、宏观经济学、微观经济学、管理学、商业银行经营管理、金融数据分析、大数据分析技术、金融经济学、证券投资学、基础会计学、Python数据分析",
+        "bachelorPeriod": "2020.09 - 2024.06",
+        "bachelorGpa": "GPA: 4.15/5.0，专业前15%，二等学业奖学金"
+      },
+      "experience": {
+        "title": "实习经历"
+      },
+      "projects": {
+        "title": "项目经历",
+        "tech": "技术栈",
+        "objective": "项目目标",
+        "methodology": "架构设计",
+        "design": "关键决策",
+        "status": "状态"
+      },
+      "skills": {
+        "title": "技能与证书",
+        "aiAgent": "AI / Agent",
+        "programming": "编程语言",
+        "dataTools": "数据分析工具",
+        "finance": "金融 & 产品",
+        "certifications": "专业认证",
+        "languages": "语言能力"
+      },
+      "now": {
+        "title": "最近在…",
+        "subtitle": "动态更新，记录当下在做的事"
+      },
+      "notes": {
+        "title": "学习笔记",
+        "subtitle": "整理的备考笔记与错题复盘，持续更新中"
+      },
+      "contact": {
+        "title": "联系方式",
+        "email": "邮箱",
+        "github": "GitHub",
+        "phone": "电话",
+        "xiaohongshu": "小红书",
+        "bilibili": "B站",
+        "message": "寻求 AI 产品经理、AI Agent 开发、Vibe Coding 相关实习或全职机会。欢迎联系！"
+      }
+    },
+    "en": {
+      "nav": {
+        "about": "About",
+        "experience": "Experience",
+        "projects": "Projects",
+        "skills": "Skills & Certs",
+        "tools": "Vibe Coding",
+        "now": "Now",
+        "notes": "Notes",
+        "contact": "Contact"
+      },
+      "hero": {
+        "title": "Kris Gu",
+        "subtitle": "AI Product × Vibe Coding | Agent Development | Financial Data Analytics",
+        "description": "Master's in Finance at Tianjin University, focused on AI Agent architecture, LLM application development, and Vibe Coding practice. Redefining financial workflows with AI.",
+        "contact": "Contact Me",
+        "github": "GitHub"
+      },
+      "about": {
+        "title": "About Me",
+        "education": "Education",
+        "intro": "Master's in Finance at Tianjin University (985). I'm an AI Product practitioner skilled in landing LLM and Agent technologies in real business scenarios. At Momenta, I built an enterprise AI assistant system from scratch, implementing a complete Agent Harness architecture with intent routing, RAG context injection, and multi-session memory. Also a Vibe Coding enthusiast, continuously building practical tools with AI-assisted programming.",
+        "strengths": "Core strengths: Full-stack AI Agent practice + CPA 4 subjects + Python/Vibe Coding + 4 cross-domain internships — a compound AI product talent.",
+        "degree": "Master's in Finance",
+        "university": "Tianjin University",
+        "faculty": "Faculty of Management and Economics",
+        "major": "Core Courses: Big Data & Financial Risk, Financial Stochastic Analysis, Financial Econometrics, Financial Data Analysis, Derivatives, Behavioral Finance, Investment, Corporate Finance",
+        "period": "2024.09 - 2027.01 (expected)",
+        "bachelor": "Bachelor in Finance",
+        "bachelorUniv": "China University of Mining and Technology (211)",
+        "bachelorFaculty": "School of Economics & Management",
+        "bachelorMajor": "Core Courses: Money & Banking, Macroeconomics, Microeconomics, Management, Commercial Bank Management, Financial Data Analysis, Big Data Analytics, Financial Economics, Securities Investment, Basic Accounting, Python Data Analysis",
+        "bachelorPeriod": "Sep 2020 - Jun 2024",
+        "bachelorGpa": "GPA: 4.15/5.0, Top 15% in major, Second-class Academic Scholarship"
+      },
+      "experience": {
+        "title": "Internship Experience"
+      },
+      "projects": {
+        "title": "Projects",
+        "tech": "Tech Stack",
+        "objective": "Objective",
+        "methodology": "Architecture",
+        "design": "Key Decisions",
+        "status": "Status"
+      },
+      "skills": {
+        "title": "Skills & Certifications",
+        "aiAgent": "AI / Agent",
+        "programming": "Programming",
+        "dataTools": "Data Tools",
+        "finance": "Finance & Product",
+        "certifications": "Certifications",
+        "languages": "Languages"
+      },
+      "now": {
+        "title": "Now",
+        "subtitle": "What I am currently into"
+      },
+      "notes": {
+        "title": "Study Notes",
+        "subtitle": "Exam prep notes & mistake reviews"
+      },
+      "contact": {
+        "title": "Get In Touch",
+        "email": "Email",
+        "github": "GitHub",
+        "phone": "Phone",
+        "xiaohongshu": "Xiaohongshu",
+        "bilibili": "Bilibili",
+        "message": "Seeking opportunities in AI Product Management, AI Agent Development, or Vibe Coding roles. Feel free to reach out!"
+      }
+    }
+  },
+  "experiences": [
+    {
+      "company": "Momenta（初速度）",
+      "companyEn": "Momenta",
+      "role": "资金分析实习生（AI 应用与数字化方向）",
+      "roleEn": "Fund Analysis Intern (AI Application & Digitalization)",
+      "period": "2025.12 - 2026.05",
+      "periodEn": "Dec 2025 - May 2026",
+      "logo": "/logos/momenta.svg",
+      "highlightsBold": [0, 1, 2],
+      "highlights": [
+        "AI 智能助手产品设计与落地：从财务团队日常高频问询出发，梳理用户需求场景（持仓分析、申购建议、汇率风险等），设计意图识别规则与场景化 Prompt 模板；后端通过 SQL 查询 + 语义层规则映射实现数据检索，借助 Claude Code 完成开发，独立推动从方案设计到上线交付的全流程，系统已投入团队日常使用",
+        "自动化工作流重构：梳理理财询价与市场资讯采集的人工流程，设计自动化方案（到期自动询价、归集报价、联网检索标的信息），借助 AI Coding 将其落地为\"智能询价归集系统\"和\"市场资讯 Skill\"，将单次 1-2 小时的案头工作压缩至 2 分钟",
+        "飞书生态集成与内部工具建设：基于飞书开放平台 API，打通群聊消息 → 审批流 → 多维表格的数据链路，实现理财申购全流程自动落表与闭环管理；为内部上线多个消息推送与信息收集 Bot，深度实践飞书自建应用、多维表格自动化及 API 调用",
+        "资金数据系统搭建：围绕约 $1.3B 资金池的管理需求，搭建资金余额、理财明细、流动性预估等数据看板；对接招商银行 CBS API 与境外银行流水数据，替代传统手工周报制作"
+      ],
+      "highlightsEn": [
+        "AI Assistant product design & delivery: started from finance team's daily high-frequency inquiries, mapped user scenarios (position analysis, purchase recommendations, FX risk, etc.), designed intent recognition rules and scenario-based prompt templates; backend uses SQL + semantic-layer rule mapping for data retrieval (non-RAG), built with Claude Code, independently drove end-to-end delivery from design to production, now in daily team use",
+        "Workflow automation redesign: analyzed manual processes for wealth product inquiry and market intelligence collection, designed automation (auto-inquiry at maturity, response aggregation, web search for product info), delivered 'Smart Inquiry System' and 'Market Intelligence Skill' via AI Coding, reduced per-task time from 1-2 hours to 2 minutes",
+        "Feishu ecosystem integration & internal tools: built data pipeline linking group chat → approval workflow → Bitable via Feishu Open API, achieving end-to-end auto-logging and closed-loop wealth subscription management; launched multiple notification bots and data-collection bots, deep hands-on with Feishu custom apps, Bitable automation, and API integration",
+        "Treasury data system: built dashboards for fund balances, wealth product details, and liquidity forecasting around ~$1.3B capital pool; integrated CMB CBS API and overseas bank transaction data, replacing traditional manual weekly reporting"
+      ]
+    },
+    {
+      "company": "中化天津有限公司",
+      "companyEn": "Sinochem Tianjin Co., Ltd.",
+      "role": "产权交易实习生",
+      "roleEn": "Asset Transaction Intern",
+      "period": "2025年8月 - 2025年11月",
+      "periodEn": "Aug 2025 - Nov 2025",
+      "logo": "/logos/sinochem.svg",
+      "highlightsBold": [1, 5],
+      "highlights": [
+        "参与多个资产处置与破产重整项目，负责现场踏勘与流程合规支持",
+        "在\"蓝星清洗资产转让\"项目中现场带领意向方实地探勘并详细介绍资产，项目最终实现挂牌价50%溢价成交",
+        "依据《公司法》《企业破产法》及中国中化内部制度，为\"厦门长蓝\"破产项目制定完整工作流程",
+        "参与中化天津物流\"十五五\"规划研究，探索利用存量土地厂房建设仓储设施并接入中欧班列",
+        "为上海写字楼出售项目提供分析支持，依据国资管理要求梳理低效资产清单并对比区域租金水平",
+        "独立撰写3篇项目通讯稿，发布在中化天津官方公众号"
+      ],
+      "highlightsEn": [
+        "Participated in multiple asset disposal and bankruptcy restructuring projects, responsible for site inspection and process compliance support",
+        "In \"Blue Star Cleaning Asset Transfer\" project, led potential buyers for on-site inspection, project ultimately achieved 50% premium over listing price",
+        "Developed complete workflow for \"Xiamen Changlan\" bankruptcy project according to Company Law, Enterprise Bankruptcy Law, and Sinochem internal regulations",
+        "Contributed to Sinochem Tianjin Logistics \"15th Five-Year Plan\" research, explored utilizing existing land/warehouses for storage facilities",
+        "Provided analytical support for Shanghai office building sale project, compiled low-efficiency asset list per state-owned asset management requirements",
+        "Independently wrote 3 project newsletters published on Sinochem Tianjin official WeChat account"
+      ]
+    },
+    {
+      "company": "中科曙光（存储产品事业部）",
+      "companyEn": "Sugon (Storage Products Division)",
+      "role": "项目管理实习生",
+      "roleEn": "Project Management Intern",
+      "period": "2025年3月 - 2025年6月",
+      "periodEn": "Mar 2025 - Jun 2025",
+      "logo": "/logos/sugon.svg",
+      "highlightsBold": [0, 2, 3],
+      "highlights": [
+        "管理412d-1230（2025年3月发版）和421SP1（2025年7月发版）两个版本全生命周期，覆盖需求排期、进度跟踪、评审组织、问题闭环",
+        "组织87场评审会议（产品需求/技术需求/原型设计/Demo/测试用例），独立主持20+场Bug评审会并主导讨论与责任分配",
+        "建立标准化评审登记模板，统一记录问题、责任人、截止时间，减少重复沟通约30-50%",
+        "使用Jira搭建项目看板管理需求和缺陷，配置Confluence空间规范文档结构，研发信息检索效率提升40%",
+        "完成版本数据统计（需求完成率、代码产出、Bug解决率），开展延期Bug根因分析，主导文档合规审计"
+      ],
+      "highlightsEn": [
+        "Managed full lifecycle of versions 412d-1230 (released Mar 2025) and 421SP1 (released Jul 2025), covering requirement scheduling, progress tracking, review coordination, issue closure",
+        "Organized 87 review meetings, independently hosted 20+ bug review meetings and led discussions with responsibility assignment",
+        "Established standardized review registration template, unified recording of issues, owners, deadlines, reduced repetitive communication by 30-50%",
+        "Built project Kanban using Jira for requirement and defect management, configured Confluence spaces for documentation standards, R&D information retrieval efficiency improved by 40%",
+        "Completed version data statistics, conducted root cause analysis of delayed bugs, led documentation compliance audit"
+      ]
+    },
+    {
+      "company": "东吴证券（研究所）",
+      "companyEn": "CSC Financial (Research Institute)",
+      "role": "行业研究实习生（电子设备与新能源）",
+      "roleEn": "Industry Research Intern (Electronics & New Energy)",
+      "period": "2024年10月 - 2025年3月",
+      "periodEn": "Oct 2024 - Mar 2025",
+      "logo": "/logos/csc.svg",
+      "highlightsBold": [0, 1],
+      "highlights": [
+        "深度参与三花智控（汽零）和厦门钨业（钨钼材料）深度报告，搭建DCF与相对估值模型（PE/PEG）",
+        "持续跟踪宁德时代、赣锋锂业等锂电池产业链龙头，整理上市公司调研及行业会议纪要20+篇",
+        "按月更新正极/负极/隔膜等核心部件产量数据，开展谐波减速器国产厂商（绿的谐波等）参数对比",
+        "协助分析覆盖企业毛利率、研发费用率、ROE、资本开支等财务指标，参与定期财务简报撰写",
+        "使用Choice/Wind金融终端、Excel财务建模工具，产出研究报告供基金经理参考"
+      ],
+      "highlightsEn": [
+        "Deeply involved in in-depth research reports on Sanhua (auto parts) and Xiamen Tungsten, built DCF and relative valuation models (PE/PEG)",
+        "Continuously tracked lithium battery industry leaders CATL and Ganfeng Lithium, compiled 20+ meeting minutes from listed company visits",
+        "Updated monthly production data for cathode/anode/separator components, conducted parameter comparison of domestic harmonic reducer manufacturers",
+        "Assisted in analyzing financial metrics including gross margin, R&D expense ratio, ROE, capex for covered companies",
+        "Utilized Choice/Wind financial terminals and Excel financial modeling tools to produce research reports for fund managers' reference"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "企业资金管理系统 AI Agent",
+      "titleEn": "AI Agent for Enterprise Treasury Management",
+      "subtitle": "从零搭建 Agent Harness 全栈架构 — Planning / Prompt / RAG / Memory / Skill / Multi-Agent 六层设计",
+      "subtitleEn": "Built Agent Harness from scratch — 6-layer architecture: Planning, Prompt, RAG, Memory, Skill, Multi-Agent",
+      "tech": ["TypeScript", "Node.js", "Claude Code CLI", "MCP", "RAG", "Vue 3", "Element Plus", "Pinia", "飞书 API"],
+      "objective": "为企业资金管理系统设计并实现内置 AI 智能助手模块。核心挑战不是\"调用 LLM\"，而是在企业内网约束下，从零搭建一个完整的 Agent Harness（脚手架层），让 LLM 具备感知真实数据、调用工具、跨会话记忆和个性化响应的能力。",
+      "objectiveEn": "Designed and implemented an AI assistant module for enterprise treasury management. The core challenge was not \"calling LLM API\" but building a complete Agent Harness from scratch under enterprise intranet constraints.",
+      "methodology": "架构分六层实现：(1) Planning 层：双模式路由（Chat 模式直调 LLM Gateway vs Agent 模式 spawn Claude Code CLI 子进程执行 ReAct 循环）；(2) Prompt 层：角色分化的 System Prompt；(3) RAG 层：结构化财务数据全量注入，用户可控上下文选择；(4) Memory 层：L2 会话历史持久化（60条滑动窗口）；(5) Skill 层：预定义技能执行器，结果带 TTL 缓存；(6) Multi-Agent 层：Coordinator + 专家 Agent Swarm 架构设计。",
+      "methodologyEn": "Architecture in 6 layers: (1) Planning: Dual-mode routing (Chat → LLM Gateway vs Agent → Claude Code CLI subprocess with ReAct loop); (2) Prompt: Role-differentiated System Prompts; (3) RAG: Structured financial data full injection with user-controlled context; (4) Memory: L2 session history persistence (60-item sliding window); (5) Skill: Predefined skill executor with TTL cache; (6) Multi-Agent: Coordinator + expert Agent Swarm design.",
+      "design": "关键工程决策：Claude Code CLI 子进程模式绕过企业内网证书限制；结构化全量注入替代向量 RAG（财务数据实时性强、结构化、体量小 <2K tokens）；场景化引导模板区分\"自动注入发送\"与\"填充模板不发送\"解决冷启动问题。技术栈：Vue 3 + TypeScript + Element Plus + Pinia（前端），Node.js + Express + TypeScript（后端），Claude Code CLI（Agent 运行时），飞书多维表格 API（数据源）。",
+      "designEn": "Key decisions: Claude Code CLI subprocess bypasses enterprise certificate restrictions; Structured full injection over vector RAG (financial data is real-time, structured, small <2K tokens); Scenario-guided templates solve cold start. Tech stack: Vue 3 + TypeScript + Element Plus + Pinia (frontend), Node.js + Express + TypeScript (backend), Claude Code CLI (Agent runtime), Feishu API (data source).",
+      "status": "已完成 (2025年12月 - 至今)",
+      "statusEn": "Completed (Dec 2025 - Present)",
+      "featured": true
+    },
+    {
+      "title": "股票行业相似度与反转策略研究",
+      "titleEn": "Stock Industry Similarity and Reversal Strategy Research",
+      "subtitle": "基于年报MD&A文本的算法分类与信息扩散效应",
+      "subtitleEn": "Algorithmic Classification and Information Diffusion based on Annual MD&A Text",
+      "tech": ["Python", "Pandas", "BERT", "GLM-4", "Cosine Similarity", "Louvain", "T-test", "ANOVA"],
+      "objective": "探索基于MD&A文本相似度的算法行业分类能否更精准捕捉股票间基本面关联，从而改进A股反转策略并识别信息扩散规律。",
+      "objectiveEn": "Explore whether algorithm-based industry classification using MD&A text similarity can better capture fundamental connections among stocks, improving A-share reversal strategies.",
+      "methodology": "研究分为四个部分：(1) Embedding模型比较：对比TF-IDF、BERT、FinBERT、LongBERT、BGE-M3；(2) Louvain社区检测：基于相似度矩阵构建加权图，使用Louvain算法进行无监督行业分类；(3) 行业反转策略回测；(4) Lead-Lag信息扩散分析。",
+      "methodologyEn": "Research comprises four parts: (1) Embedding model comparison; (2) Louvain community detection for unsupervised industry classification; (3) Industry reversal strategy backtest; (4) Lead-Lag information diffusion analysis.",
+      "design": "研究设计采用实证分析框架。使用2012-2024年A股年报MD&A文本。反转策略形成期与持有期网格为{2,4,6,8}周，评估指标包括年化收益、夏普比率、最大回撤。",
+      "designEn": "Empirical framework using 2012-2024 A-share annual MD&A texts. Reversal strategy formation/holding periods grid: {2,4,6,8} weeks. Metrics: annualized return, Sharpe ratio, max drawdown.",
+      "status": "进行中 (2025年8月 - 至今)",
+      "statusEn": "Ongoing (Aug 2025 - Present)"
+    },
+    {
+      "title": "投资者情绪指数与期货价格发现",
+      "titleEn": "Investor Sentiment Index and Futures Price Discovery",
+      "subtitle": "基于股吧文本挖掘的高频情绪指数构建",
+      "subtitleEn": "Constructing High-Frequency Sentiment Index from Forum Text Mining",
+      "tech": ["Python", "Requests", "BeautifulSoup", "FDA", "Text Mining", "Sentiment Lexicon", "VAR"],
+      "objective": "爬取东方财富股吧数据，构建高频投资者情绪指数，检验其对股指期货市场价格发现功能的影响。",
+      "objectiveEn": "Scrape East Money forum data to construct high-frequency investor sentiment index and test its impact on price discovery of stock index futures.",
+      "methodology": "每日爬取股吧帖子；采用中文情感词典进行文本情感分析，构建日度情绪指数；运用函数化数据分析(FDA)进行混频融合；使用VAR模型和脉冲响应函数(IRF)检验情绪对价格发现的动态影响机制。",
+      "methodologyEn": "Daily scraping of forum posts; apply Chinese sentiment lexicon for textual analysis; use Functional Data Analysis (FDA) for mixed-frequency fusion; employ VAR and Impulse Response Functions.",
+      "design": "情绪指数构建流程包括：数据爬取、文本清洗、情感打分、日度聚合。FDA混频方法将日度情绪转化为与期货周度收益率匹配的频率。VAR模型包含期货收益率、情绪指数、成交量等变量。",
+      "designEn": "Sentiment index construction: data scraping, text cleaning, sentiment scoring, daily aggregation. FDA converts daily sentiment to weekly frequency. VAR model includes futures returns, sentiment, volume.",
+      "status": "已结项 (2022年4月 - 2024年4月)",
+      "statusEn": "Completed (Apr 2022 - Apr 2024)"
+    },
+    {
+      "title": "招商银行数字金融训练营",
+      "titleEn": "China Merchants Bank Digital Finance Camp",
+      "subtitle": "用户行为预测与AI营销智能体",
+      "subtitleEn": "User Behavior Prediction and AI Marketing Agent",
+      "tech": ["Python", "Pandas", "Scikit-learn", "BERT", "Flask", "API Design"],
+      "objective": "开发用户广告点击预测、资讯分类模型以及AI营销智能体，提升招商银行数字金融场景的转化率与用户体验。",
+      "objectiveEn": "Develop user ad click prediction, news classification models, and AI marketing agent to boost conversion rates in CMB digital finance scenarios.",
+      "methodology": "采用移动窗口训练规避数据泄露；使用BERT-base-chinese对用户咨询文本进行多分类（8类意图识别）；基于Flask搭建轻量级API服务。",
+      "methodologyEn": "Applied moving window training; used BERT-base-chinese for multi-class text classification (8 intent categories); built lightweight API service with Flask.",
+      "design": "项目采用端到端机器学习工作流。数据预处理包括缺失值处理、文本分词、停用词去除。模型训练采用时间序列交叉验证，移动窗口避免未来信息泄露。API设计遵循RESTful原则。",
+      "designEn": "End-to-end ML workflow. Data preprocessing: missing value handling, tokenization, stopword removal. Model training used time-series cross-validation with moving window. RESTful API for real-time inference.",
+      "status": "已完成 (2025年7月 - 2025年8月)",
+      "statusEn": "Completed (Jul 2025 - Aug 2025)"
+    }
+  ],
+  "skillsData": {
+    "aiAgent": [
+      "Claude Code",
+      "Coze",
+      "LangChain",
+      "MCP",
+      "Agent 架构设计",
+      "RAG",
+      "Prompt Engineering",
+      "ReAct",
+      "Memory 管理"
+    ],
+    "programming": [
+      "Python",
+      "TypeScript",
+      "JavaScript",
+      "SQL",
+      "VBA"
+    ],
+    "dataTools": [
+      "Pandas",
+      "NumPy",
+      "Scikit-learn",
+      "BERT",
+      "MySQL",
+      "Wind/Choice",
+      "Power BI",
+      "Jira",
+      "Confluence"
+    ],
+    "finance": [
+      "AI 产品设计",
+      "财务分析",
+      "DCF估值",
+      "行业研究",
+      "财务建模",
+      "风险评估"
+    ],
+    "certifications": [
+      "CPA：通过会计、财务成本管理、经济法、公司战略与风险管理（4科）",
+      "税务师（CTA）：通过财务与会计、税法一、税法二、涉税服务实务（4科）",
+      "初级会计专业技术资格证书",
+      "基金从业资格证书",
+      "CET-6（英语六级）"
+    ],
+    "certificationsEn": [
+      "CPA: 4 subjects passed (Accounting, Financial Management, Economic Law, Corporate Strategy & Risk Management)",
+      "CTA (Tax Advisor): 4 subjects passed (Financial & Accounting, Tax Law I, Tax Law II, Tax Service Practice)",
+      "Junior Accounting Qualification Certificate",
+      "Fund Practitioner Certificate",
+      "CET-6 (College English Test Band 6)"
+    ],
+    "languages": [
+      "中文（母语）",
+      "English（CET-6，专业工作语言）"
+    ]
+  },
+  "vibeTools": [
+    {
+      "name": "OAA · 网申助手",
+      "nameEn": "OAA · Online Application Assistant",
+      "desc": "自动读取招聘平台的网申问题，结合个人经历生成填写内容，告别重复手填。纯 Vibe Coding 驱动，从需求到上线仅用数小时。",
+      "descEn": "Auto-reads job application questions and generates tailored answers. Built entirely with Vibe Coding — from idea to production in hours.",
+      "tech": ["Python", "Claude Code", "Vibe Coding"],
+      "github": "https://github.com/gu1209/onsite_apply_ass"
+    },
+    {
+      "name": "财务 AI Agent 系统",
+      "nameEn": "Financial AI Agent System",
+      "desc": "为企业资金管理系统搭建 AI 智能助手，实现双模式路由、RAG 上下文注入、多会话记忆、技能执行器等完整 Agent Harness 架构。",
+      "descEn": "AI assistant for enterprise treasury with dual-mode routing, RAG context injection, multi-session memory, and skill executor — a complete Agent Harness.",
+      "tech": ["TypeScript", "Claude Code CLI", "MCP", "Node.js", "Vue 3"],
+      "github": "https://github.com/gu1209"
+    },
+    {
+      "name": "市场资讯自动化",
+      "nameEn": "Market Intelligence Automation",
+      "desc": "开发市场资讯周报/日报自动生成 Skill，覆盖美国/中国/全球经济三大维度，自动筛选信息并生成飞书云文档推送。",
+      "descEn": "Automated weekly/daily market intelligence reports covering US/China/Global economy. Auto-filters info and generates Feishu docs for team distribution.",
+      "tech": ["Claude Code", "Skill", "飞书 API", "Vibe Coding"],
+      "github": "https://github.com/gu1209"
+    }
+  ],
+  "metrics": {
+    "zh": [
+      { "target": 4, "decimals": 0, "suffix": "", "prefix": "", "label": "段实习经历" },
+      { "target": 60, "decimals": 0, "suffix": "%", "prefix": "", "label": "AI 效率提升" },
+      { "target": 80, "decimals": 0, "suffix": "%", "prefix": "", "label": "人工时间节省" },
+      { "target": 3, "decimals": 0, "suffix": "", "prefix": "", "label": "个 Vibe Coding 工具" },
+      { "target": 6, "decimals": 0, "suffix": "", "prefix": "", "label": "层 Agent 架构" }
+    ],
+    "en": [
+      { "target": 4, "decimals": 0, "suffix": "", "prefix": "", "label": "Internships" },
+      { "target": 60, "decimals": 0, "suffix": "%", "prefix": "", "label": "AI Efficiency Gain" },
+      { "target": 80, "decimals": 0, "suffix": "%", "prefix": "", "label": "Time Saved" },
+      { "target": 3, "decimals": 0, "suffix": "", "prefix": "", "label": "Vibe Coding Tools" },
+      { "target": 6, "decimals": 0, "suffix": "", "prefix": "", "label": "Agent Layers" }
+    ]
+  },
+  "notes": [
+    {
+      "id": "default-1",
+      "title": "税二·错题复盘·综合提高（做题不顺畅）",
+      "tag": "CTA 税法二",
+      "href": "https://share.mubu.com/doc/3TZehcyQt6R"
+    }
+  ],
+  "now": [
+    {
+      "emoji": "📚",
+      "category": "在读",
+      "categoryEn": "Reading",
+      "content": "点击编辑，填写你在读的书"
+    },
+    {
+      "emoji": "🎬",
+      "category": "在看",
+      "categoryEn": "Watching",
+      "content": "点击编辑，填写在看的剧或番"
+    },
+    {
+      "emoji": "💬",
+      "category": "在聊",
+      "categoryEn": "Thinking",
+      "content": "点击编辑，填写最近在思考的话题"
+    }
+  ],
+  "contact": {
+    "email": "gujie_kris@163.com",
+    "github": "https://github.com/gu1209",
+    "xiaohongshu": "https://xhslink.com/m/5Q4gGqHQfrc",
+    "bilibili": "https://b23.tv/qt7QGN9",
+    "phone": "+86 192 9224 4363",
+    "xhsUid": "293946035",
+    "biliName": "清祀朔九"
+  },
+  "sectionOrder": ["about", "experience", "projects", "skills", "tools", "metrics"]
+}
