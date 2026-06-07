@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, createContext, useContext, Fragment } from
 import { Mail, Github, Phone, Award, Code, Database, BarChart3, Languages, Globe, Download, Menu, X, ChevronDown, Sparkles, Lock, RotateCcw, LogOut, BookOpen, ExternalLink, Plus, Trash2, Pencil, Sun, Moon, Eye, EyeOff, Settings } from 'lucide-react';
 import { useContentStore } from '@/lib/adminStore';
 import AdminPanel from '@/components/AdminPanel';
+import Sidebar from '@/components/Sidebar';
 import defaultContent from '@/public/content.json';
 import ResumeExportModal from '@/components/ResumeExportModal';
 import { STAR_DATA } from '@/lib/starData';
@@ -414,7 +415,6 @@ export default function Home() {
   const [lang, setLang] = useState<'zh' | 'en'>('zh');
   const [mounted, setMounted] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedProject, setExpandedProject] = useState<number | null>(0);
   const [expandedStarExp, setExpandedStarExp] = useState<number | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -524,117 +524,24 @@ export default function Home() {
       {/* ── Scroll progress bar ── */}
       <div id="scroll-progress" style={{ width: `${scrollProgress}%` }} />
 
-      {/* ── Navigation ── */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md z-50 border-b border-gray-100 shadow-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <a href="#" className="flex items-center gap-2.5 hover:opacity-80 transition">
-              <div className="w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-md">KG</div>
-              <span className="font-semibold text-gray-900 tracking-tight">Kris Gu</span>
-            </a>
+      {/* ── Sidebar ── */}
+      <Sidebar
+        lang={lang}
+        isDark={isDark}
+        isAdmin={isAdmin}
+        activeSection={activeSection}
+        sectionOrder={(storeContent.sectionOrder as string[]) || ['about', 'experience', 'projects', 'skills', 'tools', 'metrics']}
+        onToggleLang={toggleLanguage}
+        onToggleDark={() => setIsDark(d => !d)}
+        onAdminClick={() => isAdmin ? logout() : setShowAdminLogin(true)}
+        onExportClick={() => setIsExportModalOpen(true)}
+      />
 
-            {/* Desktop nav */}
-            <div className="hidden md:flex items-center gap-7">
-              {(['about', 'experience', 'projects', 'skills', 'tools', 'contact'] as const).map(item => (
-                <a key={item} href={`#${item}`} className={`text-sm font-medium transition-colors relative group ${activeSection === item ? 'text-primary-600' : 'text-gray-600 hover:text-primary-600'}`}>
-                  {t.nav[item]}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary-500 transition-all duration-300 ${activeSection === item ? 'w-full' : 'w-0 group-hover:w-full'}`} />
-                </a>
-              ))}
-              <a href="/blog/" className="text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors">
-                {t.nav.blog || '博客'}
-              </a>
-              <button
-                onClick={() => setIsExportModalOpen(true)}
-                className="flex items-center gap-1.5 bg-primary-50 text-primary-700 hover:bg-primary-100 border border-primary-200 px-4 py-2 rounded-full text-sm font-medium transition hover:shadow-sm"
-              >
-                <Download size={15} />
-                <span>{lang === 'zh' ? '导出简历' : 'Resume'}</span>
-              </button>
-              <button
-                onClick={toggleLanguage}
-                className="flex items-center gap-1.5 text-gray-500 hover:text-primary-600 border border-gray-200 px-3 py-1.5 rounded-full text-xs font-medium transition hover:border-primary-400"
-              >
-                <Globe size={13} />
-                <span>{lang === 'en' ? '中文' : 'EN'}</span>
-              </button>
-              <button
-                onClick={() => setIsDark(d => !d)}
-                title={isDark ? '切换浅色' : '切换深色'}
-                className="p-1.5 rounded-full text-gray-400 hover:text-primary-600 hover:bg-primary-50 transition"
-              >
-                {isDark ? <Sun size={14} /> : <Moon size={14} />}
-              </button>
-              <button
-                onClick={() => isAdmin ? logout() : setShowAdminLogin(true)}
-                title={isAdmin ? '退出管理模式' : '管理员登录'}
-                className={`p-1.5 rounded-full transition ${isAdmin ? 'text-amber-600 bg-amber-100 hover:bg-amber-200' : 'text-gray-300 hover:text-gray-500'}`}
-              >
-                <Lock size={13} />
-              </button>
-            </div>
-
-            {/* Mobile controls */}
-            <div className="flex md:hidden items-center gap-2">
-              <button
-                onClick={toggleLanguage}
-                className="flex items-center gap-1 text-gray-500 border border-gray-200 px-2.5 py-1.5 rounded-full text-xs font-medium"
-              >
-                <Globe size={12} />
-                {lang === 'en' ? '中文' : 'EN'}
-              </button>
-              <button
-                onClick={() => setIsDark(d => !d)}
-                className="p-1.5 text-gray-400 hover:text-primary-600 transition"
-              >
-                {isDark ? <Sun size={16} /> : <Moon size={16} />}
-              </button>
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-gray-600 hover:text-primary-600 transition"
-                aria-label="Toggle menu"
-              >
-                {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile dropdown menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white px-6 pt-4 pb-5">
-            <div className="space-y-1 mb-4">
-              {(['about', 'experience', 'projects', 'skills', 'tools', 'contact'] as const).map(item => (
-                <a
-                  key={item}
-                  href={`#${item}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2.5 px-2 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:text-primary-600 transition-colors"
-                >
-                  {t.nav[item]}
-                </a>
-              ))}
-              <a
-                href="/blog/"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block py-2.5 px-2 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:text-primary-600 transition-colors"
-              >
-                {t.nav.blog || '博客'}
-              </a>
-            </div>
-            <button
-              onClick={() => { setIsExportModalOpen(true); setMobileMenuOpen(false); }}
-              className="w-full flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-primary-700 transition"
-            >
-              <Download size={16} />
-              {lang === 'zh' ? '导出简历' : 'Export Resume'}
-            </button>
-          </div>
-        )}
-      </nav>
+      {/* ── Main Content ── */}
+      <main className="lg:ml-56">
 
       {/* ── Hero ── */}
-      <section className="pt-28 pb-20 px-6 relative bg-white hero-mesh">
+      <section className="pt-8 lg:pt-14 pb-20 px-6 relative bg-white hero-mesh">
         {/* Background decorations — overflow-hidden scoped here so content isn't clipped */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {/* Dot-grid background decoration */}
@@ -669,7 +576,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto relative">
+        <div className="max-w-4xl mx-auto relative">
           <div className="flex flex-col md:flex-row gap-14 items-center">
             {/* Left content */}
             <div className="flex-1 space-y-5">
@@ -1078,7 +985,7 @@ export default function Home() {
       {(!secHidden('skills') || isAdmin) && (
       <section id="skills" className="py-20 px-6 scroll-mt-24 relative" style={{ order: order('skills') }}>
         <Veil id="skills" />
-        <div className={dim('skills')}><div className="max-w-6xl mx-auto">
+        <div className={dim('skills')}><div className="max-w-4xl mx-auto">
           <SectionHeading label={t.skills.title} />
 
           {/* 3-column skill categories */}
@@ -1145,7 +1052,7 @@ export default function Home() {
       {(!secHidden('tools') || isAdmin) && (
       <section id="tools" className="py-20 px-6 scroll-mt-24 bg-gradient-to-br from-violet-50/50 via-white to-primary-50/50 relative" style={{ order: order('tools') }}>
         <Veil id="tools" />
-        <div className={dim('tools')}><div className="max-w-6xl mx-auto">
+        <div className={dim('tools')}><div className="max-w-4xl mx-auto">
           <SectionHeading label={lang === 'zh' ? 'Vibe Coding 作品' : 'Vibe Coding Portfolio'} />
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 border border-violet-100 shadow-sm mb-8 -mt-4">
             <p className="text-gray-600 text-sm leading-relaxed">
@@ -1195,6 +1102,8 @@ export default function Home() {
         </div>
         );
       })()}
+
+      </main>
 
       {/* ── Contact ── */}
       <section id="contact" className="py-20 px-6 bg-gradient-to-br from-primary-600 to-primary-800 text-white scroll-mt-24">
@@ -1254,7 +1163,7 @@ export default function Home() {
 
       {/* ── Footer ── */}
       <footer className="bg-gray-950 text-white py-10 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col items-center gap-5">
+        <div className="max-w-4xl mx-auto flex flex-col items-center gap-5">
           {/* 每日一言 */}
           {hitokoto && (
             <div className="text-center max-w-lg">

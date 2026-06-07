@@ -94,7 +94,6 @@ export default function AdminPanel({ content, onUpdate, onImport, onExport, onRe
   const sectionLabels: Record<string, string> = {
     about: '关于我', experience: '实习经历', projects: '项目经历',
     skills: '技能与证书', tools: 'Vibe Coding 作品', metrics: '数据指标',
-    now: '最近在…', notes: '学习笔记',
   };
 
   // ── Update nested translation field ──
@@ -394,35 +393,6 @@ export default function AdminPanel({ content, onUpdate, onImport, onExport, onRe
               </div>
             ))}
             <button onClick={() => onUpdate(c => { const n = JSON.parse(JSON.stringify(c)); n.metrics.zh.push({ target: 0, decimals: 0, suffix: '', prefix: '', label: '新指标' }); n.metrics.en?.push({ target: 0, decimals: 0, suffix: '', prefix: '', label: 'New' }); return n; })} className="text-xs text-primary-600 flex items-center gap-1 mt-1"><Plus size={12} /> 添加指标</button>
-          </Section>
-
-          {/* ══ NOTES ══ */}
-          <Section id="notes" title="学习笔记 (Notes)">
-            {(content?.notes || []).map((note: any, idx: number) => (
-              <div key={idx} className="flex gap-2 mb-2 items-end">
-                <div className="flex-1"><label className="text-[10px] text-gray-400">标题</label><input value={note.title || ''} onChange={e => updateArrayItem('notes', idx, 'title', e.target.value)} className="w-full text-xs border border-gray-200 rounded px-2 py-1" /></div>
-                <div className="w-24"><label className="text-[10px] text-gray-400">标签</label><input value={note.tag || ''} onChange={e => updateArrayItem('notes', idx, 'tag', e.target.value)} className="w-full text-xs border border-gray-200 rounded px-2 py-1" /></div>
-                <div className="flex-1"><label className="text-[10px] text-gray-400">链接</label><input value={note.href || ''} onChange={e => updateArrayItem('notes', idx, 'href', e.target.value)} className="w-full text-xs border border-gray-200 rounded px-2 py-1" /></div>
-                <button onClick={() => removeArrayItem('notes', idx)} className="text-red-300 hover:text-red-500 mb-1"><X size={14} /></button>
-              </div>
-            ))}
-            <button onClick={() => addArrayItem('notes', { id: Date.now().toString(), title: '新笔记', tag: '标签', href: '' })} className="text-xs text-primary-600 flex items-center gap-1 mt-1"><Plus size={12} /> 添加笔记</button>
-          </Section>
-
-          {/* ══ NOW ══ */}
-          <Section id="now" title="最近在… (Now)">
-            {(content?.now || []).map((item: any, idx: number) => (
-              <div key={idx} className="mb-3">
-                <div className="flex gap-2 mb-1 items-end">
-                  <div className="w-10"><label className="text-[10px] text-gray-400">Emoji</label><input value={item.emoji || ''} onChange={e => updateArrayItem('now', idx, 'emoji', e.target.value)} className="w-full text-xs border border-gray-200 rounded px-2 py-1 text-center" /></div>
-                  <div className="flex-1"><label className="text-[10px] text-gray-400">分类 (中)</label><input value={item.category || ''} onChange={e => updateArrayItem('now', idx, 'category', e.target.value)} className="w-full text-xs border border-gray-200 rounded px-2 py-1" /></div>
-                  <div className="flex-1"><label className="text-[10px] text-gray-400">Category (EN)</label><input value={item.categoryEn || ''} onChange={e => updateArrayItem('now', idx, 'categoryEn', e.target.value)} className="w-full text-xs border border-gray-200 rounded px-2 py-1" /></div>
-                  <button onClick={() => removeArrayItem('now', idx)} className="text-red-300 hover:text-red-500 mb-1"><X size={14} /></button>
-                </div>
-                <Field label="内容" value={item.content || ''} onChange={v => updateArrayItem('now', idx, 'content', v)} rows={2} />
-              </div>
-            ))}
-            <button onClick={() => addArrayItem('now', { emoji: '✨', category: '新分类', categoryEn: 'New', content: '' })} className="text-xs text-primary-600 flex items-center gap-1 mt-1"><Plus size={12} /> 添加</button>
           </Section>
 
           {/* ══ CONTACT ══ */}
