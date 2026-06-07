@@ -20,20 +20,6 @@
               "icon": "lucide-file",
               "title": "这是一个测试的blog"
             }
-          },
-          {
-            "id": "cf0392014c86a829",
-            "type": "leaf",
-            "state": {
-              "type": "outgoing-link",
-              "state": {
-                "file": "content/blog/这是一个测试的blog.md",
-                "linksCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-going-out",
-              "title": "这是一个测试的blog 的出链列表"
-            }
           }
         ]
       }
@@ -178,7 +164,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -194,7 +181,17 @@
   },
   "active": "4a5ead745468b4d7",
   "lastOpenFiles": [
-    "deploy.sh",
+    "out/404/index.html",
+    "out/404.html",
+    "out/blog/这是一个测试的blog/index.txt",
+    "out/blog/这是一个测试的blog/index.html",
+    "out/blog/hello-world/index.txt",
+    "out/blog/hello-world/index.html",
+    "out/blog/这是一个测试的blog",
+    "out/blog/index.html",
+    "out/blog/index.txt",
+    "out/blog/hello-world",
+    "out/blog",
     "content/blog/这是一个测试的blog.md",
     "一个新笔记.md"
   ]
